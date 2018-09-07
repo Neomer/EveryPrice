@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Neomer.EveryPrice.SDK.Managers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,7 +13,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
         public void Post([FromBody]string username, [FromBody]string password)
         {
-            
+UserManager
         }
 
         public void Put(int id, [FromBody]string value)
