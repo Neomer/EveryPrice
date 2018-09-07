@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Managers
 {
-    public interface IEntityManager
+    public class UserManager : BaseEntityManager<IUser>
     {
-        IEntity Get(Guid id);
-
-        void Remove(IEntity entity);
-
-        void Save(IEntity entity);
     }
 }

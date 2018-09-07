@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
 
 namespace Neomer.EveryPrice.SDK.Managers
@@ -12,17 +13,17 @@ namespace Neomer.EveryPrice.SDK.Managers
     {
         public IEntity Get(Guid id)
         {
-            throw new NotImplementedException();
+            return NHibernateHelper.Instance.CurrentSession.Get<TEntity>(id);
         }
 
-        public void Remove(Guid id)
+        public void Remove(IEntity entity)
         {
-            throw new NotImplementedException();
+            NHibernateHelper.Instance.CurrentSession.Delete(entity);
         }
 
-        public void Save(Guid id)
+        public void Save(IEntity entity)
         {
-            throw new NotImplementedException();
+            NHibernateHelper.Instance.CurrentSession.SaveOrUpdate(entity);
         }
     }
 }
