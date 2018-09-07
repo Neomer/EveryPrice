@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "EveryPrice", "EveryPrice\EveryPrice.shproj", "{5082830A-978F-460E-A939-DC4D40542B43}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		EveryPrice\EveryPrice.projitems*{5082830a-978f-460e-a939-dc4d40542b43}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3ED41D0D-7704-4996-AF14-8EB8273F9394}
+	EndGlobalSection
+EndGlobal
