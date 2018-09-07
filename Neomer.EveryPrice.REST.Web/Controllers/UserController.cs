@@ -1,4 +1,6 @@
-﻿using Neomer.EveryPrice.SDK.Managers;
+﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Managers;
+using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +13,15 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     public class UserController : ApiController
     {
 
-        public void Post([FromBody]string username, [FromBody]string password)
+        public void Post([FromBody]UserAuthModel username)
         {
-UserManager
+            IUser user = new User();
+            user.Uid = Guid.NewGuid();
+
+            username.ToUser(ref user);
+
+            var userManager = new UserManager();
+            userManager.Save(user);
         }
 
         public void Put(int id, [FromBody]string value)

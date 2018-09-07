@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Neomer.EveryPrice.SDK.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web
@@ -19,6 +21,8 @@ namespace Neomer.EveryPrice.REST.Web
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            NHibernateHelper.Instance.OpenSession(HttpContext.Current.Server.MapPath(@"~\Models\Nhibernate\nhibernate.cfg.xml"));
         }
     }
 }
