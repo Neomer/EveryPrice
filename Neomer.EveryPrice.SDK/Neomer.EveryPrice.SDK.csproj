@@ -71,11 +71,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< .mine
     <None Include="packages.config" />
-=======
     <Content Include="Models\NHibernate\Nhibernate.cfg.xml" />
->>>>>>> .theirs
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Models\NHibernateMapping\User.hbm.xml" />
