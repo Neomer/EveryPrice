@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\Managers\UnsupportedEntityException.cs" />
     <Compile Include="Helpers\NHibernateHelper.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
     <Compile Include="Managers\IEntityManager.cs" />
@@ -72,7 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Models\NHibernate\Nhibernate.cfg.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Models\NHibernateMapping\User.hbm.xml" />
