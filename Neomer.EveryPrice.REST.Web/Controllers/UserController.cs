@@ -23,12 +23,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
         public void Post([FromBody]UserAuthModel username)
         {
-            IUser user = new User();
-            user.Uid = Guid.NewGuid();
-            username.ToUser(ref user);
 
-            var userManager = new UserManager();
-            userManager.Save(user);
         }
 
         public void Put(int id, [FromBody]string value)

@@ -8,8 +8,13 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Managers
 {
-    public class UserManager : BaseEntityManager<IUser>
+    public class UserManager : BaseEntityManager<UserManager, IUser>
     {
+        protected UserManager()
+        {
+
+        }
+
         public override void Save(IEntity entity)
         {
             var user = entity as IUser;
@@ -26,5 +31,10 @@ namespace Neomer.EveryPrice.SDK.Managers
 
             base.Save(entity);
         }
+
+        public void RegisterUser(IUser user) {
+            this.Save(user);
+        }
+
     }
 }

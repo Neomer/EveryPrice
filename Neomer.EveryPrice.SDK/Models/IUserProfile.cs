@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Models
 {
-    interface IUserProfile
+    public interface IUserProfile : IEntity
     {
+        string Name { get; set; }
+
+        DateTime BirthDate { get; set; }
+
+        IUser Owner { get; set; }
     }
 }
