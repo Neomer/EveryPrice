@@ -8,7 +8,7 @@
       NHibernate.Driver.SqlClientDriver
     </property>
     <property name="connection.connection_string">
-      Server=...\SQLENTERPRISE; database=EveryPrice; Integrated Security=SSPI;
+      Server=KIRPK\SQLEXPRESS; database=EveryPrice; Integrated Security=SSPI;
     </property>
     <property name="dialect">
       NHibernate.Dialect.MsSql2008Dialect

@@ -8,6 +8,6 @@ namespace Neomer.EveryPrice.SDK.Models
 {
     public class User : BaseEntity, IUser
     {
-        public string Username { get; set; }
+        public virtual string Username { get; set; }
     }
 }

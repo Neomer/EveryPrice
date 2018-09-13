@@ -13,6 +13,7 @@ namespace Neomer.EveryPrice.SDK.Helpers
     public class NHibernateHelper
     {
         private static NHibernateHelper instance;
+        private ISessionFactory sessionFactory = null;
 
         private NHibernateHelper()
         {
@@ -35,9 +36,19 @@ namespace Neomer.EveryPrice.SDK.Helpers
             var configuration = new Configuration();
             configuration.Configure(configurationFilePath);
             configuration.AddAssembly(typeof(IEntity).Assembly);
-            ISessionFactory sessionFactory = configuration.BuildSessionFactory();
+            sessionFactory = configuration.BuildSessionFactory();
+
             new SchemaUpdate(configuration).Execute(true, true);
+
             CurrentSession = sessionFactory.OpenSession();
+        }
+
+        public void CloseSession()
+        {
+            if (sessionFactory != null)
+            {
+                sessionFactory.Close();
+            }
         }
 
         public ISession CurrentSession { get; private set; }

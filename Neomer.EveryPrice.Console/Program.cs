@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Neomer.EveryPrice.SDK.Helpers;
+using Neomer.EveryPrice.SDK.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,14 @@ namespace Neomer.EveryPrice.Console
     {
         static void Main(string[] args)
         {
+
+            var location = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var appPath = System.IO.Path.GetDirectoryName(location);
+
+            NHibernateHelper.Instance.OpenSession(appPath + @"\Nhibernate.cfg.xml");
+
+            
+            NHibernateHelper.Instance.CloseSession();
         }
     }
 }
