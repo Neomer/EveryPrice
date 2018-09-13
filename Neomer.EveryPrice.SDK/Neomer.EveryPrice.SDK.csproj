@@ -62,6 +62,7 @@
     <Compile Include="Helpers\NHibernateHelper.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
     <Compile Include="Managers\IEntityManager.cs" />
+    <Compile Include="Managers\UserManager.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\IUser.cs" />
@@ -70,7 +71,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< .mine
     <None Include="packages.config" />
+=======
+    <Content Include="Models\NHibernate\Nhibernate.cfg.xml" />
+>>>>>>> .theirs
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Models\NHibernateMapping\User.hbm.xml" />
