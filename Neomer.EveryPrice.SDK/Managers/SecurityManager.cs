@@ -27,7 +27,9 @@ namespace Neomer.EveryPrice.SDK.Managers
             user.Token = Guid.NewGuid();
             user.TokenExpirationDate = DateTime.Now.AddHours(2);
 
-            Save(user);
+            SaveIsolate(user);
+
+            return user;
         }
 
     }

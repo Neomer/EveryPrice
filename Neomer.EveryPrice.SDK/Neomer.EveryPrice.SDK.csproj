@@ -64,6 +64,7 @@
     <Compile Include="Helpers\NHibernateHelper.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
     <Compile Include="Managers\IEntityManager.cs" />
+    <Compile Include="Managers\SecurityManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
     <Compile Include="Managers\UserProfileManager.cs" />
     <Compile Include="Managers\UserSecurityProfileManager.cs" />

@@ -39,7 +39,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public User Post([FromBody]UserAuthModel authModel)
         {
-            return UserManager.Instance.GetUserByUsername(authModel.Username) as User;
+            var user = UserManager.Instance.GetUserByUsername(authModel.Username) as IUser;
+            return SecurityManager.Instance.SignIn(user.Uid) as User;
         }
 
         /// <summary>

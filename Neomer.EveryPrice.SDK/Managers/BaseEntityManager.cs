@@ -33,6 +33,10 @@ namespace Neomer.EveryPrice.SDK.Managers
             NHibernateHelper.Instance.CurrentSession.Delete(entity);
         }
 
+        /// <summary>
+        /// Сохраняет сущность в БД во внешней транзакции
+        /// </summary>
+        /// <param name="entity"></param>
         public virtual void Save(IEntity entity)
         {
             if (!(entity is TEntity))
@@ -42,6 +46,10 @@ namespace Neomer.EveryPrice.SDK.Managers
             NHibernateHelper.Instance.CurrentSession.Save(entity);
         }
 
+        /// <summary>
+        /// Сохраняет сущность в БД внутри собственной транзакции
+        /// </summary>
+        /// <param name="entity"></param>
         public virtual void SaveIsolate(IEntity entity)
         {
             using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
