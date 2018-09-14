@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Neomer.EveryPrice.SDK.Core;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Exceptions.Managers;
 
 namespace Neomer.EveryPrice.SDK.Managers
 {
@@ -29,7 +30,11 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         public virtual void Save(IEntity entity)
         {
-            NHibernateHelper.Instance.CurrentSession.SaveOrUpdate(entity);
+            if (!(entity is TEntity))
+            {
+                throw new UnsupportedEntityException();
+            }
+            NHibernateHelper.Instance.CurrentSession.Save(entity);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Neomer.EveryPrice.SDK.Models
 
         public virtual string Name { get; set; }
 
-        public virtual DateTime BirthDate { get; set; }
+        public virtual DateTime? BirthDate { get; set; }
 
         public virtual IUser Owner { get; set; }
 

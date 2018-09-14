@@ -6,6 +6,5 @@
       <generator class="guid" />
     </id>
     <property name="Username" />
-    <one-to-one name="Profile" class="UserProfile" />
   </class>
 </hibernate-mapping>

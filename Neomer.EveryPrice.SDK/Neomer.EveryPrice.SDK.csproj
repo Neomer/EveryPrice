@@ -66,12 +66,14 @@
     <Compile Include="Managers\IEntityManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
     <Compile Include="Managers\UserProfileManager.cs" />
+    <Compile Include="Managers\UserSecurityProfileManager.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\IUserProfile.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserProfile.cs" />
+    <Compile Include="Models\UserSecurityProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +84,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Models\NHibernateMapping\UserProfile.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Models\NHibernateMapping\UserSecurityProfile.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,6 +6,7 @@ using System.Web;
 
 namespace Neomer.EveryPrice.REST.Web.Models
 {
+    [Serializable]
     public class UserAuthModel
     {
         public string Username;

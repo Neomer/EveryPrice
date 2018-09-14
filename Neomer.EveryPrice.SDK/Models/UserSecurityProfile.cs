@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Models
 {
-    public class User : BaseEntity, IUser
+    public class UserSecurityProfile : BaseEntity
     {
-        public virtual string Username { get; set; }
+
+        public virtual IUser Owner { get; set; }
+
+        public virtual string Password { get; set; }
+
     }
 }

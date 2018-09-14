@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="Neomer.EveryPrice.SDK" namespace="Neomer.EveryPrice.SDK.Models">
-  <class name="UserProfile" table="UserProfiles" dynamic-update="true" >
+  <class name="UserSecurityProfile" table="UserSecurityProfiles" dynamic-update="true" >
     <cache usage="read-write"/>
     <id name="Uid">
       <generator class="foreign">
         <param name="property">Owner</param>
       </generator>
     </id>
-    <property name="Name" />
-    <property name="BirthDate" />
+    <property name="Password" />
     <one-to-one name="Owner" class="User" cascade="all" constrained="true" />
   </class>
 </hibernate-mapping>

@@ -33,7 +33,20 @@ namespace Neomer.EveryPrice.SDK.Managers
         }
 
         public void RegisterUser(IUser user) {
+
             this.Save(user);
+
+            var userProfile = new UserProfile();
+            userProfile.Owner = user;
+            userProfile.Name = null;
+            userProfile.BirthDate = null;
+
+            UserProfileManager.Instance.Save(userProfile);
+
+            var userSecurityProfile = new UserSecurityProfile();
+            userSecurityProfile.Owner = user;
+
+            UserSecurityProfileManager.Instance.Save(userSecurityProfile);
         }
 
     }

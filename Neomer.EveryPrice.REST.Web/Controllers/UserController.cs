@@ -7,14 +7,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Mvc;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class UserController : ApiController
     {
-        public IUser Get()
+        public User Get()
         {
-            IUser user = new User();
+            User user = new User();
             user.Uid = Guid.NewGuid();
             user.Username = "Test username";
 
