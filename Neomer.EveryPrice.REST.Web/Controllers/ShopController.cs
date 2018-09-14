@@ -42,7 +42,11 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public Shop Put([FromBody]ShopEditModel editModel)
         {
-            
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if (user == null)
+            {
+                return null;
+            }
 
             IShop shop = new Shop() { CreationDate = DateTime.Now };
             editModel.ToShop(ref shop);

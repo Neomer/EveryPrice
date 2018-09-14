@@ -1,4 +1,5 @@
-﻿using Neomer.EveryPrice.SDK.Helpers;
+﻿using Neomer.EveryPrice.SDK.Exceptions.Security;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
 using NHibernate.Criterion;
 using System;
@@ -62,17 +63,17 @@ namespace Neomer.EveryPrice.SDK.Managers
         {
             if (!headers.Contains("Token"))
             {
-                return null;
+                throw new TokenNotFoundException();
             }
             var tokenString = headers.GetValues("Token").FirstOrDefault();
             if (tokenString == null)
             {
-                return null;
+                throw new TokenNotFoundException();
             }
             Guid token;
             if (!Guid.TryParse(tokenString, out token))
             {
-                return null;
+                throw new InvalidTokenException();
             }
 
             return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()

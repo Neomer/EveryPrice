@@ -61,6 +61,9 @@
   <ItemGroup>
     <Compile Include="Core\Singleton.cs" />
     <Compile Include="Exceptions\Managers\UnsupportedEntityException.cs" />
+    <Compile Include="Exceptions\Security\BaseSecurityException.cs" />
+    <Compile Include="Exceptions\Security\TokenExpiredException.cs" />
+    <Compile Include="Exceptions\Security\TokenNotFoundException.cs" />
     <Compile Include="Helpers\NHibernateHelper.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
     <Compile Include="Managers\IEntityManager.cs" />
