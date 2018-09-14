@@ -69,7 +69,12 @@
     <Compile Include="Managers\UserProfileManager.cs" />
     <Compile Include="Managers\UserSecurityProfileManager.cs" />
     <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Models\IProduct.cs" />
+    <Compile Include="Models\IGroup.cs" />
+    <Compile Include="Models\IPrice.cs" />
+    <Compile Include="Models\IShop.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\IUserProfile.cs" />
     <Compile Include="Models\User.cs" />
@@ -90,6 +95,9 @@
     <EmbeddedResource Include="Models\NHibernateMapping\UserSecurityProfile.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Models\NHibernateMapping\Group.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
