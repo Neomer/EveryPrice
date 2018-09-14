@@ -77,6 +77,9 @@
     <Compile Include="Models\IShop.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\IUserProfile.cs" />
+    <Compile Include="Models\Price.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Shop.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\UserSecurityProfile.cs" />

@@ -10,7 +10,7 @@ namespace Neomer.EveryPrice.SDK.Models
     {
         IProduct Product { get; set; }
 
-        double Price { get; set; }
+        double Value { get; set; }
 
         string Unit { get; set; }
 
