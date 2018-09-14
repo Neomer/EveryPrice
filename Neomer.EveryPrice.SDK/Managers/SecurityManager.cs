@@ -39,6 +39,11 @@ namespace Neomer.EveryPrice.SDK.Managers
             return user;
         }
 
+        /// <summary>
+        /// Возвращает пользователя по переданному токену безопасности
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public IUser GetUserByToken(Guid token)
         {
             return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
