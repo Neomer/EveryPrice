@@ -58,5 +58,6 @@ namespace Neomer.EveryPrice.SDK.Managers
                 .UniqueResult<IUser>();
         }
 
+
     }
 }

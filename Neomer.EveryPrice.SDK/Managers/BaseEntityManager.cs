@@ -41,5 +41,22 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
             NHibernateHelper.Instance.CurrentSession.Save(entity);
         }
+
+        public virtual void SaveIsolate(IEntity entity)
+        {
+            using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
+            {
+                Save(entity);
+                try
+                {
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    throw ex;
+                }
+            }
+        }
     }
 }
