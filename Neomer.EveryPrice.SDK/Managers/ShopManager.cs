@@ -1,4 +1,5 @@
-﻿using Neomer.EveryPrice.SDK.Models;
+﻿using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,23 @@ namespace Neomer.EveryPrice.SDK.Managers
         protected ShopManager()
         {
 
+        }
+
+        public override void Save(IEntity entity)
+        {
+            IShop shop = entity as IShop;
+
+            if (shop == null)
+            {
+                throw new UnsupportedEntityException();
+            }
+
+            if (string.IsNullOrEmpty(shop.Name))
+            {
+                throw new FormatException("Название магазина не может быть пустым!");
+            }
+
+            base.Save(entity);
         }
     }
 }

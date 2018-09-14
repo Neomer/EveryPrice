@@ -30,8 +30,6 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public Shop Post(Guid id, [FromBody]ShopEditModel editModel)
         {
-            
-
             return null;
         }
 
