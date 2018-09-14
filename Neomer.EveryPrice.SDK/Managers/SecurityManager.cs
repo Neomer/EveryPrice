@@ -1,4 +1,6 @@
-﻿using Neomer.EveryPrice.SDK.Models;
+﻿using Neomer.EveryPrice.SDK.Helpers;
+using Neomer.EveryPrice.SDK.Models;
+using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,11 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
+        /// <summary>
+        /// Авторизовывает пользователя в системе и присваивает ему новый токен безопасности
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public IUser SignIn(Guid userId)
         {
             var user = Get(userId) as IUser;
@@ -30,6 +37,14 @@ namespace Neomer.EveryPrice.SDK.Managers
             SaveIsolate(user);
 
             return user;
+        }
+
+        public IUser GetUserByToken(Guid token)
+        {
+            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+                .Add(Expression.Eq("Token", token))
+                .Add(Expression.Le("TokenExpirationDate", DateTime.Now))
+                .UniqueResult<IUser>();
         }
 
     }
