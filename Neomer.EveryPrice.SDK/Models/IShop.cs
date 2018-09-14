@@ -10,6 +10,8 @@ namespace Neomer.EveryPrice.SDK.Models
     {
         string Name { get; set; }
 
+        string Address { get; set; }
+
         DateTime CreationDate { get; set; }
 
         IGroup Group { get; set; }

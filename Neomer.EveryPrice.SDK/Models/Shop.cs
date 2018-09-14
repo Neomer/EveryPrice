@@ -11,6 +11,8 @@ namespace Neomer.EveryPrice.SDK.Models
 
         public virtual string Name { get; set; }
 
+        public virtual string Address { get; set; }
+
         public virtual DateTime CreationDate { get; set; }
 
         public virtual IGroup Group { get; set; }
