@@ -5,6 +5,8 @@
     <id name="Uid">
       <generator class="guid" />
     </id>
-    <property name="Username" />
+    <property name="Username">
+      <column name="Username" unique-key="UsernameUQ"/>
+    </property>
   </class>
 </hibernate-mapping>

@@ -14,13 +14,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class UserController : ApiController
     {
-        public User Get()
+        public void Get()
         {
-            User user = new User();
-            user.Uid = Guid.NewGuid();
-            user.Username = "Test username";
-
-            return user;
         }
 
         public User Get(Guid id)
@@ -28,9 +23,9 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             return UserManager.Instance.Get(id) as User;
         }
 
-        public void Post([FromBody]UserAuthModel username)
+        public User Post([FromBody]UserAuthModel authModel)
         {
-
+            return UserManager.Instance.GetUserByUsername(authModel.Username) as User;
         }
 
         public void Put(int id, [FromBody]string value)

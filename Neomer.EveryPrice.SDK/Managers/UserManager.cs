@@ -1,5 +1,7 @@
 ﻿using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +49,13 @@ namespace Neomer.EveryPrice.SDK.Managers
             userSecurityProfile.Owner = user;
 
             UserSecurityProfileManager.Instance.Save(userSecurityProfile);
+        }
+
+        public IUser GetUserByUsername(string username)
+        {
+            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+                .Add(Expression.Eq("Username", username))
+                .UniqueResult<IUser>();
         }
 
     }
