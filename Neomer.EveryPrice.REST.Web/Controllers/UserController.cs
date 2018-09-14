@@ -1,4 +1,5 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
@@ -20,6 +21,11 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             user.Username = "Test username";
 
             return user;
+        }
+
+        public User Get(Guid id)
+        {
+            return UserManager.Instance.Get(id) as User;
         }
 
         public void Post([FromBody]UserAuthModel username)

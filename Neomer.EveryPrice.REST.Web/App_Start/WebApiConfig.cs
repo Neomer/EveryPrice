@@ -22,7 +22,7 @@ namespace Neomer.EveryPrice.REST.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            //NHibernateHelper.Instance.OpenSession(HttpContext.Current.Server.MapPath(@"~\Models\Nhibernate\nhibernate.cfg.xml"));
+            NHibernateHelper.Instance.OpenSession(HttpContext.Current.Server.MapPath(@"~/Nhibernate.cfg.xml"));
         }
     }
 }
