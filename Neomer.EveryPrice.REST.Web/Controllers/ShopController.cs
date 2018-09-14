@@ -46,7 +46,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                 return null;
             }
 
-            IShop shop = new Shop() { CreationDate = DateTime.Now };
+            IShop shop = new Shop()
+            {
+                CreationDate = DateTime.Now,
+                Creator = user
+            };
+
             editModel.ToShop(ref shop);
 
             ShopManager.Instance.SaveIsolate(shop);
