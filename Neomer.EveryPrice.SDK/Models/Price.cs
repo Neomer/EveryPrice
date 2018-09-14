@@ -8,13 +8,13 @@ namespace Neomer.EveryPrice.SDK.Models
 {
     public class Price : BaseEntity, IPrice
     {
-        public virtual IProduct Product { get; set; }
-
         public virtual double Value { get; set; }
 
         public virtual string Unit { get; set; }
 
         public virtual DateTime CreationDate { get; set; }
+
+        public virtual IProduct Product { get; set; }
 
     }
 }

@@ -19,7 +19,7 @@ namespace Neomer.EveryPrice.Console
 
             NHibernateHelper.Instance.OpenSession(appPath + @"\Nhibernate.cfg.xml");
 
-            Program.CreateGroups();
+            //Program.CreateGroups();
 
             NHibernateHelper.Instance.CloseSession();
         }
