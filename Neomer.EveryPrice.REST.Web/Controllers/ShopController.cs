@@ -42,6 +42,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public Shop Put([FromBody]ShopEditModel editModel)
         {
+            
+
             IShop shop = new Shop() { CreationDate = DateTime.Now };
             editModel.ToShop(ref shop);
 

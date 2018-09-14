@@ -21,5 +21,6 @@ namespace Neomer.EveryPrice.SDK.Models
 
         public virtual double Lng { get; set; }
 
+        public virtual IUser Creator { get; set; }
     }
 }

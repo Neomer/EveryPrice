@@ -16,5 +16,6 @@ namespace Neomer.EveryPrice.SDK.Models
 
         DateTime CreationDate { get; set; }
 
+        IUser Creator { get; set; }
     }
 }

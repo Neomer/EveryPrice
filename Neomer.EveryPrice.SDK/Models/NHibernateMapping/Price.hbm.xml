@@ -9,5 +9,6 @@
     <property name="Unit" />
     <property name="CreationDate" />
     <many-to-one name="Product" column="ProductUid" class="Product" />
+    <many-to-one name="Creator" column="CreatorUid" class="User" />
   </class>
 </hibernate-mapping>

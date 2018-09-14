@@ -16,5 +16,7 @@ namespace Neomer.EveryPrice.SDK.Models
 
         public virtual IProduct Product { get; set; }
 
+        public virtual IUser Creator { get; set; }
+
     }
 }

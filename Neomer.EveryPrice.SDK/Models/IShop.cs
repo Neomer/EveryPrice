@@ -19,5 +19,7 @@ namespace Neomer.EveryPrice.SDK.Models
         double Lat { get; set; }
 
         double Lng { get; set; }
+
+        IUser Creator { get; set; }
     }
 }
