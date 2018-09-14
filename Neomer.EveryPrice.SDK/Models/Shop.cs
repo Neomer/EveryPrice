@@ -17,5 +17,9 @@ namespace Neomer.EveryPrice.SDK.Models
 
         public virtual IGroup Group { get; set; }
 
+        public virtual double Lat { get; set; }
+
+        public virtual double Lng { get; set; }
+
     }
 }
