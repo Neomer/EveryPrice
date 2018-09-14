@@ -12,6 +12,8 @@ namespace Neomer.EveryPrice.SDK.Managers
     {
         IEntity Get(Guid id);
 
+        IEnumerable<IEntity> Get();
+
         void Remove(IEntity entity);
 
         void Save(IEntity entity);

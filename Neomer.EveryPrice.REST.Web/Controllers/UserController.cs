@@ -14,24 +14,46 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class UserController : ApiController
     {
+        /// <summary>
+        /// Не использовать!
+        /// </summary>
+        [Obsolete]
         public void Get()
         {
         }
 
+        /// <summary>
+        /// Возвращает пользователя по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор пользователя</param>
+        /// <returns></returns>
         public User Get(Guid id)
         {
             return UserManager.Instance.Get(id) as User;
         }
 
+        /// <summary>
+        /// Возвращает пользователя по данным для авторизации
+        /// </summary>
+        /// <param name="authModel"></param>
+        /// <returns></returns>
         public User Post([FromBody]UserAuthModel authModel)
         {
             return UserManager.Instance.GetUserByUsername(authModel.Username) as User;
         }
 
-        public void Put(int id, [FromBody]string value)
+        /// <summary>
+        /// Регистрация нового пользователя
+        /// </summary>
+        /// <param name="authModel"></param>
+        public void Put([FromBody]UserAuthModel authModel)
         {
         }
 
+        /// <summary>
+        /// Удаление пользователя
+        /// </summary>
+        /// <param name="id"></param>
         public void Delete(int id)
         {
         }

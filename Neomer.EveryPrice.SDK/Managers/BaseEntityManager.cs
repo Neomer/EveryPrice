@@ -23,6 +23,11 @@ namespace Neomer.EveryPrice.SDK.Managers
             return NHibernateHelper.Instance.CurrentSession.Get<TEntity>(id);
         }
 
+        public virtual IEnumerable<IEntity> Get()
+        {
+            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IEntity>().List<IEntity>();
+        }
+
         public virtual void Remove(IEntity entity)
         {
             NHibernateHelper.Instance.CurrentSession.Delete(entity);
