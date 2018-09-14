@@ -1,4 +1,5 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
         public Shop Get(Guid id)
         {
-            return null;
+            return ShopManager.Instance.Get(id) as Shop;
         }
 
         /// <summary>
@@ -29,6 +30,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public Shop Post(Guid id, [FromBody]ShopEditModel editModel)
         {
+            
+
             return null;
         }
 
@@ -39,7 +42,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public Shop Put([FromBody]ShopEditModel editModel)
         {
-            return null;
+            IShop shop = new Shop() { CreationDate = DateTime.Now };
+            editModel.ToShop(ref shop);
+
+            ShopManager.Instance.SaveIsolate(shop);
+
+            return shop as Shop;
         }
 
     }
