@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="Neomer.EveryPrice.SDK" namespace="Neomer.EveryPrice.SDK.Models">
+  <class name="Product" table="Products" dynamic-update="true" >
+    <cache usage="read-write"/>
+    <id name="Uid">
+      <generator class="guid" />
+    </id>
+    <property name="Name" />
+    <property name="CreationDate" />
+    <many-to-one name="Shop" column="ShopUid" class="Shop" />
+    <many-to-one name="Group" column="GroupUid" class="Group" />
+    <many-to-one name="Creator" column="CreatorUid" class="User" />
+  </class>
+</hibernate-mapping>

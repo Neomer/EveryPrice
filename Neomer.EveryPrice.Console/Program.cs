@@ -19,19 +19,35 @@ namespace Neomer.EveryPrice.Console
 
             NHibernateHelper.Instance.OpenSession(appPath + @"\Nhibernate.cfg.xml");
 
-            {
-                var transactionUid = NHibernateHelper.Instance.BeginTransaction();
-                
-                var adminUser = new User();
-                adminUser.Username = "Admin";
-                UserManager.Instance.RegisterUser(adminUser);
-
-                NHibernateHelper.Instance.CommitTransaction(transactionUid);
-
-                var profile = UserProfileManager.Instance.Get(adminUser.Uid);
-            }
+            //Program.CreateGroups();
 
             NHibernateHelper.Instance.CloseSession();
+        }
+
+        static void CreateGroups()
+        {
+            var transactionUid = NHibernateHelper.Instance.BeginTransaction();
+
+            var g = new Group() { Name = "Алкоголь" };
+
+            NHibernateHelper.Instance.CurrentSession.Save(g);
+            NHibernateHelper.Instance.CurrentSession.Save(new Group() { Name = "Крепкий", Parent = g });
+            NHibernateHelper.Instance.CurrentSession.Save(new Group() { Name = "Пиво", Parent = g });
+            NHibernateHelper.Instance.CurrentSession.Save(new Group() { Name = "Вино", Parent = g });
+
+            NHibernateHelper.Instance.CommitTransaction(transactionUid);
+        }
+
+
+        static void CreateAdmin()
+        {
+            var transactionUid = NHibernateHelper.Instance.BeginTransaction();
+
+            var adminUser = new User();
+            adminUser.Username = "Admin";
+            UserManager.Instance.RegisterUser(adminUser);
+
+            NHibernateHelper.Instance.CommitTransaction(transactionUid);
         }
     }
 }
