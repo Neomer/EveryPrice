@@ -4,8 +4,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.neomer.everyprice.api.SecurityApi;
+import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 
+import java.io.IOException;
+import java.util.UUID;
+
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
         securityApi = retrofit.create(SecurityApi.class); //Создаем объект, при помощи которого будем выполнять запросы
 
-        securityApi.GetToken(new UserSignInModel("Admin"));
+        try {
+            Response<Token> token = securityApi.GetToken(new UserSignInModel("Admin")).execute();
+
+            UUID tokenUid = token.body().getToken();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

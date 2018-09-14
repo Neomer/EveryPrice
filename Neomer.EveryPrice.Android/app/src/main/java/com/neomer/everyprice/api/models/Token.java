@@ -5,8 +5,22 @@ import java.util.UUID;
 
 public class Token {
 
-    UUID Token;
+    private UUID Token;
+    private  LocalDateTime TokenExpirationDate;
 
-    LocalDateTime TokenExpirationDate;
+    public UUID getToken() {
+        return Token;
+    }
 
+    public void setToken(UUID token) {
+        Token = token;
+    }
+
+    public LocalDateTime getTokenExpirationDate() {
+        return TokenExpirationDate;
+    }
+
+    public void setTokenExpirationDate(LocalDateTime tokenExpirationDate) {
+        TokenExpirationDate = tokenExpirationDate;
+    }
 }
