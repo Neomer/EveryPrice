@@ -26,6 +26,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public UserProfile Post(Guid id, [FromBody]UserProfileEditModel profileEditModel)
         {
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if  (user == null)
+            {
+                return null;
+            }
+
             var userProfile = UserProfileManager.Instance.Get(id) as UserProfile;
             if (userProfile == null)
             {

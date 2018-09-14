@@ -4,6 +4,7 @@ using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,6 +50,34 @@ namespace Neomer.EveryPrice.SDK.Managers
             return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
                 .Add(Expression.Eq("Token", token))
                 .Add(Expression.Le("TokenExpirationDate", DateTime.Now))
+                .UniqueResult<IUser>();
+        }
+
+        /// <summary>
+        /// Возвращает пользователя по переданному токену безопасности
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public IUser GetUserByToken(HttpRequestHeaders headers)
+        {
+            if (!headers.Contains("Token"))
+            {
+                return null;
+            }
+            var tokenString = headers.GetValues("Token").FirstOrDefault();
+            if (tokenString == null)
+            {
+                return null;
+            }
+            Guid token;
+            if (!Guid.TryParse(tokenString, out token))
+            {
+                return null;
+            }
+
+            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+                .Add(Expression.Eq("Token", token))
+                .Add(Expression.Ge("TokenExpirationDate", DateTime.Now))
                 .UniqueResult<IUser>();
         }
 
