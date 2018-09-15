@@ -4,6 +4,7 @@ import com.neomer.everyprice.api.models.IUser;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -13,6 +14,6 @@ import retrofit2.http.Query;
 public interface SecurityApi {
 
     @POST("/api/user")
-    Call<Token> GetToken(@Body UserSignInModel signInModel);
+    Call<ResponseBody> GetToken(@Body UserSignInModel signInModel);
 
 }
