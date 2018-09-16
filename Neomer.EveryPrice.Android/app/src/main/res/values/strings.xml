@@ -16,4 +16,6 @@
 
     <string name="error_wrong_username_or_password">Wrong Username or Password!</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="google_maps_key">sd</string>
 </resources>

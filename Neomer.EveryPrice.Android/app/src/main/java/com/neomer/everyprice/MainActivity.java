@@ -32,13 +32,5 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnAddShop = (Button) findViewById(R.id.btnAddShop);
-        btnAddShop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MapsActivity.class));
-            }
-        });
-
     }
 }
