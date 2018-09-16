@@ -8,6 +8,8 @@ import com.neomer.everyprice.MainActivity;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +53,16 @@ public final class WebApiFacade {
         call.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
+                if (response.code() != 200) {
+                    if (callback != null) {
+                        try {
+                            callback.onFailure(new Exception(response.errorBody().string()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return;
+                }
                 token = response.body();
                 if (callback != null) {
                     callback.onSuccess();

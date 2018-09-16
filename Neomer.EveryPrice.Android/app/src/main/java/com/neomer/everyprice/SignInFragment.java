@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
@@ -26,6 +27,7 @@ public class SignInFragment extends Fragment {
 
         final EditText txtUsername = (EditText) rootView.findViewById(R.id.txtUsername);
         Button btnSignIn = (Button) rootView.findViewById(R.id.btnSignIn);
+        final TextView tvError = (TextView) rootView.findViewById(R.id.tvError);
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +42,7 @@ public class SignInFragment extends Fragment {
 
                             @Override
                             public void onFailure(Throwable t) {
-
+                                tvError.setText(rootView.getResources().getText(R.string.error_wrong_username_or_password));
                             }
                         });
             }
