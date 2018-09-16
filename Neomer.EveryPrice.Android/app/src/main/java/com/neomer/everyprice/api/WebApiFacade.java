@@ -45,31 +45,43 @@ public final class WebApiFacade {
         return instance;
     }
 
-    public void SignIn(UserSignInModel signInModel) {
+    public void SignIn(UserSignInModel signInModel, final WebApiCallback callback) {
 
         Call<Token> call = securityApi.SignIn(signInModel);
         call.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 token = response.body();
+                if (callback != null) {
+                    callback.onSuccess();
+                }
             }
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
             }
         });
     }
 
-    public void Registration(UserSignInModel signInModel) {
+    public void Registration(UserSignInModel signInModel, final WebApiCallback callback) {
         Call<Token> call = securityApi.Registration(signInModel);
         call.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
                 token = response.body();
+                if (callback != null) {
+                    callback.onSuccess();
+                }
             }
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
             }
         });
     }
