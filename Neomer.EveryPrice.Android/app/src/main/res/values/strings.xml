@@ -11,6 +11,9 @@
     <string name="password_retype">Retype password</string>
     <string name="password_not_match">Passwords not match!</string>
 
+    <string name="add_shop">Add shop</string>
+
 
     <string name="error_wrong_username_or_password">Wrong Username or Password!</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

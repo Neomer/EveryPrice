@@ -10,6 +10,7 @@ import com.neomer.everyprice.api.models.UserSignInModel;
 
 import java.io.IOException;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +32,7 @@ public final class WebApiFacade {
                 .create();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
+                .baseUrl("http://46.147.174.43:8000/") //Базовая часть адреса
                 .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                 .build();
 
@@ -47,20 +48,28 @@ public final class WebApiFacade {
         return instance;
     }
 
+    private boolean checkErrorStatus(int code, ResponseBody errorBody, WebApiCallback callback) {
+        if (code != 200) {
+            if (callback != null) {
+                try {
+                    callback.onFailure(new Exception(errorBody.string()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public void SignIn(UserSignInModel signInModel, final WebApiCallback callback) {
 
         Call<Token> call = securityApi.SignIn(signInModel);
         call.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
-                if (response.code() != 200) {
-                    if (callback != null) {
-                        try {
-                            callback.onFailure(new Exception(response.errorBody().string()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
                     return;
                 }
                 token = response.body();
@@ -83,6 +92,10 @@ public final class WebApiFacade {
         call.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
+                    return;
+                }
                 token = response.body();
                 if (callback != null) {
                     callback.onSuccess();

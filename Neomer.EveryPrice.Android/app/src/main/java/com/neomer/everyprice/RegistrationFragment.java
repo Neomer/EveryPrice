@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neomer.everyprice.api.WebApiCallback;
@@ -29,14 +30,15 @@ public class RegistrationFragment extends Fragment {
         final EditText txtUsername = (EditText) rootView.findViewById(R.id.txtUsername);
         final EditText txtPassword = (EditText) rootView.findViewById(R.id.txtPassword);
         final EditText txtPasswordRetype = (EditText) rootView.findViewById(R.id.txtPasswordRetype);
+        final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
 
         Button btnRegistration = (Button) rootView.findViewById(R.id.btnRegister);
 
         btnRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (txtPassword.getText().toString() != txtPasswordRetype.getText().toString()) {
-                    Toast.makeText(rootView.getContext(), rootView.getResources().getText(R.string.password_not_match), Toast.LENGTH_LONG);
+                if (!txtPassword.getText().toString().contentEquals(txtPasswordRetype.getText().toString())) {
+                    tvRegistrationError.setText(rootView.getResources().getText(R.string.password_not_match));
                     return;
                 }
 
@@ -50,7 +52,7 @@ public class RegistrationFragment extends Fragment {
 
                             @Override
                             public void onFailure(Throwable t) {
-
+                                tvRegistrationError.setText(t.getLocalizedMessage());
                             }
                         });
 
