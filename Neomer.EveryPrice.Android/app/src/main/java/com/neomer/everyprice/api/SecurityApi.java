@@ -9,11 +9,15 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface SecurityApi {
 
     @POST("/api/user")
-    Call<Token> GetToken(@Body UserSignInModel signInModel);
+    Call<Token> SignIn(@Body UserSignInModel signInModel);
+
+    @PUT("/api/user")
+    Call<Token> Registration(@Body UserSignInModel signInModel);
 
 }
