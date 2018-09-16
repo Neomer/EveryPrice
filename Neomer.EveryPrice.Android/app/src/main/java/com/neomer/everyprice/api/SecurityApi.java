@@ -14,6 +14,6 @@ import retrofit2.http.Query;
 public interface SecurityApi {
 
     @POST("/api/user")
-    Call<ResponseBody> GetToken(@Body UserSignInModel signInModel);
+    Call<Token> GetToken(@Body UserSignInModel signInModel);
 
 }
