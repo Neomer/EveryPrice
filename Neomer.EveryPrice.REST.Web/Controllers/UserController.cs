@@ -47,8 +47,13 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// Регистрация нового пользователя
         /// </summary>
         /// <param name="authModel"></param>
-        public void Put([FromBody]UserAuthModel authModel)
+        public User Put([FromBody]UserAuthModel authModel)
         {
+            IUser user = new User();
+            authModel.ToUser(ref user);
+            UserManager.Instance.SaveIsolate(user);
+
+            return SecurityManager.Instance.SignIn(user.Uid) as User;
         }
 
         /// <summary>
