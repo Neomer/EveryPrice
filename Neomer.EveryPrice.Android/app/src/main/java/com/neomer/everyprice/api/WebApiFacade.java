@@ -2,6 +2,7 @@ package com.neomer.everyprice.api;
 
 import android.widget.Toast;
 
+import com.google.android.gms.common.internal.ResourceUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.MainActivity;
@@ -21,23 +22,43 @@ public final class WebApiFacade {
 
     private static WebApiFacade instance;
 
-    private Retrofit retrofit;
-    private SecurityApi securityApi;
+    private Retrofit retrofit = null;
+    private SecurityApi securityApi = null;
+
+    private String lastError;
 
     private Token token;
 
     private WebApiFacade() {
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX") // "2018-09-16T13:08:12.7290948+04:00"
-                .create();
+        try {
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX") // "2018-09-16T13:08:12.7290948+04:00"
+                    .create();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://46.147.174.43:8000/") //Базовая часть адреса
-                .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
-                .build();
+        }
+        catch (NullPointerException ex) {
+            lastError = ex.getMessage();
+        }
+        catch (Exception ex) {
+            lastError = ex.getMessage();
+        }
 
-        securityApi = retrofit.create(SecurityApi.class); //Создаем объект, при помощи которого будем выполнять запросы
+        try {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://46.147.174.43:8000/") //Базовая часть адреса
+                    .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
+                    .build();
+        }
+        catch (NullPointerException ex) {
+            lastError = ex.getMessage();
+        }
+        catch (Exception ex) {
+            lastError = ex.getMessage();
+        }
 
+        if (retrofit != null) {
+            securityApi = retrofit.create(SecurityApi.class); //Создаем объект, при помощи которого будем выполнять запросы
+        }
         token = null;
     }
 
@@ -63,6 +84,10 @@ public final class WebApiFacade {
     }
 
     public void SignIn(UserSignInModel signInModel, final WebApiCallback callback) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
 
         Call<Token> call = securityApi.SignIn(signInModel);
         call.enqueue(new Callback<Token>() {
