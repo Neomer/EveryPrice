@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Location.cs" />
     <Compile Include="Core\Singleton.cs" />
     <Compile Include="Exceptions\Managers\UnsupportedEntityException.cs" />
     <Compile Include="Exceptions\Security\BaseSecurityException.cs" />

@@ -1,4 +1,5 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Core;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
@@ -12,9 +13,9 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class ShopController : ApiController
     {
-        public Shop Get(double lat, double lng, double distance)
+        public List<Shop> Get(double lat, double lng, double distance)
         {
-            return null;
+            return ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance) as List<Shop>;
         }
 
         public Shop Get(Guid id)
@@ -30,7 +31,20 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public Shop Post(Guid id, [FromBody]ShopEditModel editModel)
         {
-            return null;
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if (user == null)
+            {
+                return null;
+            }
+            var shop = ShopManager.Instance.Get(id) as IShop;
+            if (shop == null)
+            {
+                return null;
+            }
+            editModel.ToShop(ref shop);
+            ShopManager.Instance.SaveIsolate(shop);
+
+            return shop as Shop;
         }
 
         /// <summary>
