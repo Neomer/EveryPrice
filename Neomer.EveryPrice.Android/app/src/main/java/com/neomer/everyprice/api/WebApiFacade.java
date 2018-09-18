@@ -7,6 +7,7 @@ import com.google.android.gms.common.internal.ResourceUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.MainActivity;
+import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
@@ -163,4 +164,29 @@ public final class WebApiFacade {
             }
         });
     }
+
+    public void GetShopProducts(Shop shop, final WebApiCallback<List<Price>> callback) {
+        Call<List<Price>> call = securityApi.GetShopProducts(shop.getUid());
+        call.enqueue(new Callback<List<Price>>() {
+            @Override
+            public void onResponse(Call<List<Price>> call, Response<List<Price>> response) {
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
+                    return;
+                }
+
+                if (callback != null) {
+                    callback.onSuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Price>> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
+            }
+        });
+    }
+
 }

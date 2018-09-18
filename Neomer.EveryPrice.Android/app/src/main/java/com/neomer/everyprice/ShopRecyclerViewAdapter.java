@@ -1,6 +1,7 @@
 package com.neomer.everyprice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.neomer.everyprice.api.models.Shop;
 
@@ -35,11 +37,24 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Shop shop = shopList.get(i);
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+        final Shop shop = shopList.get(i);
         if (shop != null) {
             viewHolder.getTextViewName().setText(shop.getName());
         }
+
+        viewHolder.getConstraintLayoutRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openShopDetailsActivity(shop);
+            }
+        });
+    }
+
+    private void openShopDetailsActivity(Shop shop) {
+        Intent intent = new Intent(context, ShopDetailsActivity.class);
+        intent.putExtra(Shop.class.getCanonicalName(), shop);
+        context.startActivity(intent);
     }
 
     @Override

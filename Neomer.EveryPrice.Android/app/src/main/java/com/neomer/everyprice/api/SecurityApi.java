@@ -1,6 +1,7 @@
 package com.neomer.everyprice.api;
 
 import com.neomer.everyprice.api.models.IUser;
+import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
@@ -29,5 +30,8 @@ public interface SecurityApi {
 
     @GET("/api/shop")
     Call<List<Shop>> GetNearShops(@Query("Lat") double latitude, @Query("Lng") double longtitude, @Query("Distance") double distance);
+
+    @GET("/api/product")
+    Call<List<Price>> GetShopProducts(@Query("ShopUid") UUID shopUid);
 
 }
