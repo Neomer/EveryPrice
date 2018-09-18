@@ -16,5 +16,7 @@ namespace Neomer.EveryPrice.SDK.Models
         IGroup Group { get; set; }
 
         IUser Creator { get; set; }
+
+        IPrice Price { get; set; }
     }
 }

@@ -8,20 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.neomer.everyprice.api.models.Price;
+import com.neomer.everyprice.api.models.Product;
+import com.neomer.everyprice.core.NumericHelper;
 
 import java.util.List;
 
 public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDetailsRecyclerViewAdapter.ViewHolder> {
 
-    private List<Price> priceList;
+    private List<Product> productList;
     private Context context;
 
-    public ShopDetailsRecyclerViewAdapter(List<Price> priceList, Context context) {
-        this.priceList = priceList;
+    public ShopDetailsRecyclerViewAdapter(List<Product> productList, Context context) {
+        this.productList = productList;
         this.context = context;
     }
 
@@ -35,20 +35,31 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        final Product product = productList.get(i);
+        if (product != null) {
+            viewHolder.getTextViewName().setText(product.getName());
+            viewHolder.getTextViewPrice().setText(NumericHelper.getInstance().FormatToMoney(product.getPrice()));
+        }
 
+        viewHolder.getConstraintLayoutRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return priceList != null ? priceList.size() :  0;
+        return productList != null ? productList.size() :  0;
     }
 
-    public List<Price> getPriceList() {
-        return priceList;
+    public List<Product> getProductList() {
+        return productList;
     }
 
-    public void setPriceList(List<Price> priceList) {
-        this.priceList = priceList;
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

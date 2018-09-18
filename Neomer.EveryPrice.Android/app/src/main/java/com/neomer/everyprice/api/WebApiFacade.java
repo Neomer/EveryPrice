@@ -1,13 +1,10 @@
 package com.neomer.everyprice.api;
 
 import android.location.Location;
-import android.widget.Toast;
 
-import com.google.android.gms.common.internal.ResourceUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.neomer.everyprice.MainActivity;
-import com.neomer.everyprice.api.models.Price;
+import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
@@ -49,8 +46,8 @@ public final class WebApiFacade {
 
         try {
             retrofit = new Retrofit.Builder()
-                    //.baseUrl("http://46.147.174.43:8000/") //Базовая часть адреса
-                    .baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
+                    .baseUrl("http://46.147.174.43:8000/") //Базовая часть адреса
+                    //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
         }
@@ -165,11 +162,11 @@ public final class WebApiFacade {
         });
     }
 
-    public void GetShopProducts(Shop shop, final WebApiCallback<List<Price>> callback) {
-        Call<List<Price>> call = securityApi.GetShopProducts(shop.getUid());
-        call.enqueue(new Callback<List<Price>>() {
+    public void GetShopProducts(Shop shop, final WebApiCallback<List<Product>> callback) {
+        Call<List<Product>> call = securityApi.GetShopProducts(shop.getUid());
+        call.enqueue(new Callback<List<Product>>() {
             @Override
-            public void onResponse(Call<List<Price>> call, Response<List<Price>> response) {
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (checkErrorStatus(response.code(), response.errorBody(), callback))
                 {
                     return;
@@ -181,7 +178,7 @@ public final class WebApiFacade {
             }
 
             @Override
-            public void onFailure(Call<List<Price>> call, Throwable t) {
+            public void onFailure(Call<List<Product>> call, Throwable t) {
                 if (callback != null) {
                     callback.onFailure(t);
                 }

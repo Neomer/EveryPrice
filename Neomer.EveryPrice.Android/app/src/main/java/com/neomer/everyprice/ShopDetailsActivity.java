@@ -7,10 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.internal.ResourceUtils;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
-import com.neomer.everyprice.api.models.Price;
+import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 
 import java.util.List;
@@ -39,9 +38,9 @@ public class ShopDetailsActivity extends AppCompatActivity {
     }
 
     private void startLoadProducts() {
-        WebApiFacade.getInstance().GetShopProducts(shop, new WebApiCallback<List<Price>>() {
+        WebApiFacade.getInstance().GetShopProducts(shop, new WebApiCallback<List<Product>>() {
             @Override
-            public void onSuccess(List<Price> result) {
+            public void onSuccess(List<Product> result) {
                 updateProductList(result);
             }
 
@@ -52,11 +51,11 @@ public class ShopDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void updateProductList(List<Price> products) {
+    private void updateProductList(List<Product> products) {
         if (shopDetailsRecyclerViewAdapter == null) {
             return;
         }
-        shopDetailsRecyclerViewAdapter.setPriceList(products);
+        shopDetailsRecyclerViewAdapter.setProductList(products);
         shopDetailsRecyclerViewAdapter.notifyDataSetChanged();
     }
 
