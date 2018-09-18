@@ -33,8 +33,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 	                    ORDER BY pr.CreationDate DESC
                     ) pr
                     WHERE [prod].[ShopUid]='{0}'", shop.Uid))
-                .AddEntity(typeof(Product))
-                .AddEntity(typeof(Price));
+                .AddEntity(typeof(Product));
 
             return query.List<Product>();
         }
