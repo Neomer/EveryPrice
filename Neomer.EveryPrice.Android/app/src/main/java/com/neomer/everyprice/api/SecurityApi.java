@@ -1,8 +1,12 @@
 package com.neomer.everyprice.api;
 
 import com.neomer.everyprice.api.models.IUser;
+import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
+
+import java.util.List;
+import java.util.UUID;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -19,5 +23,11 @@ public interface SecurityApi {
 
     @PUT("/api/user")
     Call<Token> Registration(@Body UserSignInModel signInModel);
+
+    @GET("/api/shop")
+    Call<Shop> GetShopDetails(@Query("Id") UUID uid);
+
+    @GET("/api/shop")
+    Call<List<Shop>> GetNearShops(@Query("Lat") double latitude, @Query("Lng") double longtitude, @Query("Distance") double distance);
 
 }

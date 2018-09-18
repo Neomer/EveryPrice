@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 
 public class RegistrationFragment extends Fragment {
@@ -44,9 +45,9 @@ public class RegistrationFragment extends Fragment {
 
                 WebApiFacade.getInstance().Registration(
                         new UserSignInModel(txtUsername.getText().toString()),
-                        new WebApiCallback() {
+                        new WebApiCallback<Token>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(Token result) {
                                 moveToMainActivity();
                             }
 

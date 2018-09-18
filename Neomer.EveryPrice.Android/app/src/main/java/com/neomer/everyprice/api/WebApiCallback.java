@@ -1,8 +1,8 @@
 package com.neomer.everyprice.api;
 
-public interface WebApiCallback {
+public interface WebApiCallback<T> {
 
-    void onSuccess();
+    void onSuccess(T result);
 
     void onFailure(Throwable t);
 
