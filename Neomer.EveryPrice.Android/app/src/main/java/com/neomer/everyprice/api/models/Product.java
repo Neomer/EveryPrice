@@ -3,42 +3,42 @@ package com.neomer.everyprice.api.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Product implements Parcelable {
 
-    private UUID uid;
-    private String name;
-    private double price;
+    private UUID Uid;
+    private String Name;
+    private List<Price> Prices;
 
     public UUID getUid() {
-        return uid;
+        return Uid;
     }
 
     public void setUid(UUID uid) {
-        this.uid = uid;
+        this.Uid = uid;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.Name = name;
     }
 
-    public double getPrice() {
-        return price;
+    public List<Price> getPrices() {
+        return Prices;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPrices(List<Price> prices) {
+        this.Prices = prices;
     }
 
     protected Product(Parcel in) {
-        uid = UUID.fromString(in.readString());
-        name = in.readString();
-        price = in.readDouble();
+        Uid = UUID.fromString(in.readString());
+        Name = in.readString();
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -60,8 +60,7 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(uid.toString());
-        dest.writeString(name);
-        dest.writeDouble(price);
+        dest.writeString(Uid.toString());
+        dest.writeString(Name);
     }
 }

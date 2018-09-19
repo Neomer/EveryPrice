@@ -7,7 +7,7 @@
     </id>
     <property name="Name" />
     <property name="Address" />
-    <property name="CreationDate" />
+    <property name="CreationDate" type="UtcDateTime" />
     <property name="Lat" />
     <property name="Lng" />
     <many-to-one name="Group" column="GroupUid" class="Group" />

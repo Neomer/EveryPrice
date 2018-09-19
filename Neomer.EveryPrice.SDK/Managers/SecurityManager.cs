@@ -34,7 +34,7 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
 
             user.Token = Guid.NewGuid();
-            user.TokenExpirationDate = DateTime.Now.AddHours(2);
+            user.TokenExpirationDate = DateTime.UtcNow.AddHours(2);
 
             SaveIsolate(user);
 
@@ -76,10 +76,16 @@ namespace Neomer.EveryPrice.SDK.Managers
                 throw new InvalidTokenException();
             }
 
-            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+            var user = NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
                 .Add(Expression.Eq("Token", token))
-                .Add(Expression.Ge("TokenExpirationDate", DateTime.Now))
+                .Add(Expression.Ge("TokenExpirationDate", DateTime.UtcNow))
                 .UniqueResult<IUser>();
+
+            if (user == null)
+            {
+                throw new InvalidTokenException();
+            }
+            return user;
         }
 
     }

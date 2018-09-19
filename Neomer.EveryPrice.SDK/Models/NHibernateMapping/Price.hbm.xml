@@ -7,7 +7,7 @@
     </id>
     <property name="Value" />
     <property name="Unit" />
-    <property name="CreationDate" />
+    <property name="CreationDate" type="UtcDateTime" />
     <many-to-one name="Product" column="ProductUid" class="Product" cascade="save-update" />
     <many-to-one name="Creator" column="CreatorUid" class="User" />
   </class>

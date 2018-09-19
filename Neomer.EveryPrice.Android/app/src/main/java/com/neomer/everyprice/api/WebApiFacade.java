@@ -33,7 +33,7 @@ public final class WebApiFacade {
     private WebApiFacade() {
         try {
             Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX") // "2018-09-16T13:08:12.7290948+04:00"
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX") // "2018-09-16T13:08:12.7290948+04:00"
                     .create();
 
         }
@@ -139,7 +139,7 @@ public final class WebApiFacade {
     }
 
     public  void GetNearestShops(Location location, double distance, final WebApiCallback<List<Shop>> callback) {
-        Call<List<Shop>> call = securityApi.GetNearShops(location.getLatitude(), location.getLongitude(), distance);
+        Call<List<Shop>> call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance);
         call.enqueue(new Callback<List<Shop>>() {
             @Override
             public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
@@ -163,7 +163,7 @@ public final class WebApiFacade {
     }
 
     public void GetShopProducts(Shop shop, final WebApiCallback<List<Product>> callback) {
-        Call<List<Product>> call = securityApi.GetShopProducts(shop.getUid());
+        Call<List<Product>> call = securityApi.GetShopProducts(token.getToken(), shop.getUid());
         call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {

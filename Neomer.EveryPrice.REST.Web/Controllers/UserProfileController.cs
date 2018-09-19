@@ -15,6 +15,11 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     {
         public UserProfile Get(Guid id)
         {
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if (user == null)
+            {
+                return null;
+            }
             return UserProfileManager.Instance.Get(id) as UserProfile;
         }
 

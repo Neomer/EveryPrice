@@ -15,11 +15,21 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     {
         public List<Shop> Get(double lat, double lng, double distance)
         {
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if (user == null)
+            {
+                return null;
+            }
             return ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance) as List<Shop>;
         }
 
         public Shop Get(Guid id)
         {
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if (user == null)
+            {
+                return null;
+            }
             return ShopManager.Instance.Get(id) as Shop;
         }
 
@@ -62,7 +72,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
             IShop shop = new Shop()
             {
-                CreationDate = DateTime.Now,
+                CreationDate = DateTime.UtcNow,
                 Creator = user
             };
 

@@ -1,4 +1,6 @@
-﻿using Neomer.EveryPrice.SDK.Models;
+﻿using Neomer.EveryPrice.SDK.Helpers;
+using Neomer.EveryPrice.SDK.Models;
+using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,14 @@ namespace Neomer.EveryPrice.SDK.Managers
         protected PriceManager()
         {
 
+        }
+
+        public IList<Price> GetPricesByProduct(IProduct product)
+        {
+            return NHibernateHelper.Instance.CurrentSession
+                .CreateCriteria<IPrice>()
+                .Add(Expression.Eq("Product", product))
+                .List<Price>(); 
         }
     }
 }

@@ -6,7 +6,7 @@
       <generator class="guid" />
     </id>
     <property name="Name" />
-    <property name="CreationDate" />
+    <property name="CreationDate" type="UtcDateTime" />
     <many-to-one name="Shop" column="ShopUid" class="Shop" />
     <many-to-one name="Group" column="GroupUid" class="Group" />
     <many-to-one name="Creator" column="CreatorUid" class="User" />

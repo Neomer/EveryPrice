@@ -61,7 +61,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             }
             IProduct product = new Product()
             {
-                CreationDate = DateTime.Now,
+                CreationDate = DateTime.UtcNow,
                 Creator = user,
                 Group = null,
                 Shop = shop

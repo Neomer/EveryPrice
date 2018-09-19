@@ -8,7 +8,7 @@
       </generator>
     </id>
     <property name="Name" />
-    <property name="BirthDate" />
+    <property name="BirthDate" type="UtcDateTime" />
     <one-to-one name="Owner" class="User" cascade="all" constrained="true" />
   </class>
 </hibernate-mapping>

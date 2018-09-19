@@ -1,4 +1,5 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Exceptions.Security;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
@@ -40,6 +41,10 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         public User Post([FromBody]UserAuthModel authModel)
         {
             var user = UserManager.Instance.GetUserByUsername(authModel.Username) as IUser;
+            if (user == null)
+            {
+                throw new SignInFailedException();
+            }
             return SecurityManager.Instance.SignIn(user.Uid) as User;
         }
 

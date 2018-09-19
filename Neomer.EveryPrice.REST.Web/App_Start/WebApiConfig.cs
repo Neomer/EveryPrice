@@ -25,7 +25,8 @@ namespace Neomer.EveryPrice.REST.Web
             NHibernateHelper.Instance.OpenSession(HttpContext.Current.Server.MapPath(@"~/Nhibernate.cfg.xml"));
 
             var cfg = GlobalConfiguration.Configuration;
-            cfg.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; 
+            cfg.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            cfg.Formatters.JsonFormatter.SerializerSettings.DateFormatString = "yyyy-MM-dd'T'HH:mm:ss.fffK";
         }
     }
 }

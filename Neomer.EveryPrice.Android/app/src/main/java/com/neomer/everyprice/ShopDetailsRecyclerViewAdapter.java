@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.core.NumericHelper;
 
@@ -38,7 +39,8 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
         final Product product = productList.get(i);
         if (product != null) {
             viewHolder.getTextViewName().setText(product.getName());
-            viewHolder.getTextViewPrice().setText(NumericHelper.getInstance().FormatToMoney(product.getPrice()));
+            List<Price> priceList = product.getPrices();
+            viewHolder.getTextViewPrice().setText(NumericHelper.getInstance().FormatToMoney(priceList.isEmpty() ? 0 : priceList.get(0).getValue()));
         }
 
         viewHolder.getConstraintLayoutRoot().setOnClickListener(new View.OnClickListener() {

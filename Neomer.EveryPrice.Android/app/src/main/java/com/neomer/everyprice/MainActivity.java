@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void applyNewLocation(Location location) {
+        if (location == null || (currentLocation != null && location.getAccuracy() >= currentLocation.getAccuracy())) {
+            return;
+        }
         currentLocation = location;
         loadListOfNearestShops();
     }
@@ -159,6 +162,19 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        try {
+            applyNewLocation(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+        }
+        catch (Exception ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        try {
+            applyNewLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+        }
+        catch (Exception ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
     }
 
