@@ -25,7 +25,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                 return null;
             }
 
-            return ProductManager.Instance.GetProductsByShop(shop) as List<Product>;
+            var products = ProductManager.Instance.GetProductsByShop(shop) as List<Product>;
+            return products;
         }
 
         public Product Post(Guid uid, [FromBody] ProductEditModel productEditModel)

@@ -35,7 +35,10 @@ namespace Neomer.EveryPrice.SDK.Managers
                     WHERE [prod].[ShopUid]='{0}'", shop.Uid))
                 .AddEntity(typeof(Product));
 
-            return query.List<Product>();
+            return NHibernateHelper.Instance.CurrentSession
+                .CreateCriteria<Product>()
+                .Add(Expression.Eq("Shop", shop))
+                .List<Product>();
         }
     }
 }

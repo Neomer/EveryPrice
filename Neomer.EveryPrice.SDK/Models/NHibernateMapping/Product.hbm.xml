@@ -10,5 +10,9 @@
     <many-to-one name="Shop" column="ShopUid" class="Shop" />
     <many-to-one name="Group" column="GroupUid" class="Group" />
     <many-to-one name="Creator" column="CreatorUid" class="User" />
-  </class>
+    <bag name="Prices" inverse="true" order-by="CreationDate DESC">
+	    <key column="ProductUid"/>
+	    <one-to-many class="Price"/>
+    </bag>
+    </class>
 </hibernate-mapping>
