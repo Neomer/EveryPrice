@@ -12,8 +12,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <uses-feature android:name="android.hardware.location" android:required="true" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -46,8 +50,9 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".ShopDetailsActivity"></activity>
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".ShopDetailsActivity" />
+        <activity android:name=".AddShopActivity"></activity>
     </application>
 
 </manifest>
