@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,7 +62,23 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(shopRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        setupFloatingButton();
+
         requestLocationPermission();
+    }
+
+    private void setupFloatingButton() {
+        FloatingActionButton floatingActionButton = findViewById(R.id.mainActivity_floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMainActions();
+            }
+        });
+    }
+
+    private void openMainActions() {
+
     }
 
     @Override

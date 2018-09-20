@@ -192,6 +192,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\PriceEditModel.cs" />
     <Compile Include="Models\ProductEditModel.cs" />
     <Compile Include="Models\ShopEditModel.cs" />
     <Compile Include="Models\UserAuthModel.cs" />
