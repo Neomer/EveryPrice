@@ -1,6 +1,7 @@
 package com.neomer.everyprice;
 
 import android.Manifest;
+import android.animation.FloatArrayEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.SearchView;
@@ -77,8 +81,44 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openMainActions() {
+    private boolean actionsShow = false;
 
+    private void openMainActions() {
+        actionsShow = !actionsShow;
+
+        FloatingActionButton fabAddShop = findViewById(R.id.mainActivity_fab_addShop);
+        fabAddShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToAddShopActivity();
+            }
+        });
+
+        if (actionsShow) {
+            Animation show_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_show);
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddShop.getLayoutParams();
+            layoutParams.rightMargin += (int) (fabAddShop.getWidth() * 1.7);
+            layoutParams.bottomMargin += (int) (fabAddShop.getHeight() * 0.25);
+            fabAddShop.setLayoutParams(layoutParams);
+            fabAddShop.startAnimation(show_fab);
+            fabAddShop.setClickable(true);
+
+        } else {
+            Animation hide_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_hide);
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddShop.getLayoutParams();
+            layoutParams.rightMargin -= (int) (fabAddShop.getWidth() * 1.7);
+            layoutParams.bottomMargin -= (int) (fabAddShop.getHeight() * 0.25);
+            fabAddShop.setLayoutParams(layoutParams);
+            fabAddShop.startAnimation(hide_fab);
+            fabAddShop.setClickable(true);
+        }
+
+    }
+
+    private void moveToAddShopActivity() {
+        startActivity(new Intent(this, AddShopActivity.class));
     }
 
     @Override
