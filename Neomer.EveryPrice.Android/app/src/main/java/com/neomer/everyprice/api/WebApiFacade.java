@@ -186,4 +186,28 @@ public final class WebApiFacade {
         });
     }
 
+    public void CreateShop(Shop shop, final WebApiCallback<Shop> callback) {
+        Call<Shop> call = securityApi.CreateShop(token.getToken(), shop);
+        call.enqueue(new Callback<Shop>() {
+            @Override
+            public void onResponse(Call<Shop> call, Response<Shop> response) {
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
+                    return;
+                }
+
+                if (callback != null) {
+                    callback.onSuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Shop> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
+            }
+        });
+    }
+
 }

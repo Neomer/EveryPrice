@@ -18,19 +18,29 @@ import retrofit2.http.Query;
 
 public interface SecurityApi {
 
+    // region User controller
     @POST("/api/user")
     Call<Token> SignIn(@Body UserSignInModel signInModel);
 
     @PUT("/api/user")
     Call<Token> Registration(@Body UserSignInModel signInModel);
+    //endregion
 
+    //region Shop controller
     @GET("/api/shop")
     Call<Shop> GetShopDetails(@Header("Token") UUID token, @Query("Id") UUID uid);
 
     @GET("/api/shop")
     Call<List<Shop>> GetNearShops(@Header("Token") UUID token, @Query("Lat") double latitude, @Query("Lng") double longtitude, @Query("Distance") double distance);
 
+    @PUT("/api/shop")
+    Call<Shop> CreateShop(@Header("Token") UUID token, @Body Shop shopModel);
+    //endregion Shop controller
+
+    //region Product controller
     @GET("/api/product")
     Call<List<Product>> GetShopProducts(@Header("Token") UUID token, @Query("ShopUid") UUID shopUid);
+    //endregion
+
 
 }
