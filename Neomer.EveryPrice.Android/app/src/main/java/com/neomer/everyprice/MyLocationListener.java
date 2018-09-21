@@ -11,31 +11,41 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-public class MyLocationListener implements LocationListener {
+import java.util.List;
+import java.util.Observer;
 
-    private Marker personalMarker;
-    private GoogleMap googleMap;
+public final class MyLocationListener implements LocationListener {
 
-    public MyLocationListener() {
-        personalMarker = null;
+    private static MyLocationListener instance;
+
+    public static MyLocationListener getInstance() {
+        if (instance == null) {
+            instance = new MyLocationListener();
+        }
+        return instance;
+    }
+
+    private List<ILocationUpdateEventListener> eventListenerList;
+
+    public void registerEventListener(ILocationUpdateEventListener listener) {
+        eventListenerList.add(listener);
+    }
+
+    public void unregisterEventListener(ILocationUpdateEventListener listener) {
+        try {
+            eventListenerList.remove(listener);
+        }
+        catch (Exception ex) {}
+    }
+
+    private MyLocationListener() {
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        if (personalMarker == null) {
-            return;
+        for (ILocationUpdateEventListener l: eventListenerList) {
+            l.onLocationReceived(location);
         }
-        Location loc_old = new Location("point");
-        loc_old.setLatitude(personalMarker.getPosition().latitude);
-        loc_old.setLongitude(personalMarker.getPosition().longitude);
-
-        LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
-
-        if (location.distanceTo(loc_old) > 1000 && googleMap != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-        }
-
-        personalMarker.setPosition(position);
     }
 
     @Override
@@ -51,21 +61,5 @@ public class MyLocationListener implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    public void setMarker(Marker marker) {
-        this.personalMarker = marker;
-    }
-
-    public Marker getMarker() {
-        return personalMarker;
-    }
-
-    public GoogleMap getGoogleMap() {
-        return googleMap;
-    }
-
-    public void setGoogleMap(GoogleMap googleMap) {
-        this.googleMap = googleMap;
     }
 }

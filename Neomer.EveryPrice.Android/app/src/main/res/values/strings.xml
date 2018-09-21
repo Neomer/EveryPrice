@@ -22,6 +22,7 @@
     <string name="save">Save</string>
 
     <string name="error_wrong_username_or_password">Wrong Username or Password!</string>
+    <string name="error_location_service_not_ready">Location service unavailable!</string>
     <string name="title_activity_maps">Map</string>
 
     <string name="google_maps_key">AIzaSyDejAVLrf_3ARNQ_pYv0pyY4N00UC220_E</string>

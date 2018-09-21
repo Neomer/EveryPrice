@@ -23,7 +23,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private LocationManager locationManager;
-    private MyLocationListener locationListener;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -70,9 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        locationListener = new MyLocationListener();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
     }
 
 
@@ -87,21 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        try {
-            mMap = googleMap;
 
-            // Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(-34, 151);
-
-            if (locationListener != null) {
-                locationListener.setMarker(
-                        mMap.addMarker(new MarkerOptions().position(sydney)));
-                locationListener.setGoogleMap(googleMap);
-            }
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }
-        catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG);
-        }
     }
 }

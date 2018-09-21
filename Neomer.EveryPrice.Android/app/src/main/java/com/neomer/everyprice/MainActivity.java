@@ -46,14 +46,29 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener {
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
+
+    @Override
+    public void onLocationReceived(Location location) {
+        if (location == null || (currentLocation != null && currentLocation.getAccuracy() < location.getAccuracy())) {
+            return;
+        }
+        currentLocation = location;
+        loadListOfNearestShops();
+    }
 
     private RecyclerView recyclerView;
     private LocationManager locationManager;
     private Location currentLocation = null;
     private ShopRecyclerViewAdapter shopRecyclerViewAdapter;
+
+    @Override
+    protected void onDestroy() {
+        MyLocationListener.getInstance().unregisterEventListener(this);
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +81,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(shopRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        setupFloatingButton();
+        MyLocationListener.getInstance().registerEventListener(this);
 
+        setupFloatingButton();
         requestLocationPermission();
     }
 
@@ -179,14 +195,6 @@ public class MainActivity extends AppCompatActivity {
         setupLocationListener();
     }
 
-    private void applyNewLocation(Location location) {
-        if (location == null || (currentLocation != null && location.getAccuracy() >= currentLocation.getAccuracy())) {
-            return;
-        }
-        currentLocation = location;
-        loadListOfNearestShops();
-    }
-
     private void setupLocationListener() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -194,45 +202,20 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                if (location.getAccuracy() < 500) {
-                    locationManager.removeUpdates(this);
-                }
-                applyNewLocation(location);
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
         try {
-            applyNewLocation(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+            onLocationReceived(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         try {
-            applyNewLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+            onLocationReceived(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
     }
 
 }
