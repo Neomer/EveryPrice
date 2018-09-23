@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddShopActivity">
+    tools:context=".AddShopActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/textView7"
@@ -14,9 +15,9 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/longitude_label"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/tvLongitude"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/addshop_btnOpenMap" />
 
     <TextView
         android:id="@+id/textView2"
@@ -26,9 +27,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/latitude_label"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/addshop_btnOpenMap" />
 
     <TextView
         android:id="@+id/tvLatitude"
@@ -38,9 +39,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="0.00"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/addshop_btnOpenMap" />
 
     <TextView
         android:id="@+id/tvLongitude"
@@ -50,14 +51,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="0.00"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/addshop_btnOpenMap" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/addshop_tvAddress"
         android:layout_width="0dp"
-        android:layout_height="47dp"
+        android:layout_height="107dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -69,10 +70,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/addshop_tvName" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/addshop_tvName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -89,7 +90,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addshop_btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -100,7 +101,7 @@
         android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/addshop_tvAddress" />
 
     <TextView
         android:id="@+id/textView8"
@@ -114,5 +115,16 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addshop_btnOpenMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/specify_location_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 </android.support.constraint.ConstraintLayout>

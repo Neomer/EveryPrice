@@ -8,5 +8,9 @@
         <domain includeSubdomains="true">http://192.168.88.204:8000</domain>
         <domain includeSubdomains="true">http://192.168.88.204</domain>
         <domain includeSubdomains="true">192.168.88.204</domain>
+
+        <domain includeSubdomains="true">http://localhost:8000</domain>
+        <domain includeSubdomains="true">http://localhost</domain>
+        <domain includeSubdomains="true">localhost</domain>
     </domain-config>
 </network-security-config>

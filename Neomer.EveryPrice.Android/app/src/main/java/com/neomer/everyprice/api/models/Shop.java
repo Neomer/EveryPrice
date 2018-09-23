@@ -8,10 +8,6 @@ import java.util.UUID;
 
 public class Shop implements Parcelable {
 
-    public Shop(UUID uid) {
-        Uid = uid;
-    }
-
     private UUID Uid;
     private String Name;
     private String Address;
@@ -24,6 +20,13 @@ public class Shop implements Parcelable {
         Address = in.readString();
         Lat = in.readDouble();
         Lng = in.readDouble();
+    }
+
+    public Shop(String name, String address, double lat, double lng) {
+        Name = name;
+        Address = address;
+        Lat = lat;
+        Lng = lng;
     }
 
     public static final Creator<Shop> CREATOR = new Creator<Shop>() {

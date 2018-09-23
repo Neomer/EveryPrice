@@ -3,6 +3,7 @@ package com.neomer.everyprice;
 import android.app.ActivityManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -11,12 +12,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
 
 public final class MyLocationListener implements LocationListener {
 
     private static MyLocationListener instance;
+    private Location lastLocation = null;
 
     public static MyLocationListener getInstance() {
         if (instance == null) {
@@ -39,10 +42,13 @@ public final class MyLocationListener implements LocationListener {
     }
 
     private MyLocationListener() {
+        eventListenerList = new ArrayList<ILocationUpdateEventListener>();
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        lastLocation = location;
+
         for (ILocationUpdateEventListener l: eventListenerList) {
             l.onLocationReceived(location);
         }
@@ -61,5 +67,9 @@ public final class MyLocationListener implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
     }
 }

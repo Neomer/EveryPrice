@@ -46,9 +46,9 @@ public final class WebApiFacade {
 
         try {
             retrofit = new Retrofit.Builder()
-                    //.baseUrl("http://46.147.174.43:8000/") //Базовая часть адреса
+                    .baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
                     //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
-                    .baseUrl("http://localhost:51479/") //Базовая часть адреса
+                    //.baseUrl("http://localhost:51479/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
         }
