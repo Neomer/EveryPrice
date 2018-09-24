@@ -158,7 +158,6 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
     }
 
     private void moveToMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

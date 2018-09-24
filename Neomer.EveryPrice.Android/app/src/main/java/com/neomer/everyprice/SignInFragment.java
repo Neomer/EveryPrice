@@ -31,26 +31,10 @@ public class SignInFragment extends Fragment {
         Button btnSignIn = (Button) rootView.findViewById(R.id.btnSignIn);
         final TextView tvSignInError = (TextView) rootView.findViewById(R.id.tvSignInError);
 
-        Toast.makeText(getContext(), "Here!", Toast.LENGTH_LONG).show();
-
-        if (tvSignInError == null) {
-            Toast.makeText(getContext(), "tvSignInError is null!", Toast.LENGTH_LONG).show();;
-        }
-
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (txtUsername == null) {
-                    Toast.makeText(getContext(), "txtUsername is null!", Toast.LENGTH_LONG).show();;
-                    return;
-                }
-
                 WebApiFacade webApiFacade = WebApiFacade.getInstance();
-
-                if (webApiFacade == null) {
-                    Toast.makeText(getContext(), "webApiFacade is null!", Toast.LENGTH_LONG).show();;
-                    return;
-                }
 
                 webApiFacade.SignIn(
                         new UserSignInModel(txtUsername.getText().toString()),
@@ -81,7 +65,7 @@ public class SignInFragment extends Fragment {
                 Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_LONG);
             }
         }
-        //getActivity().finish();
+        getActivity().finish();
     }
 
 
