@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private LocationManager locationManager;
     private Location currentLocation = null;
     private ShopRecyclerViewAdapter shopRecyclerViewAdapter;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onDestroy() {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void setupFloatingButton() {
-        FloatingActionButton floatingActionButton = findViewById(R.id.mainActivity_floatingActionButton);
+        floatingActionButton = findViewById(R.id.mainActivity_floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,8 +115,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             Animation show_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_show);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddShop.getLayoutParams();
-            layoutParams.rightMargin += (int) (fabAddShop.getWidth() * 1.7);
-            layoutParams.bottomMargin += (int) (fabAddShop.getHeight() * 0.25);
+            layoutParams.rightMargin += (int) (floatingActionButton.getWidth());
+            layoutParams.bottomMargin += (int) (floatingActionButton.getHeight());
             fabAddShop.setLayoutParams(layoutParams);
             fabAddShop.startAnimation(show_fab);
             fabAddShop.setClickable(true);
@@ -124,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             Animation hide_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_hide);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddShop.getLayoutParams();
-            layoutParams.rightMargin -= (int) (fabAddShop.getWidth() * 1.7);
-            layoutParams.bottomMargin -= (int) (fabAddShop.getHeight() * 0.25);
+            layoutParams.rightMargin -= (int) (floatingActionButton.getWidth());
+            layoutParams.bottomMargin -= (int) (floatingActionButton.getHeight());
             fabAddShop.setLayoutParams(layoutParams);
             fabAddShop.startAnimation(hide_fab);
             fabAddShop.setClickable(true);

@@ -55,9 +55,11 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                     location.getLongitude(),
                     1);
 
+            EditText txtAddress = findViewById(R.id.addshop_tvAddress);
             if (addressList != null && addressList.size() > 0) {
-                EditText txtAddress = findViewById(R.id.addshop_tvAddress);
                 txtAddress.setText(addressList.get(0).getAddressLine(0));
+            } else {
+                txtAddress.setText("");
             }
         } catch (IOException e) {
             e.printStackTrace();

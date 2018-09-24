@@ -8,6 +8,7 @@ import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
+import com.neomer.everyprice.api.models.WebApiException;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,10 +22,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class WebApiFacade {
 
+    public static int WEBAPI_RETRY_COUNT = 10;
+
     private static WebApiFacade instance;
 
     private Retrofit retrofit = null;
     private SecurityApi securityApi = null;
+    private UserSignInModel signInModel = null;
 
     private String lastError;
 
@@ -46,9 +50,9 @@ public final class WebApiFacade {
 
         try {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
+                    //.baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
                     //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
-                    //.baseUrl("http://localhost:51479/") //Базовая часть адреса
+                    .baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
         }
@@ -76,7 +80,13 @@ public final class WebApiFacade {
         if (code != 200) {
             if (callback != null) {
                 try {
-                    callback.onFailure(new Exception(errorBody.string()));
+                    Gson gson = new GsonBuilder().create();
+                    WebApiException exception = gson.fromJson(errorBody.string(), WebApiException.class);
+                    if (exception.is("InvalidTokenException") && signInModel != null) {
+                        SignIn(signInModel, null);
+                    } else {
+                        callback.onFailure(exception);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -91,6 +101,8 @@ public final class WebApiFacade {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
         }
+
+        this.signInModel = signInModel;
 
         Call<Token> call = securityApi.SignIn(signInModel);
         call.enqueue(new Callback<Token>() {
@@ -116,6 +128,11 @@ public final class WebApiFacade {
     }
 
     public void Registration(UserSignInModel signInModel, final WebApiCallback<Token> callback) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
         Call<Token> call = securityApi.Registration(signInModel);
         call.enqueue(new Callback<Token>() {
             @Override
@@ -139,13 +156,25 @@ public final class WebApiFacade {
         });
     }
 
-    public  void GetNearestShops(Location location, double distance, final WebApiCallback<List<Shop>> callback) {
+    public void GetNearestShops(final Location location, final double distance, final WebApiCallback<List<Shop>> callback) {
+        GetNearestShops(location, distance, callback, 0);
+    }
+
+    private void GetNearestShops(final Location location, final double distance, final WebApiCallback<List<Shop>> callback, final int retry) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
         Call<List<Shop>> call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance);
         call.enqueue(new Callback<List<Shop>>() {
             @Override
             public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
                 if (checkErrorStatus(response.code(), response.errorBody(), callback))
                 {
+                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
+                        GetNearestShops(location, distance, callback, retry + 1);
+                    }
                     return;
                 }
 
@@ -163,13 +192,25 @@ public final class WebApiFacade {
         });
     }
 
-    public void GetShopProducts(Shop shop, final WebApiCallback<List<Product>> callback) {
+    public  void GetShopProducts(Shop shop, final WebApiCallback<List<Product>> callback) {
+        GetShopProducts(shop, callback, 0);
+    }
+
+    private void GetShopProducts(final Shop shop, final WebApiCallback<List<Product>> callback, final int retry) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
         Call<List<Product>> call = securityApi.GetShopProducts(token.getToken(), shop.getUid());
         call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (checkErrorStatus(response.code(), response.errorBody(), callback))
                 {
+                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
+                        GetShopProducts(shop, callback, retry + 1);
+                    }
                     return;
                 }
 
@@ -188,12 +229,24 @@ public final class WebApiFacade {
     }
 
     public void CreateShop(Shop shop, final WebApiCallback<Shop> callback) {
+        CreateShop(shop, callback, 0);
+    }
+
+    private void CreateShop(final Shop shop, final WebApiCallback<Shop> callback, final int retry) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
         Call<Shop> call = securityApi.CreateShop(token.getToken(), shop);
         call.enqueue(new Callback<Shop>() {
             @Override
             public void onResponse(Call<Shop> call, Response<Shop> response) {
                 if (checkErrorStatus(response.code(), response.errorBody(), callback))
                 {
+                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
+                        CreateShop(shop, callback, retry + 1);
+                    }
                     return;
                 }
 

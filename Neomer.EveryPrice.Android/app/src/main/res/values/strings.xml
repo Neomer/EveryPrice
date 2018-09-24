@@ -27,7 +27,13 @@
     <string name="error_wrong_username_or_password">Wrong Username or Password!</string>
     <string name="error_location_service_not_ready">Location service unavailable!</string>
     <string name="error_location_not_ready">Location not ready! Please wait a minute...</string>
+
+    <string name="webapi_error_wrong_username_or_password">Wrong username or password!</string>
+
     <string name="title_activity_maps">Map</string>
 
     <string name="google_maps_key">AIzaSyDejAVLrf_3ARNQ_pYv0pyY4N00UC220_E</string>
+
+
+
 </resources>

@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neomer.everyprice.api.WebApiCallback;
+import com.neomer.everyprice.api.WebApiExceptionTranslator;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
+import com.neomer.everyprice.api.models.WebApiException;
 
 public class SignInFragment extends Fragment {
 
@@ -46,7 +48,11 @@ public class SignInFragment extends Fragment {
 
                             @Override
                             public void onFailure(Throwable t) {
-                                tvSignInError.setText(t.getMessage());
+                                if (t instanceof WebApiException) {
+                                    tvSignInError.setText(WebApiExceptionTranslator.getMessage((WebApiException) t, getResources()));
+                                } else {
+                                    tvSignInError.setText(t.getMessage());
+                                }
                             }
                         });
 

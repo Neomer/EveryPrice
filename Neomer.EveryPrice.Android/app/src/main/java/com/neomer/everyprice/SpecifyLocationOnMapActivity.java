@@ -90,7 +90,7 @@ public class SpecifyLocationOnMapActivity extends AppCompatActivity implements O
             googleMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
                             position,
-                            15));
+                            17));
 
             if (markerPosition != null) {
                 markerPosition.setPosition(position);
