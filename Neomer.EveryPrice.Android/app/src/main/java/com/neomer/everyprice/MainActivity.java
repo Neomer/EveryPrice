@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.api.SecurityApi;
+import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
@@ -178,9 +179,18 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
             @Override
             public void onFailure(Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                if (t instanceof SignInNeededException) {
+                    moveToSecurityActivity();
+                } else {
+                    Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    private void moveToSecurityActivity() {
+        startActivity(new Intent(this, SecurityActivity.class));
+        finish();
     }
 
     private void requestLocationPermission() {

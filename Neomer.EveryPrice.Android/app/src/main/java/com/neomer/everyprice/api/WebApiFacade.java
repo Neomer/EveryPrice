@@ -1,5 +1,6 @@
 package com.neomer.everyprice.api;
 
+import android.content.pm.SigningInfo;
 import android.location.Location;
 
 import com.google.gson.Gson;
@@ -51,8 +52,8 @@ public final class WebApiFacade {
         try {
             retrofit = new Retrofit.Builder()
                     //.baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
-                    //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
-                    .baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
+                    .baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
+                    //.baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
         }
@@ -166,6 +167,10 @@ public final class WebApiFacade {
             return;
         }
 
+        if (token == null) {
+            callback.onFailure(new SignInNeededException());
+        }
+
         Call<List<Shop>> call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance);
         call.enqueue(new Callback<List<Shop>>() {
             @Override
@@ -202,6 +207,10 @@ public final class WebApiFacade {
             return;
         }
 
+        if (token == null) {
+            callback.onFailure(new SignInNeededException());
+        }
+
         Call<List<Product>> call = securityApi.GetShopProducts(token.getToken(), shop.getUid());
         call.enqueue(new Callback<List<Product>>() {
             @Override
@@ -236,6 +245,10 @@ public final class WebApiFacade {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
+        }
+
+        if (token == null) {
+            callback.onFailure(new SignInNeededException());
         }
 
         Call<Shop> call = securityApi.CreateShop(token.getToken(), shop);

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
@@ -154,9 +155,18 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
 
             @Override
             public void onFailure(Throwable t) {
-                Toast.makeText(AddShopActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                if (t instanceof SignInNeededException) {
+                    moveToSecurityActivity();
+                } else {
+                    Toast.makeText(AddShopActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    private void moveToSecurityActivity() {
+        startActivity(new Intent(this, SecurityActivity.class));
+        finish();
     }
 
     private void moveToMainActivity() {
