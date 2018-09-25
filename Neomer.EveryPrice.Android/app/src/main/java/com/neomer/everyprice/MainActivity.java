@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -50,6 +51,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener {
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
+    private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
 
     @Override
     public void onLocationReceived(Location location) {
@@ -77,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SearchView searchView = (SearchView) findViewById(R.id.searchPrice);
-        recyclerView = (RecyclerView) findViewById(R.id.rvNearShops);
+        SearchView searchView = findViewById(R.id.searchPrice);
+        recyclerView = findViewById(R.id.rvNearShops);
         shopRecyclerViewAdapter = new ShopRecyclerViewAdapter(null, MainActivity.this);
         recyclerView.setAdapter(shopRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -116,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             Animation show_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_show);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddShop.getLayoutParams();
-            layoutParams.rightMargin += (int) (floatingActionButton.getWidth());
-            layoutParams.bottomMargin += (int) (floatingActionButton.getHeight());
+            layoutParams.rightMargin += floatingActionButton.getWidth();
+            layoutParams.bottomMargin += floatingActionButton.getHeight();
             fabAddShop.setLayoutParams(layoutParams);
             fabAddShop.startAnimation(show_fab);
             fabAddShop.setClickable(true);
@@ -126,8 +128,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             Animation hide_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_hide);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddShop.getLayoutParams();
-            layoutParams.rightMargin -= (int) (floatingActionButton.getWidth());
-            layoutParams.bottomMargin -= (int) (floatingActionButton.getHeight());
+            layoutParams.rightMargin -= floatingActionButton.getWidth();
+            layoutParams.bottomMargin -= floatingActionButton.getHeight();
             fabAddShop.setLayoutParams(layoutParams);
             fabAddShop.startAnimation(hide_fab);
             fabAddShop.setClickable(true);
@@ -136,7 +138,19 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void moveToAddShopActivity() {
-        startActivity(new Intent(this, AddShopActivity.class));
+        startActivityForResult(new Intent(this, AddShopActivity.class), RESULT_FOR_ADD_SHOP_ACTION);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == RESULT_FOR_ADD_SHOP_ACTION) {
+            if (resultCode == RESULT_OK) {
+                loadListOfNearestShops();
+            }
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

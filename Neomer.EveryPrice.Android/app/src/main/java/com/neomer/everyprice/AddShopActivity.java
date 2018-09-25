@@ -150,6 +150,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         WebApiFacade.getInstance().CreateShop(shop, new WebApiCallback<Shop>() {
             @Override
             public void onSuccess(Shop result) {
+                setResult(RESULT_OK, null);
                 moveToMainActivity();
             }
 
