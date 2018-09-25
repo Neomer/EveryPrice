@@ -52,6 +52,20 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
 
     @Override
+    protected void onPause() {
+        stopListenLocation();
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        requestLocationPermission();
+
+        super.onResume();
+    }
+
+    @Override
     public void onLocationReceived(Location location) {
         if (location == null || (currentLocation != null && currentLocation.getAccuracy() < location.getAccuracy())) {
             return;
@@ -86,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         MyLocationListener.getInstance().registerEventListener(this);
 
         setupFloatingButton();
-        requestLocationPermission();
     }
 
     private void setupFloatingButton() {
@@ -228,5 +241,11 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
     }
+
+    private void stopListenLocation() {
+        locationManager.removeUpdates(MyLocationListener.getInstance());
+        locationManager = null;
+    }
+
 
 }

@@ -38,7 +38,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
     public final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     public final static int REQUEST_LOCATION_CODE = 0;
 
-
+    private LocationManager locationManager;
     private Location currentLocation = null;
     private Geocoder geocoder;
 
@@ -106,8 +106,20 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         });
 
         geocoder = new Geocoder(this);
+    }
 
+    @Override
+    protected void onPause() {
+        stopLocationListen();
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
         setupLocationListener();
+
+        super.onResume();
     }
 
     private void openLocationOnMap() {
@@ -191,7 +203,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
             return;
         }
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (locationManager == null) {
             Toast.makeText(this, getResources().getString(R.string.error_location_service_not_ready), Toast.LENGTH_SHORT).show();
             finish();
@@ -218,6 +230,12 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
-
     }
+
+    private void stopLocationListen() {
+        locationManager.removeUpdates(MyLocationListener.getInstance());
+        locationManager = null;
+    }
+
+
 }
