@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signin">Войти</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="title_activity_security">Безопаность</string>
+    <string name="tab_text_1">Вход</string>
+    <string name="tab_text_2">Регистрация</string>
+    <string name="action_settings">Настройки</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="password_retype">Повторите пароль</string>
+    <string name="password_not_match">Пароли не совпадают!</string>
+    <string name="address">Адрес</string>
+    <string name="shop_name">Наименование магазина</string>
+    <string name="shop">Магазин</string>
+    <string name="add_shop">Добавить магазин</string>
+    <string name="specify_location_button">Уточнить на карте...</string>
+    <string name="add_shop_title">Добавить новый магазин</string>
+    <string name="latitude_label">Широта:</string>
+    <string name="longitude_label">Долгота:</string>
+    <string name="save">Сохранить</string>
+    <string name="specify_location">Применить местоположение</string>
+    <string name="error_wrong_username_or_password">Неверный логин или пароль!</string>
+    <string name="error_location_service_not_ready">Служба определения координат недоступна!</string>
+    <string name="error_location_not_ready">Местоположение не получено! Подождите несколько минут...</string>
+    <string name="webapi_error_wrong_username_or_password">Неверный логин или пароль!</string>
+    <string name="add_price_title">Указать новую стоимость товара</string>
+    <string name="add_product_title">Добавить новый товар</string>
+    <string name="product_name_hint">Наименование позиции</string>
+    <string name="product_price_hint">Стоимость</string>
+    <string name="product_unit_piece">Шт.</string>
+    <string name="product_unit_kg">Кг.</string>
+    <string name="title_activity_maps">Карта</string>
+</resources>
