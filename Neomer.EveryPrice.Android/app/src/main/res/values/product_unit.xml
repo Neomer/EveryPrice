@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="product_units">
+        <item>@string/product_unit_piece</item>
+        <item>@string/product_unit_kg</item>
+    </string-array>
+</resources>

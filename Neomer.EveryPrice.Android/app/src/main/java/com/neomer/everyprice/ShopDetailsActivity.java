@@ -62,7 +62,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
         fabAddPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToAddPriceActivity();
+                moveToAddProductActivity();
             }
         });
 
@@ -117,8 +117,8 @@ public class ShopDetailsActivity extends AppCompatActivity {
         startActivityForResult(intent, RESULT_FOR_ADD_PRICE);
     }
 
-    private void moveToAddPriceActivity() {
-        Intent intent = new Intent(this, AddPriceActivity.class);
+    private void moveToAddProductActivity() {
+        Intent intent = new Intent(this, AddProductActivity.class);
         intent.putExtra(Shop.class.getCanonicalName(), shop);
         startActivityForResult(intent, RESULT_FOR_ADD_PRICE);
     }

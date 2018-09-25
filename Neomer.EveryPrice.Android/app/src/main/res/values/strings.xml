@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">EveryPrice</string>
+    <string name="google_maps_key" translatable="false">AIzaSyDejAVLrf_3ARNQ_pYv0pyY4N00UC220_E</string>
+
     <string name="signin">Sign In</string>
     <string name="register">Register</string>
     <string name="title_activity_security">Security</string>
@@ -30,9 +32,15 @@
 
     <string name="webapi_error_wrong_username_or_password">Wrong username or password!</string>
 
-    <string name="title_activity_maps">Map</string>
+    <string name="add_price_title">Add new price of a product</string>
 
-    <string name="google_maps_key">AIzaSyDejAVLrf_3ARNQ_pYv0pyY4N00UC220_E</string>
+    <string name="add_product_title">Add new product</string>
+    <string name="product_name_hint">Product name</string>
+    <string name="product_price_hint">Price</string>
+    <string name="product_unit_piece">Pc.</string>
+    <string name="product_unit_kg">Kg.</string>
+
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

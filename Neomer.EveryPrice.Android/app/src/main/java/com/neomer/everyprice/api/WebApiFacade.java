@@ -51,8 +51,8 @@ public final class WebApiFacade {
 
         try {
             retrofit = new Retrofit.Builder()
-                    //.baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
-                    .baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
+                    .baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
+                    //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
                     //.baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
@@ -82,11 +82,16 @@ public final class WebApiFacade {
             if (callback != null) {
                 try {
                     Gson gson = new GsonBuilder().create();
-                    WebApiException exception = gson.fromJson(errorBody.string(), WebApiException.class);
-                    if (exception.is("InvalidTokenException") && signInModel != null) {
-                        SignIn(signInModel, null);
-                    } else {
-                        callback.onFailure(exception);
+                    try {
+                        WebApiException exception = gson.fromJson(errorBody.string(), WebApiException.class);
+                        if (exception.is("InvalidTokenException") && signInModel != null) {
+                            SignIn(signInModel, null);
+                        } else {
+                            callback.onFailure(exception);
+                        }
+                    }
+                    catch (Exception ex) {
+                        callback.onFailure(new Exception(errorBody.string()));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

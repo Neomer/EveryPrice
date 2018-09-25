@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword '19071988'
+            storeFile file('D:/prj/EveryPrice/keystore')
+            storePassword '19071988'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.neomer.everyprice"
@@ -16,7 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '28.0.1'
+    buildToolsVersion '28.0.2'
 }
 
 dependencies {

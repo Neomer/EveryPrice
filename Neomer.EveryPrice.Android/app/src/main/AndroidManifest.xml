@@ -54,7 +54,8 @@
         <activity android:name=".ShopDetailsActivity" />
         <activity android:name=".AddShopActivity" />
         <activity android:name=".SpecifyLocationOnMapActivity" />
-        <activity android:name=".AddPriceActivity"></activity>
+        <activity android:name=".AddPriceActivity" />
+        <activity android:name=".AddProductActivity"></activity>
     </application>
 
 </manifest>
