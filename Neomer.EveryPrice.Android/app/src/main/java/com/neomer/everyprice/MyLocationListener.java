@@ -1,20 +1,13 @@
 package com.neomer.everyprice;
 
-import android.app.ActivityManager;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.neomer.everyprice.core.ILocationUpdateEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
 public final class MyLocationListener implements LocationListener {
 

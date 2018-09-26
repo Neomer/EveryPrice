@@ -1,6 +1,7 @@
 package com.neomer.everyprice.api;
 
 import android.content.pm.SigningInfo;
+import android.graphics.PorterDuff;
 import android.location.Location;
 
 import com.google.gson.Gson;
@@ -281,5 +282,46 @@ public final class WebApiFacade {
             }
         });
     }
+
+    public void CreateProduct(final Shop shop, final Product product, WebApiCallback<Product> callback) {
+        CreateProduct(shop, product, callback, 0);
+    }
+
+    private void CreateProduct(final Shop shop, final Product product, final WebApiCallback<Product> callback, final int retry) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
+        if (token == null) {
+            callback.onFailure(new SignInNeededException());
+        }
+
+        Call<Product> call = securityApi.CreateProduct(token.getToken(), shop.getUid(), product);
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
+                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
+                        CreateProduct(shop, product, callback, retry + 1);
+                    }
+                    return;
+                }
+
+                if (callback != null) {
+                    callback.onSuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
+            }
+        });
+    }
+
 
 }

@@ -40,6 +40,9 @@ public interface SecurityApi {
     //region Product controller
     @GET("/api/product")
     Call<List<Product>> GetShopProducts(@Header("Token") UUID token, @Query("ShopUid") UUID shopUid);
+
+    @PUT("/api/product")
+    Call<Product> CreateProduct(@Header("Token") UUID token, @Query("ShopUid") UUID shopUid, @Body Product product);
     //endregion
 
 

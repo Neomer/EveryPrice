@@ -4,14 +4,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.LocaleList;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,11 +23,11 @@ import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.NumericHelper;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 public class AddShopActivity extends AppCompatActivity implements ILocationUpdateEventListener {
 

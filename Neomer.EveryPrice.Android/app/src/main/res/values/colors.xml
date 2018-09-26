@@ -8,6 +8,7 @@
 
     <color name="price_color">#33CC33</color>
     <color name="main_font">#333333</color>
+    <color name="distance_font_color">#9999FF</color>
 
     <color name="error_textView">#bb0000</color>
 

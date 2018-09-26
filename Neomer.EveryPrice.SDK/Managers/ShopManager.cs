@@ -37,7 +37,7 @@ namespace Neomer.EveryPrice.SDK.Managers
         public IList<Shop> GetShopsNear(Location location, double distance)
         {
             var query = NHibernateHelper.Instance.CurrentSession
-                .CreateSQLQuery(String.Format("select * from [EveryPrice].[dbo].[Shops] s where [dbo].[GEO_DISTANCE]( {0}, {1}, s.Lat, s.Lng) < {2};",
+                .CreateSQLQuery(String.Format("select s.*, d.Distance from [EveryPrice].[dbo].[Shops] s left join (select s.[Uid], [EveryPrice].[dbo].[GEO_DISTANCE]( {0}, {1}, s.Lat, s.Lng) Distance from [EveryPrice].[dbo].[Shops] s) d on s.[Uid]=d.[Uid] where d.Distance < {2} order by d.Distance;",
                     location.Latitude.ToString().Replace(',', '.'),
                     location.Longtitude.ToString().Replace(',', '.'),
                     distance.ToString().Replace(',', '.')))
