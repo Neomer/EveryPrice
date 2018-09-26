@@ -17,6 +17,6 @@ namespace Neomer.EveryPrice.SDK.Models
 
         IUser Creator { get; set; }
 
-        ICollection<IPrice> Prices { get; set; }
+        IEnumerable<IPrice> Prices { get; set; }
     }
 }
