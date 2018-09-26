@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     public void onLocationReceived(Location location) {
-        if (location == null || (currentLocation != null && currentLocation.getAccuracy() < location.getAccuracy())) {
+        if (location == null) {
             return;
         }
         currentLocation = location;
