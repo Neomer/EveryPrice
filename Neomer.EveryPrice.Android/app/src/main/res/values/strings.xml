@@ -41,6 +41,10 @@
     <string name="product_unit_kg">Kg.</string>
     <string name="price_is_dicount">Discount</string>
 
+    <string name="kilometer_short">km</string>
+    <string name="meter_short">m</string>
+    <string name="miles">ml</string>
+
     <string name="title_activity_maps">Map</string>
 
 

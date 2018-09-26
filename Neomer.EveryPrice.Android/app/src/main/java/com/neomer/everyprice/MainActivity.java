@@ -1,12 +1,10 @@
 package com.neomer.everyprice;
 
 import android.Manifest;
-import android.animation.FloatArrayEvaluator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,35 +18,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.neomer.everyprice.api.SecurityApi;
 import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
-import com.neomer.everyprice.api.models.Token;
-import com.neomer.everyprice.api.models.UserSignInModel;
+import com.neomer.everyprice.core.ILocationUpdateEventListener;
+import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 
-import java.io.IOException;
-import java.security.Permission;
 import java.util.List;
-import java.util.UUID;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener {
+public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
@@ -94,14 +76,20 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         setContentView(R.layout.activity_main);
 
         SearchView searchView = findViewById(R.id.searchPrice);
-        recyclerView = findViewById(R.id.rvNearShops);
-        shopRecyclerViewAdapter = new ShopRecyclerViewAdapter(null, MainActivity.this);
-        recyclerView.setAdapter(shopRecyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         MyLocationListener.getInstance().registerEventListener(this);
 
+        setupRecyclerView();
         setupFloatingButton();
+    }
+
+    private void setupRecyclerView() {
+        recyclerView = findViewById(R.id.rvNearShops);
+
+        shopRecyclerViewAdapter = new ShopRecyclerViewAdapter(null, MainActivity.this);
+        shopRecyclerViewAdapter.setOnBottomReachListener(this);
+        recyclerView.setAdapter(shopRecyclerViewAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void setupFloatingButton() {
@@ -193,6 +181,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         if (currentLocation == null) {
             return;
         }
+
+
         WebApiFacade.getInstance().GetNearestShops(currentLocation, 1000, new WebApiCallback<List<Shop>>() {
             @Override
             public void onSuccess(List<Shop> result) {
@@ -262,4 +252,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
 
+    @Override
+    public void OnRecyclerBottomReached(int position) {
+        loadListOfNearestShops();
+    }
 }

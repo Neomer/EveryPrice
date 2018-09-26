@@ -32,4 +32,7 @@
     <string name="product_unit_kg">Кг.</string>
     <string name="title_activity_maps">Карта</string>
     <string name="price_is_dicount">Данная цена по скидке</string>
+    <string name="kilometer_short">км</string>
+    <string name="meter_short">м</string>
+    <string name="miles">миль</string>
 </resources>

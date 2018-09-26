@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.core;
 
 import android.location.Location;
 
