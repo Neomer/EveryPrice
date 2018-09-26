@@ -31,7 +31,7 @@ public final class NumericHelper {
         if (value > 1000) {
             return String.valueOf(Precision.round(value * 0.001, 1)) + ' ' + resources.getString(R.string.kilometer_short);
         } else {
-            return String.valueOf(Precision.round(value, 0)) + ' ' + resources.getString(R.string.meter_short);
+            return String.valueOf(Math.round(value)) + ' ' + resources.getString(R.string.meter_short);
         }
     }
 
