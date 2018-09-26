@@ -1,6 +1,7 @@
 package com.neomer.everyprice;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -75,12 +76,28 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SearchView searchView = findViewById(R.id.searchPrice);
+        SearchView searchView = findViewById(R.id.MainActivity_tagSearch);
 
         MyLocationListener.getInstance().registerEventListener(this);
 
         setupRecyclerView();
         setupFloatingButton();
+        setupFastSearch();
+    }
+
+    private void setupFastSearch() {
+        SearchView searchView = findViewById(R.id.MainActivity_tagSearch);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     private void setupRecyclerView() {

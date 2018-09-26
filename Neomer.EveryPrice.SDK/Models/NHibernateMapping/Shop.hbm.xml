@@ -12,5 +12,9 @@
     <property name="Lng" />
     <many-to-one name="Group" column="GroupUid" class="Group" />
     <many-to-one name="Creator" column="CreatorUid" class="User" />
+    <bag name="Tags" lazy="true" table="Tag_Shop">
+      <key column="ShopUid"/>
+      <many-to-many class="Tag" fetch="join" column="TagUid" />
+    </bag>
   </class>
 </hibernate-mapping>

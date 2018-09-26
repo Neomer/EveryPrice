@@ -8,6 +8,23 @@ namespace Neomer.EveryPrice.SDK.Models
 {
     public class Shop : BaseEntity, IShop
     {
+        public Shop()
+        {
+
+        }
+
+        public Shop(IShop shop)
+        {
+            Name = shop.Name;
+            Address = shop.Address;
+            CreationDate = shop.CreationDate;
+            Group = shop.Group;
+            Lat = shop.Lat;
+            Lng = shop.Lng;
+            Creator = shop.Creator;
+            Tags = shop.Tags;
+        }
+
 
         public virtual string Name { get; set; }
 
@@ -22,5 +39,7 @@ namespace Neomer.EveryPrice.SDK.Models
         public virtual double Lng { get; set; }
 
         public virtual IUser Creator { get; set; }
+
+        public virtual IList<ITag> Tags { get; set; }
     }
 }

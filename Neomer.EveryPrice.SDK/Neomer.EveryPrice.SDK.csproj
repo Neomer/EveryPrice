@@ -75,6 +75,7 @@
     <Compile Include="Managers\SecurityManager.cs" />
     <Compile Include="Managers\ProductManager.cs" />
     <Compile Include="Managers\ShopManager.cs" />
+    <Compile Include="Managers\TagManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
     <Compile Include="Managers\UserProfileManager.cs" />
     <Compile Include="Managers\UserSecurityProfileManager.cs" />
@@ -85,11 +86,14 @@
     <Compile Include="Models\IGroup.cs" />
     <Compile Include="Models\IPrice.cs" />
     <Compile Include="Models\IShop.cs" />
+    <Compile Include="Models\ITag.cs" />
+    <Compile Include="Models\ITagged.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\IUserProfile.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Shop.cs" />
+    <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\UserSecurityProfile.cs" />
@@ -120,6 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Models\NHibernateMapping\Price.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Models\NHibernateMapping\Tag.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

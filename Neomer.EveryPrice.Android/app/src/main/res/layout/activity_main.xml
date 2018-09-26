@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <SearchView
-        android:id="@+id/searchPrice"
+        android:id="@+id/MainActivity_tagSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -33,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchPrice">
+        app:layout_constraintTop_toBottomOf="@+id/MainActivity_tagSearch">
 
     </android.support.v7.widget.RecyclerView>
 

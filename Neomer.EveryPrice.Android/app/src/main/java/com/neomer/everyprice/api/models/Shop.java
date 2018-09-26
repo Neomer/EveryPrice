@@ -13,6 +13,7 @@ public class Shop implements Parcelable {
     private String Address;
     private double Lat;
     private double Lng;
+    private String Tags;
 
     protected Shop(Parcel in) {
         Uid = UUID.fromString(in.readString());
@@ -22,11 +23,12 @@ public class Shop implements Parcelable {
         Lng = in.readDouble();
     }
 
-    public Shop(String name, String address, double lat, double lng) {
+    public Shop(String name, String address, double lat, double lng, String tags) {
         Name = name;
         Address = address;
         Lat = lat;
         Lng = lng;
+        Tags = tags;
     }
 
     public static final Creator<Shop> CREATOR = new Creator<Shop>() {
@@ -93,5 +95,13 @@ public class Shop implements Parcelable {
         parcel.writeString(Address);
         parcel.writeDouble(Lat);
         parcel.writeDouble(Lng);
+    }
+
+    public String getTags() {
+        return Tags;
+    }
+
+    public void setTags(String tags) {
+        Tags = tags;
     }
 }

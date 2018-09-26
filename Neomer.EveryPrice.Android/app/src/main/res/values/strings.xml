@@ -44,6 +44,8 @@
     <string name="kilometer_short">km</string>
     <string name="meter_short">m</string>
     <string name="miles">ml</string>
+    <string name="tags">Tags</string>
+    <string name="tags_search_hint">Find tags...</string>
 
     <string name="title_activity_maps">Map</string>
 
