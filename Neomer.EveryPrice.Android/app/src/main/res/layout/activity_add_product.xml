@@ -29,8 +29,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
+        android:hint="@string/product_name_hint"
         android:inputType="textPersonName"
-        android:text="@string/product_name_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -45,8 +45,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
+        android:hint="@string/product_price_hint"
         android:inputType="numberDecimal"
-        android:text="@string/product_price_hint"
         app:layout_constraintEnd_toStartOf="@+id/addproduct_cmbUnit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addproduct_txtProductName" />
@@ -80,9 +80,11 @@
         android:id="@+id/addproduct_chkIsDiscount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/price_is_dicount"
-        app:layout_constraintTop_toBottomOf="@+id/addproduct_txtPrice"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addproduct_txtPrice" />
 
 </android.support.constraint.ConstraintLayout>
