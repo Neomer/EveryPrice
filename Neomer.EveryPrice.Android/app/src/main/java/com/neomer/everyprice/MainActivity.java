@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         if (currentLocation == null) {
             return;
         }
-
+        recyclerView.setAdapter(new RecyclerViewUpdateAdapter());
 
         WebApiFacade.getInstance().GetNearestShops(currentLocation, 1000, new WebApiCallback<List<Shop>>() {
             @Override
@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
                 } else {
                     shopRecyclerViewAdapter.setShopList(result);
+                    recyclerView.setAdapter(shopRecyclerViewAdapter);
                     shopRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
@@ -231,14 +232,14 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         }
 
         try {
-            onLocationReceived(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+            MyLocationListener.getInstance().onLocationChanged(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         try {
-            onLocationReceived(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+            MyLocationListener.getInstance().onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
         }
         catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -254,6 +255,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     public void OnRecyclerBottomReached(int position) {
-        loadListOfNearestShops();
+        //loadListOfNearestShops();
     }
 }
