@@ -40,7 +40,10 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
         if (product != null) {
             viewHolder.getTextViewName().setText(product.getName());
             List<Price> priceList = product.getPrices();
-            viewHolder.getTextViewPrice().setText(NumericHelper.getInstance().FormatToMoney(priceList.isEmpty() ? 0 : priceList.get(0).getValue()));
+            viewHolder.getTextViewPrice().setText(
+                    priceList == null || priceList.isEmpty() ?
+                            viewHolder.getContext().getResources().getText(R.string.no_price) :
+                            NumericHelper.getInstance().FormatToMoney(priceList.get(0).getValue()));
         }
 
         viewHolder.getConstraintLayoutRoot().setOnClickListener(new View.OnClickListener() {
@@ -70,6 +73,7 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
         private TextView textViewName;
         private TextView textViewPrice;
         private ConstraintLayout constraintLayoutRoot;
+        private Context context;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +82,7 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
             textViewName = itemView.findViewById(R.id.shopDetails_RecyclerView_tvName);
             textViewPrice = itemView.findViewById(R.id.shopDetails_RecyclerView_tvPrice);
             constraintLayoutRoot = itemView.findViewById(R.id.shopDetails_RecyclerView_rootLayout);
+            context = itemView.getContext();
         }
 
         public ImageView getImageView() {
@@ -110,6 +115,10 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
 
         public void setConstraintLayoutRoot(ConstraintLayout constraintLayoutRoot) {
             this.constraintLayoutRoot = constraintLayoutRoot;
+        }
+
+        public Context getContext() {
+            return context;
         }
     }
 

@@ -35,4 +35,5 @@
     <string name="kilometer_short">км</string>
     <string name="meter_short">м</string>
     <string name="miles">миль</string>
+    <string name="no_price">Нет цены</string>
 </resources>

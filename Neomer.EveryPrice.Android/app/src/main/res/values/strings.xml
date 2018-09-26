@@ -47,5 +47,7 @@
 
     <string name="title_activity_maps">Map</string>
 
+    <string name="no_price">No price</string>
+
 
 </resources>

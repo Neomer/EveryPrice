@@ -1,6 +1,7 @@
 package com.neomer.everyprice;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -137,8 +138,22 @@ public class ShopDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == RESULT_FOR_ADD_PRICE) {
+            if (resultCode == RESULT_OK) {
+                startLoadProducts();
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void updateProductList(List<Product> products) {
         if (shopDetailsRecyclerViewAdapter == null) {
+            return;
+        }
+        if (products == null || products.size() == 0) {
             return;
         }
         shopDetailsRecyclerViewAdapter.setProductList(products);
