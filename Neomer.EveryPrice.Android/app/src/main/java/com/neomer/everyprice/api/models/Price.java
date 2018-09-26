@@ -60,6 +60,11 @@ public class Price implements Parcelable {
         Unit = in.readString();
     }
 
+    public Price(double value, String unit) {
+        Value = value;
+        Unit = unit;
+    }
+
     public static final Creator<Price> CREATOR = new Creator<Price>() {
         @Override
         public Price createFromParcel(Parcel in) {

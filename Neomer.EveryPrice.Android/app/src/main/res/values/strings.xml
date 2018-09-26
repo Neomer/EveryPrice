@@ -39,6 +39,7 @@
     <string name="product_price_hint">Price</string>
     <string name="product_unit_piece">Pc.</string>
     <string name="product_unit_kg">Kg.</string>
+    <string name="price_is_dicount">Discount</string>
 
     <string name="title_activity_maps">Map</string>
 

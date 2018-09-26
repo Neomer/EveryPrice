@@ -3,6 +3,9 @@ package com.neomer.everyprice.api.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.neomer.everyprice.core.NumericHelper;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +42,13 @@ public class Product implements Parcelable {
     protected Product(Parcel in) {
         Uid = UUID.fromString(in.readString());
         Name = in.readString();
+    }
+
+    public Product(String name, double price) {
+        Name = name;
+
+        Prices = new ArrayList<Price>();
+        Prices.add(new Price(NumericHelper.ToMoney(price), ""));
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {

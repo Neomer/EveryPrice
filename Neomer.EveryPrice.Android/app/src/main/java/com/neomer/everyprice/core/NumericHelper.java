@@ -22,4 +22,6 @@ public final class NumericHelper {
     }
 
     public String FormatLocation(double value) { return String.valueOf(Precision.round(value, 5)); }
+
+    public static double ToMoney(double value) { return Precision.round(value, 2); }
 }

@@ -31,4 +31,5 @@
     <string name="product_unit_piece">Шт.</string>
     <string name="product_unit_kg">Кг.</string>
     <string name="title_activity_maps">Карта</string>
+    <string name="price_is_dicount">Данная цена по скидке</string>
 </resources>
