@@ -18,6 +18,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -78,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         SearchView searchView = findViewById(R.id.searchPrice);
 
         MyLocationListener.getInstance().registerEventListener(this);
+
+        ImageButton btnRefresh = findViewById(R.id.MainActivity_btnRefresh);
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadListOfNearestShops();
+            }
+        });
 
         setupRecyclerView();
         setupFloatingButton();
