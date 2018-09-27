@@ -16,12 +16,12 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-        public IList<Price> GetPricesByProduct(IProduct product)
+        public IList<IPrice> GetPricesByProduct(IProduct product)
         {
             return NHibernateHelper.Instance.CurrentSession
                 .CreateCriteria<IPrice>()
                 .Add(Expression.Eq("Product", product))
-                .List<Price>(); 
+                .List<IPrice>(); 
         }
     }
 }

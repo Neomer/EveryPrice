@@ -23,7 +23,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
             CreationDate = shop.CreationDate;
             Lat = shop.Lat;
             Lng = shop.Lng;
-            Creator = shop.Creator.Username;
+            Creator = new UserViewModel(shop.Creator);
             Tags = shop.Tags == null ? null :
                 shop.Tags
                 .Select(_ => new TagsViewModel(_))
@@ -43,7 +43,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public double Lng;
 
-        public string Creator;
+        public UserViewModel Creator;
 
         public IList<TagsViewModel> Tags;
 

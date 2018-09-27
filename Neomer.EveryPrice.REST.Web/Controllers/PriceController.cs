@@ -12,7 +12,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class PriceController : ApiController
     {
-        public List<Price> Get([FromUri] Guid productUid)
+        public List<PriceViewModel> Get([FromUri] Guid productUid)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -25,10 +25,17 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             {
                 return null;
             }
-            return PriceManager.Instance.GetPricesByProduct(product) as List<Price>;
+            var priceList = PriceManager.Instance.GetPricesByProduct(product);
+            if (priceList == null)
+            {
+                return null;
+            }
+            return priceList
+                .Select(_ => new PriceViewModel(_))
+                .ToList<PriceViewModel>();
         }
 
-        public Price Put(Guid productUid, [FromBody] PriceEditModel model)
+        public PriceViewModel Put(Guid productUid, [FromBody] PriceEditModel model)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -51,7 +58,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             model.ToPrice(ref price);
             PriceManager.Instance.SaveIsolate(price);
 
-            return price as Price;
+            return new PriceViewModel(price);
         }
     }
 }

@@ -193,6 +193,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\PriceViewModel.cs" />
+    <Compile Include="Models\ProductViewModel.cs" />
     <Compile Include="Models\ShopViewModel.cs" />
     <Compile Include="Models\PriceEditModel.cs" />
     <Compile Include="Models\ProductEditModel.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Models\TagsViewModel.cs" />
     <Compile Include="Models\UserAuthModel.cs" />
     <Compile Include="Models\UserProfileEditModel.cs" />
+    <Compile Include="Models\UserWithTokenViewModel.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
