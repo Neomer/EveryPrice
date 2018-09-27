@@ -2,6 +2,7 @@ package com.neomer.everyprice.api;
 
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 
@@ -45,5 +46,8 @@ public interface SecurityApi {
     Call<Product> CreateProduct(@Header("Token") UUID token, @Query("ShopUid") UUID shopUid, @Body Product product);
     //endregion
 
+    //region Tag controller
+    Call<List<TagFastSearchViewModel>> FindTags(@Header("Token") UUID token, @Query("part") String tagPart);
+    //endregion
 
 }

@@ -1,4 +1,5 @@
-﻿using Neomer.EveryPrice.SDK.Helpers;
+﻿using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
 using NHibernate.Criterion;
 using System;
@@ -14,6 +15,35 @@ namespace Neomer.EveryPrice.SDK.Managers
         protected ProductManager()
         {
 
+        }
+
+        public override void SaveIsolate(IEntity entity)
+        {
+            var product = entity as IProduct;
+            if (product == null)
+            {
+                throw new UnsupportedEntityException();
+            }
+            using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
+            {
+                base.Save(product);
+                if (product.Prices != null)
+                {
+                    foreach (var price in product.Prices)
+                    {
+                        PriceManager.Instance.Save(price);
+                    }
+                }
+                try
+                {
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    throw ex;
+                }
+            }
         }
 
         public IList<Product> GetProductsByShop(IShop shop)

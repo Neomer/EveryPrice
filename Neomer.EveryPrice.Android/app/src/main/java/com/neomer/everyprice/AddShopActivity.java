@@ -149,11 +149,13 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
 
         EditText txtName = findViewById(R.id.addshop_tvName);
         EditText txtAddress = findViewById(R.id.addshop_tvAddress);
+        EditText txtTags = findViewById(R.id.addshop_txtTags);
 
         Shop shop = new Shop(txtName.getText().toString(),
                 txtAddress.getText().toString(),
                 currentLocation.getLatitude(),
-                currentLocation.getLongitude());
+                currentLocation.getLongitude(),
+                txtTags.getText().toString());
 
         WebApiFacade.getInstance().CreateShop(shop, new WebApiCallback<Shop>() {
             @Override

@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 import com.neomer.everyprice.api.models.WebApiException;
@@ -316,6 +317,46 @@ public final class WebApiFacade {
 
             @Override
             public void onFailure(Call<Product> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
+            }
+        });
+    }
+
+    public void TagFastSearch(final String tagPart, WebApiCallback<List<TagFastSearchViewModel>> callback) {
+        TagFastSearch(tagPart, callback, 0);
+    }
+
+    private void TagFastSearch(final String tagPart, final WebApiCallback<List<TagFastSearchViewModel>> callback, final int retry) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
+        if (token == null) {
+            callback.onFailure(new SignInNeededException());
+        }
+
+        Call<List<TagFastSearchViewModel>> call = securityApi.FindTags(token.getToken(), tagPart);
+        call.enqueue(new Callback<List<TagFastSearchViewModel>>() {
+            @Override
+            public void onResponse(Call<List<TagFastSearchViewModel>> call, Response<List<TagFastSearchViewModel>> response) {
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
+                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
+                        TagFastSearch(tagPart, callback, retry + 1);
+                    }
+                    return;
+                }
+
+                if (callback != null) {
+                    callback.onSuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TagFastSearchViewModel>> call, Throwable t) {
                 if (callback != null) {
                     callback.onFailure(t);
                 }

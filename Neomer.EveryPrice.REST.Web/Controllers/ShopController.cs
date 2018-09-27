@@ -23,14 +23,31 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             return ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance) as List<Shop>;
         }
 
-        public Shop Get(Guid id)
+        public Shop Get([FromUri] Guid id)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            return ShopManager.Instance.Get(id) as Shop;
+            return ShopManager.Instance.Get((Guid)id) as Shop;
+        }
+
+        public List<ShopViewModel> Get(Guid tagUid, string tagName)
+        {
+            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            if (user == null)
+            {
+                return null;
+            }
+            var tag = TagManager.Instance.Get((Guid)tagUid) as ITag;
+            if (tag == null || tag.Shops == null)
+            {
+                return null;
+            }
+            return tag.Shops
+                .Select(_ => new ShopViewModel(_))
+                .ToList<ShopViewModel>();
         }
 
         /// <summary>
@@ -82,6 +99,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
             return shop as Shop;
         }
+
 
     }
 }

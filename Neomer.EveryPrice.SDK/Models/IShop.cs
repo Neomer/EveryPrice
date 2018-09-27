@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Models
 {
-    public interface IShop : IEntity
+    public interface IShop : IEntity, ITagged
     {
         string Name { get; set; }
 
@@ -22,4 +22,5 @@ namespace Neomer.EveryPrice.SDK.Models
 
         IUser Creator { get; set; }
     }
+
 }
