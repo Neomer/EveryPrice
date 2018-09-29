@@ -6,6 +6,7 @@ using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -44,8 +45,19 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// </summary>
         /// <param name="authModel"></param>
         /// <returns></returns>
-        public UserWithTokenViewModel Post([FromBody]UserAuthModel authModel)
+        public async System.Threading.Tasks.Task<UserWithTokenViewModel> PostAsync([FromBody]UserAuthModel authModel)
         {
+            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+            {
+                contentStream.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(contentStream))
+                {
+                    string rawContent = sr.ReadToEnd();
+                    Logger.Log.Debug(rawContent);
+                    // use raw content here
+                }
+            }
+
             var user = UserManager.Instance.GetUserByUsername(authModel.Username) as IUser;
             if (user == null)
             {
@@ -58,8 +70,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// Регистрация нового пользователя
         /// </summary>
         /// <param name="authModel"></param>
-        public UserWithTokenViewModel Put([FromBody]UserAuthModel authModel)
+        public async System.Threading.Tasks.Task<UserWithTokenViewModel> PutAsync([FromBody]UserAuthModel authModel)
         {
+            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+            {
+                contentStream.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(contentStream))
+                {
+                    string rawContent = sr.ReadToEnd();
+                    Logger.Log.Debug(rawContent);
+                    // use raw content here
+                }
+            }
             IUser user = new User();
             authModel.ToUser(ref user);
             UserManager.Instance.SaveIsolate(user);

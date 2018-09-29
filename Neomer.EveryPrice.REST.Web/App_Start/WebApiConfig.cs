@@ -23,6 +23,7 @@ namespace Neomer.EveryPrice.REST.Web
             );
 
             NHibernateHelper.Instance.OpenSession(HttpContext.Current.Server.MapPath(@"~/Nhibernate.cfg.xml"));
+            Logger.InitLogger(HttpContext.Current.Server.MapPath(@"~/Log4Net.cfg.xml"));
 
             var cfg = GlobalConfiguration.Configuration;
             cfg.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
