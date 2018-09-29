@@ -52,22 +52,10 @@ namespace Neomer.EveryPrice.SDK.Managers
             {
                 return null;
             }
-            var query = NHibernateHelper.Instance.CurrentSession
-                .CreateSQLQuery(String.Format(@"
-                    SELECT prod.*, pr.* FROM 
-	                    [EveryPrice].[dbo].[Products] prod
-                    CROSS APPLY (
-	                    SELECT  TOP 1 *
-	                    FROM [EveryPrice].[dbo].[Prices] pr
-	                    WHERE pr.ProductUid = prod.Uid
-	                    ORDER BY pr.CreationDate DESC
-                    ) pr
-                    WHERE [prod].[ShopUid]='{0}'", shop.Uid))
-                .AddEntity(typeof(Product));
-
             return NHibernateHelper.Instance.CurrentSession
                 .CreateCriteria<IProduct>()
                 .Add(Expression.Eq("Shop", shop))
+                .AddOrder(Order.Asc("Name"))
                 .List<IProduct>();
         }
     }
