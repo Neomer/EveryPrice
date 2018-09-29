@@ -1,4 +1,5 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Exceptions.Managers;
 using Neomer.EveryPrice.SDK.Exceptions.Security;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
@@ -30,7 +31,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public UserViewModel Get(Guid id)
         {
-            return new UserViewModel(UserManager.Instance.Get(id) as IUser);
+            var entity = UserManager.Instance.Get(id) as IUser;
+            if (entity == null)
+            {
+                throw new NotFoundException();
+            }
+            return new UserViewModel(entity);
         }
 
         /// <summary>
