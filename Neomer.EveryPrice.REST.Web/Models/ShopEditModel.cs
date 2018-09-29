@@ -33,6 +33,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
             shopModel.Name = this.Name;
             shopModel.Tags = Tags == null ? null :
                 Tags
+                    .Where(_ => !String.IsNullOrEmpty(_.Value))
                     .Select(_ => new Tag()
                     {
                         Value = _.Value
