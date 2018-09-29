@@ -17,6 +17,11 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public ShopViewModel(IShop shop)
         {
+            if (shop == null)
+            {
+                return;
+            }
+
             Uid = shop.Uid;
             Name = shop.Name;
             Address = shop.Address;

@@ -16,6 +16,10 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public ImageViewModel(IBlob image) : base(image)
         {
+            if (image == null)
+            {
+                return;
+            }
             EncriptedData = Convert.ToBase64String(image.Data);
         }
 

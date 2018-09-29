@@ -1,4 +1,5 @@
-﻿using Neomer.EveryPrice.REST.Web.Models;
+﻿using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.REST.Web.Models;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
@@ -18,7 +19,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             {
                 return null;
             }
-            return new ImageViewModel(BlobManager.Instance.Get(id) as IBlob);
+            var image = BlobManager.Instance.Get(id) as IBlob;
+            if (image == null)
+            {
+                throw new NotFoundException();
+            }
+            return new ImageViewModel();
         }
     }
 }
