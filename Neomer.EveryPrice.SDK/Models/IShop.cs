@@ -21,6 +21,8 @@ namespace Neomer.EveryPrice.SDK.Models
         double Lng { get; set; }
 
         IUser Creator { get; set; }
+
+        IList<IBlob> Images { get; set; }
     }
 
 }
