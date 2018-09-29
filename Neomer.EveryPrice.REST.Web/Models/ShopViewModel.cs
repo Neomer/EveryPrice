@@ -31,8 +31,8 @@ namespace Neomer.EveryPrice.REST.Web.Models
             Creator = new UserViewModel(shop.Creator);
             Tags = shop.Tags == null ? null :
                 shop.Tags
-                    .Select(_ => new TagsViewModel(_))
-                    .ToList<TagsViewModel>();
+                    .Select(_ => new TagViewModel(_))
+                    .ToList<TagViewModel>();
             Images = shop.Images == null ? null :
                 shop.Images
                     .Select(_ => new ImagePreviewViewModel(_))
@@ -54,7 +54,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public UserViewModel Creator;
 
-        public IList<TagsViewModel> Tags;
+        public IList<TagViewModel> Tags;
 
         public IList<ImagePreviewViewModel> Images;
 
