@@ -14,5 +14,9 @@
 	    <key column="ProductUid"/>
 	    <one-to-many class="Price"/>
     </bag>
-    </class>
+    <bag name="Images" inverse="true" order-by="CreationDate DESC">
+      <key column="OwnerUid" />
+      <one-to-many class="Blob" />
+    </bag>
+  </class>
 </hibernate-mapping>

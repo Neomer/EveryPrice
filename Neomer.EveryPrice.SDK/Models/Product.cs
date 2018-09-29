@@ -20,5 +20,7 @@ namespace Neomer.EveryPrice.SDK.Models
         public virtual IUser Creator { get; set; }
 
         public virtual IEnumerable<IPrice> Prices { get; set; }
+
+        public virtual IList<IBlob> Images { get; set; }
     }
 }

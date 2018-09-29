@@ -23,6 +23,7 @@ namespace Neomer.EveryPrice.SDK.Models
             Lng = shop.Lng;
             Creator = shop.Creator;
             Tags = shop.Tags;
+            Images = shop.Images;
         }
 
 
@@ -41,5 +42,7 @@ namespace Neomer.EveryPrice.SDK.Models
         public virtual IUser Creator { get; set; }
 
         public virtual IList<ITag> Tags { get; set; }
+
+        public virtual IList<IBlob> Images { get; set; }
     }
 }

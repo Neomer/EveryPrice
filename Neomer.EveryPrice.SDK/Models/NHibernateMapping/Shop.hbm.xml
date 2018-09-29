@@ -16,5 +16,9 @@
       <key column="ShopUid"/>
       <many-to-many class="Tag" fetch="join" column="TagUid" />
     </bag>
+    <bag name="Images" inverse="true" order-by="CreationDate DESC">
+      <key column="OwnerUid" />
+      <one-to-many class="Blob" />
+    </bag>
   </class>
 </hibernate-mapping>
