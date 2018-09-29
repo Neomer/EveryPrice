@@ -13,24 +13,29 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class ShopController : ApiController
     {
-        public List<Shop> Get(double lat, double lng, double distance)
+        public List<ShopViewModel> Get(double lat, double lng, double distance)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            return ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance) as List<Shop>;
+            var shopList = ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance);
+
+            return shopList == null ? null :
+                shopList
+                    .Select(_ => new ShopViewModel(_))
+                    .ToList<ShopViewModel>();
         }
 
-        public Shop Get([FromUri] Guid id)
+        public ShopViewModel Get([FromUri] Guid id)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            return ShopManager.Instance.Get((Guid)id) as Shop;
+            return new ShopViewModel(ShopManager.Instance.Get(id) as IShop);
         }
 
         public List<ShopViewModel> Get(Guid tagUid, string tagName)
@@ -56,7 +61,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <param name="id">Идентификатор</param>
         /// <param name="editModel">Модель данных</param>
         /// <returns></returns>
-        public Shop Post(Guid id, [FromBody]ShopEditModel editModel)
+        public ShopViewModel Post(Guid id, [FromBody]ShopEditModel editModel)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -71,7 +76,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             editModel.ToShop(ref shop);
             ShopManager.Instance.SaveIsolate(shop);
 
-            return shop as Shop;
+            return new ShopViewModel(shop);
         }
 
         /// <summary>
@@ -79,7 +84,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// </summary>
         /// <param name="editModel"></param>
         /// <returns></returns>
-        public Shop Put([FromBody]ShopEditModel editModel)
+        public ShopViewModel Put([FromBody]ShopEditModel editModel)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -97,7 +102,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
             ShopManager.Instance.SaveIsolate(shop);
 
-            return shop as Shop;
+            return new ShopViewModel(shop);
         }
 
 

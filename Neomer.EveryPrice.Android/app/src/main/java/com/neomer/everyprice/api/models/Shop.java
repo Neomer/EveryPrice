@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.sql.Driver;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Shop implements Parcelable {
@@ -13,7 +15,7 @@ public class Shop implements Parcelable {
     private String Address;
     private double Lat;
     private double Lng;
-    private String Tags;
+    private List<Tag> Tags;
 
     protected Shop(Parcel in) {
         Uid = UUID.fromString(in.readString());
@@ -21,6 +23,8 @@ public class Shop implements Parcelable {
         Address = in.readString();
         Lat = in.readDouble();
         Lng = in.readDouble();
+        Tags = new ArrayList<>();
+        in.readTypedList(Tags, Tag.CREATOR);
     }
 
     public Shop(String name, String address, double lat, double lng, String tags) {
@@ -28,7 +32,14 @@ public class Shop implements Parcelable {
         Address = address;
         Lat = lat;
         Lng = lng;
-        Tags = tags;
+        if (tags != null)
+        {
+            Tags = new ArrayList<>();
+            String[] strings = tags.split(" ");
+            for (String s : strings) {
+                Tags.add(new Tag(s));
+            }
+        }
     }
 
     public static final Creator<Shop> CREATOR = new Creator<Shop>() {
@@ -95,13 +106,14 @@ public class Shop implements Parcelable {
         parcel.writeString(Address);
         parcel.writeDouble(Lat);
         parcel.writeDouble(Lng);
+        parcel.writeTypedList(Tags);
     }
 
-    public String getTags() {
+    public List<Tag> getTags() {
         return Tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<Tag> tags) {
         Tags = tags;
     }
 }

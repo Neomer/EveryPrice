@@ -28,9 +28,9 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// </summary>
         /// <param name="id">Идентификатор пользователя</param>
         /// <returns></returns>
-        public User Get(Guid id)
+        public UserViewModel Get(Guid id)
         {
-            return UserManager.Instance.Get(id) as User;
+            return new UserViewModel(UserManager.Instance.Get(id) as IUser);
         }
 
         /// <summary>
@@ -38,27 +38,27 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// </summary>
         /// <param name="authModel"></param>
         /// <returns></returns>
-        public User Post([FromBody]UserAuthModel authModel)
+        public UserWithTokenViewModel Post([FromBody]UserAuthModel authModel)
         {
             var user = UserManager.Instance.GetUserByUsername(authModel.Username) as IUser;
             if (user == null)
             {
                 throw new SignInFailedException();
             }
-            return SecurityManager.Instance.SignIn(user.Uid) as User;
+            return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(user.Uid));
         }
 
         /// <summary>
         /// Регистрация нового пользователя
         /// </summary>
         /// <param name="authModel"></param>
-        public User Put([FromBody]UserAuthModel authModel)
+        public UserWithTokenViewModel Put([FromBody]UserAuthModel authModel)
         {
             IUser user = new User();
             authModel.ToUser(ref user);
             UserManager.Instance.SaveIsolate(user);
 
-            return SecurityManager.Instance.SignIn(user.Uid) as User;
+            return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(user.Uid));
         }
 
         /// <summary>

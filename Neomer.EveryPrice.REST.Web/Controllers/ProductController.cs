@@ -12,7 +12,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class ProductController : ApiController
     {
-        public List<Product> Get(Guid shopUid)
+        public List<ProductViewModel> Get(Guid shopUid)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -25,11 +25,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                 return null;
             }
 
-            var products = ProductManager.Instance.GetProductsByShop(shop) as List<Product>;
-            return products;
+            var products = ProductManager.Instance.GetProductsByShop(shop);
+            if (products == null)
+            {
+                return null;
+            }
+
+            return products
+                .Select(_ => new ProductViewModel(_))
+                .ToList<ProductViewModel>();
         }
 
-        public Product Post(Guid uid, [FromBody] ProductEditModel productEditModel)
+        public ProductViewModel Post(Guid uid, [FromBody] ProductEditModel productEditModel)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -44,10 +51,10 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             productEditModel.ToProduct(ref product);
             ProductManager.Instance.SaveIsolate(product);
 
-            return product as Product;
+            return new ProductViewModel(product);
         }
 
-        public Product Put(Guid shopUid, [FromBody] ProductEditModel productEditModel)
+        public ProductViewModel Put(Guid shopUid, [FromBody] ProductEditModel productEditModel)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
@@ -70,7 +77,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             productEditModel.ToProduct(ref product);
             ProductManager.Instance.SaveIsolate(product);
 
-            return product as Product;
+            return new ProductViewModel(product);
         }
     }
 }

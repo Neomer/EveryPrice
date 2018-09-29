@@ -46,7 +46,7 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
         }
 
-        public IList<Product> GetProductsByShop(IShop shop)
+        public IList<IProduct> GetProductsByShop(IShop shop)
         {
             if (shop == null)
             {
@@ -66,9 +66,9 @@ namespace Neomer.EveryPrice.SDK.Managers
                 .AddEntity(typeof(Product));
 
             return NHibernateHelper.Instance.CurrentSession
-                .CreateCriteria<Product>()
+                .CreateCriteria<IProduct>()
                 .Add(Expression.Eq("Shop", shop))
-                .List<Product>();
+                .List<IProduct>();
         }
     }
 }

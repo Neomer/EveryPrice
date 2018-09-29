@@ -11,6 +11,8 @@ namespace Neomer.EveryPrice.REST.Web.Models
     {
         public double Value;
 
+        public string Unit;
+
         public void ToPrice(ref IPrice model)
         {
             if (model == null)
@@ -18,7 +20,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
                 return;
             }
             model.Value = Value;
-            model.Unit = "шт.";
+            model.Unit = Unit;
         }
     }
 }

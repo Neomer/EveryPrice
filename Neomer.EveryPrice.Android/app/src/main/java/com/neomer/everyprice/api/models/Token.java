@@ -7,7 +7,7 @@ import java.util.UUID;
 public class Token {
 
     private UUID Token;
-    private  Date TokenExpirationDate;
+    private Date TokenExpirationDate;
     private UUID Uid;
     private String Username;
 

@@ -6,6 +6,7 @@ public class TagFastSearchViewModel {
 
     private UUID Uid;
     private String Value;
+    private int EntityCount;
 
     public UUID getUid() {
         return Uid;
@@ -21,5 +22,9 @@ public class TagFastSearchViewModel {
 
     public void setValue(String value) {
         Value = value;
+    }
+
+    public int getEntityCount() {
+        return EntityCount;
     }
 }
