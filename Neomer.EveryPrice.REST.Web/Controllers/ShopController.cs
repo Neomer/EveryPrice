@@ -1,5 +1,6 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
 using Neomer.EveryPrice.SDK.Core;
+using Neomer.EveryPrice.SDK.Exceptions.Managers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
@@ -35,7 +36,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             {
                 return null;
             }
-            return new ShopViewModel(ShopManager.Instance.Get(id) as IShop);
+            var entity = ShopManager.Instance.Get(id) as IShop;
+            if (entity == null)
+            {
+                throw new NotFoundException();
+            }
+            return new ShopViewModel(entity);
         }
 
         public List<ShopViewModel> Get(Guid tagUid, string tagName)

@@ -24,7 +24,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             {
                 throw new NotFoundException();
             }
-            return new ImageViewModel();
+            return new ImageViewModel(image);
         }
     }
 }
