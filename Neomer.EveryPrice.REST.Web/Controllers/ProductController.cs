@@ -1,8 +1,10 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,8 +38,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                 .ToList<ProductViewModel>();
         }
 
-        public ProductViewModel Post(Guid uid, [FromBody] ProductEditModel productEditModel)
+        public async System.Threading.Tasks.Task<ProductViewModel> PostAsync(Guid uid, [FromBody] ProductEditModel productEditModel)
         {
+            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+            {
+                contentStream.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(contentStream))
+                {
+                    string rawContent = sr.ReadToEnd();
+                    Logger.Log.Debug(rawContent);
+                    // use raw content here
+                }
+            }
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
@@ -54,8 +66,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             return new ProductViewModel(product);
         }
 
-        public ProductViewModel Put(Guid shopUid, [FromBody] ProductEditModel productEditModel)
+        public async System.Threading.Tasks.Task<ProductViewModel> PutAsync(Guid shopUid, [FromBody] ProductEditModel productEditModel)
         {
+            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+            {
+                contentStream.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(contentStream))
+                {
+                    string rawContent = sr.ReadToEnd();
+                    Logger.Log.Debug(rawContent);
+                    // use raw content here
+                }
+            }
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
