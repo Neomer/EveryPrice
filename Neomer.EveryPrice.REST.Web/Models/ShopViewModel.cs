@@ -24,9 +24,13 @@ namespace Neomer.EveryPrice.REST.Web.Models
             Lat = shop.Lat;
             Lng = shop.Lng;
             Creator = new UserViewModel(shop.Creator);
-            Tags = shop.Tags?.Select(_ => new TagsViewModel(_))
+            Tags = shop.Tags == null ? null :
+                shop.Tags
+                    .Select(_ => new TagsViewModel(_))
                     .ToList<TagsViewModel>();
-            Images = shop.Images?.Select(_ => new ImagePreviewViewModel(_))
+            Images = shop.Images == null ? null :
+                shop.Images
+                    .Select(_ => new ImagePreviewViewModel(_))
                     .ToList<ImagePreviewViewModel>();
         }
 
