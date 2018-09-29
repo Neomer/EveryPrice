@@ -18,7 +18,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public string Address;
 
-        public string Tags;
+        public IList<TagEditModel> Tags;
 
         public void ToShop(ref IShop shopModel)
         {
@@ -31,24 +31,13 @@ namespace Neomer.EveryPrice.REST.Web.Models
             shopModel.Lat = this.Lat;
             shopModel.Lng = this.Lng;
             shopModel.Name = this.Name;
-            List<ITag> tagList = shopModel.Tags as List<ITag> ?? new List<ITag>();
-            var new_tags = Tags.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
-            foreach (var t in new_tags)
-            {
-                var tag = TagManager.Instance.FindTag(t);
-
-                if (tag == null)
-                {
-                    tag = new Tag()
+            shopModel.Tags = Tags == null ? null :
+                Tags
+                    .Select(_ => new Tag()
                     {
-                        Value = t,
-                        Shops = new List<IShop>() { shopModel }
-                    };
-                }
-                tagList.Add(tag);
-
-            }
-            shopModel.Tags = tagList;
+                        Value = _.Value
+                    })
+                    .ToList<ITag>();
         }
     }
 }
