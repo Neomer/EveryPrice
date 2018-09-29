@@ -1,10 +1,12 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
 using Neomer.EveryPrice.SDK.Core;
 using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -67,8 +69,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <param name="id">Идентификатор</param>
         /// <param name="editModel">Модель данных</param>
         /// <returns></returns>
-        public ShopViewModel Post(Guid id, [FromBody]ShopEditModel editModel)
+        public async System.Threading.Tasks.Task<ShopViewModel> PostAsync(Guid id, [FromBody]ShopEditModel editModel)
         {
+            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+            {
+                contentStream.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(contentStream))
+                {
+                    string rawContent = sr.ReadToEnd();
+                    Logger.Log.Debug(rawContent);
+                    // use raw content here
+                }
+            }
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
@@ -90,8 +102,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// </summary>
         /// <param name="editModel"></param>
         /// <returns></returns>
-        public ShopViewModel Put([FromBody]ShopEditModel editModel)
+        public async System.Threading.Tasks.Task<ShopViewModel> PutAsync([FromBody]ShopEditModel editModel)
         {
+            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+            {
+                contentStream.Seek(0, SeekOrigin.Begin);
+                using (var sr = new StreamReader(contentStream))
+                {
+                    string rawContent = sr.ReadToEnd();
+                    Logger.Log.Debug(rawContent);
+                    // use raw content here
+                }
+            }
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
