@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 
 msbuild.log
+/Neomer.EveryPrice.REST.Web/Logs
