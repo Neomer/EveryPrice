@@ -13,7 +13,7 @@ public class Product implements Parcelable {
 
     private UUID Uid;
     private String Name;
-    private List<Price> Prices;
+    private Price Price;
 
     public UUID getUid() {
         return Uid;
@@ -31,14 +31,6 @@ public class Product implements Parcelable {
         this.Name = name;
     }
 
-    public List<Price> getPrices() {
-        return Prices;
-    }
-
-    public void setPrices(List<Price> prices) {
-        this.Prices = prices;
-    }
-
     protected Product(Parcel in) {
         Uid = UUID.fromString(in.readString());
         Name = in.readString();
@@ -46,9 +38,7 @@ public class Product implements Parcelable {
 
     public Product(String name, double price) {
         Name = name;
-
-        Prices = new ArrayList<Price>();
-        Prices.add(new Price(NumericHelper.ToMoney(price), ""));
+        Price = new Price(price, "");
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -72,5 +62,13 @@ public class Product implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(Uid.toString());
         dest.writeString(Name);
+    }
+
+    public com.neomer.everyprice.api.models.Price getPrice() {
+        return Price;
+    }
+
+    public void setPrice(com.neomer.everyprice.api.models.Price price) {
+        Price = price;
     }
 }
