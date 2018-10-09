@@ -206,7 +206,8 @@
     <Compile Include="Models\ProductEditModel.cs" />
     <Compile Include="Models\ShopEditModel.cs" />
     <Compile Include="Models\TagEditModel.cs" />
-    <Compile Include="Models\TagsViewModel.cs" />
+    <Compile Include="Models\FindTagsViewModel.cs" />
+    <Compile Include="Models\TagViewModel.cs" />
     <Compile Include="Models\UserAuthModel.cs" />
     <Compile Include="Models\UserProfileEditModel.cs" />
     <Compile Include="Models\UserWithTokenViewModel.cs" />

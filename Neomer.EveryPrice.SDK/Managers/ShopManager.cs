@@ -63,9 +63,32 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
         }
 
-        public IList<Shop> GetShopsNear(Location location, double distance)
+		public IList<Shop> GetShopsNear(Location location, double distance, ITag tag)
+		{
+			if (tag == null)
+			{
+				return GetShopsNear(location, distance);
+			}
+
+			var query = NHibernateHelper.Instance.CurrentSession
+				.CreateSQLQuery(String.Format("select * from [EveryPrice].[dbo].[Shops] s left join (select s.[Uid], [EveryPrice].[dbo].[GEO_DISTANCE]( {0}, {1}, s.Lat, s.Lng) Distance from [EveryPrice].[dbo].[Shops] s) d on s.[Uid]=d.[Uid] left join [EveryPrice].[dbo].[Tag_Shop] ts on ts.[ShopUid] = s.[Uid] where d.Distance < {2} and ts.[TagUid] = '{3}' order by d.Distance;",
+					location.Latitude.ToString().Replace(',', '.'),
+					location.Longtitude.ToString().Replace(',', '.'),
+					distance.ToString().Replace(',', '.'),
+					tag.Uid))
+				.AddEntity(typeof(Shop));
+
+			return query.List<Shop>();
+		}
+
+		public IList<Shop> GetShopsNear(Location location, double distance)
         {
-            var query = NHibernateHelper.Instance.CurrentSession
+			if (location == null)
+			{
+				return null;
+			}
+
+			var query = NHibernateHelper.Instance.CurrentSession
                 .CreateSQLQuery(String.Format("select s.*, d.Distance from [EveryPrice].[dbo].[Shops] s left join (select s.[Uid], [EveryPrice].[dbo].[GEO_DISTANCE]( {0}, {1}, s.Lat, s.Lng) Distance from [EveryPrice].[dbo].[Shops] s) d on s.[Uid]=d.[Uid] where d.Distance < {2} order by d.Distance;",
                     location.Latitude.ToString().Replace(',', '.'),
                     location.Longtitude.ToString().Replace(',', '.'),

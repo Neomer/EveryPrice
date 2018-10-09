@@ -18,20 +18,32 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     {
         public List<ShopViewModel> Get(double lat, double lng, double distance)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
-            if (user == null)
-            {
-                return null;
-            }
-            var shopList = ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance);
-
-            return shopList == null ? null :
-                shopList
-                    .Select(_ => new ShopViewModel(_))
-                    .ToList<ShopViewModel>();
+			return Get(lat, lng, distance, null);
         }
 
-        public ShopViewModel Get([FromUri] Guid id)
+
+		public List<ShopViewModel> Get(double lat, double lng, double distance, Guid? tagUid)
+		{
+			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+			if (user == null)
+			{
+				return null;
+			}
+			ITag tag = null;
+			if (tagUid != null)
+			{
+				tag = TagManager.Instance.Get((Guid)tagUid) as ITag;
+			}
+
+			var shopList = ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance, tag);
+
+			return shopList == null ? null :
+				shopList
+					.Select(_ => new ShopViewModel(_))
+					.ToList<ShopViewModel>();
+		}
+
+		public ShopViewModel Get([FromUri] Guid id)
         {
             var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)

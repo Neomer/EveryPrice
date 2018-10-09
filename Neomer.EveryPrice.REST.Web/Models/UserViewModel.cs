@@ -14,7 +14,11 @@ namespace Neomer.EveryPrice.REST.Web.Models
         }
 
         public UserViewModel(IUser user)
-        {
+        { 
+			if (user == null)
+			{
+				return;
+			}
             Username = user.Username;
             Uid = user.Uid;
         }
