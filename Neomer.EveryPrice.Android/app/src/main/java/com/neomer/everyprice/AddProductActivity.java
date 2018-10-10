@@ -12,6 +12,7 @@ import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.WebApiException;
 
 public class AddProductActivity extends AppCompatActivity {
 
@@ -57,7 +58,12 @@ public class AddProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable t) {
-                Toast.makeText(AddProductActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                String msg = (t instanceof WebApiException) ?
+                        ((WebApiException) t).getExceptionMessage() :
+                        t.getMessage().isEmpty() ?
+                                "TagFastSearch() exception" :
+                                t.getMessage();
+                Toast.makeText(AddProductActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         });
     }
