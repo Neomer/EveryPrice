@@ -51,8 +51,8 @@ namespace Neomer.EveryPrice.SDK.Managers
 						var tagExists = TagManager.Instance.FindTag(tag.Value);
 						if (tagExists != null)
 						{
-							tag.Uid = tagExists.Uid;
-							TagManager.Instance.Update(tag);
+							tagExists.Shops.Add(shop);
+							TagManager.Instance.Save(tagExists);
 						}
 						else
 						{
