@@ -113,7 +113,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
     }
 
     private void moveToEditInfoActivity() {
-        Intent intent = new Intent(this, AddPriceActivity.class);
+        Intent intent = new Intent(this, AddShopActivity.class);
         intent.putExtra(Shop.class.getCanonicalName(), shop);
         startActivityForResult(intent, RESULT_FOR_ADD_PRICE);
     }

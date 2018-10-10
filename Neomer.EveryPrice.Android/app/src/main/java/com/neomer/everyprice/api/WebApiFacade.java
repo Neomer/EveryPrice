@@ -55,8 +55,8 @@ public final class WebApiFacade {
 
         try {
             retrofit = new Retrofit.Builder()
-                    //.baseUrl("http://46.147.155.8:8000/") //Базовая часть адреса
-                    .baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
+                    .baseUrl("http://46.147.157.189:8000/") //Базовая часть адреса
+                    //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
                     //.baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
@@ -270,6 +270,50 @@ public final class WebApiFacade {
         }
 
         Call<Shop> call = securityApi.CreateShop(token.getToken(), shop);
+        call.enqueue(new Callback<Shop>() {
+            @Override
+            public void onResponse(Call<Shop> call, Response<Shop> response) {
+                if (checkErrorStatus(response.code(), response.errorBody(), callback))
+                {
+                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
+                        CreateShop(shop, callback, retry + 1);
+                    }
+                    return;
+                }
+
+                if (callback != null) {
+                    callback.onSuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Shop> call, Throwable t) {
+                if (callback != null) {
+                    callback.onFailure(t);
+                }
+            }
+        });
+    }
+
+    public void EditShop(Shop shop, final WebApiCallback<Shop> callback) {
+        EditShop(shop, callback, 0);
+    }
+
+    private void EditShop(final Shop shop, final WebApiCallback<Shop> callback, final int retry) {
+        if (securityApi == null) {
+            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
+            return;
+        }
+
+        if (shop.getUid() == null) {
+            throw new IllegalArgumentException("Shop uid is null!");
+        }
+
+        if (token == null) {
+            callback.onFailure(new SignInNeededException());
+        }
+
+        Call<Shop> call = securityApi.EditShop(token.getToken(), shop.getUid(), shop);
         call.enqueue(new Callback<Shop>() {
             @Override
             public void onResponse(Call<Shop> call, Response<Shop> response) {

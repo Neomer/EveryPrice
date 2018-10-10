@@ -27,19 +27,16 @@ public class Shop implements Parcelable {
         in.readTypedList(Tags, Tag.CREATOR);
     }
 
+    public Shop() {
+
+    }
+
     public Shop(String name, String address, double lat, double lng, String tags) {
         Name = name;
         Address = address;
         Lat = lat;
         Lng = lng;
-        if (tags != null)
-        {
-            Tags = new ArrayList<>();
-            String[] strings = tags.split(" ");
-            for (String s : strings) {
-                Tags.add(new Tag(s));
-            }
-        }
+        setTags(tags);
     }
 
     public static final Creator<Shop> CREATOR = new Creator<Shop>() {
@@ -115,5 +112,20 @@ public class Shop implements Parcelable {
 
     public void setTags(List<Tag> tags) {
         Tags = tags;
+    }
+
+    public void setTags(String tags) {
+        if (tags != null)
+        {
+            if (Tags == null) {
+                Tags = new ArrayList<>();
+            } else {
+                Tags.clear();
+            }
+            String[] strings = tags.split(" ");
+            for (String s : strings) {
+                Tags.add(new Tag(s));
+            }
+        }
     }
 }
