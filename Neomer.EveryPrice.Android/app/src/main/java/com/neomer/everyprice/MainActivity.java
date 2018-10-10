@@ -34,6 +34,7 @@ import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.TagViewModel;
+import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 
@@ -170,7 +171,12 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
                             @Override
                             public void onFailure(Throwable t) {
-                                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                                String msg = (t instanceof WebApiException) ?
+                                        ((WebApiException) t).getExceptionMessage() :
+                                        t.getMessage().isEmpty() ?
+                                                "TagFastSearch() exception" :
+                                                t.getMessage();
+                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -302,7 +308,12 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                 if (t instanceof SignInNeededException) {
                     moveToSecurityActivity();
                 } else {
-                    Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getExceptionMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "TagFastSearch() exception" :
+                                    t.getMessage();
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -337,14 +348,20 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             MyLocationListener.getInstance().onLocationChanged(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
         }
         catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+            String msg = ex.getMessage().isEmpty() ?
+                            "getLastKnownLocation(LocationManager.NETWORK_PROVIDER) exception" :
+                            ex.getMessage();
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
 
         try {
             MyLocationListener.getInstance().onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
         }
         catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+            String msg = ex.getMessage().isEmpty() ?
+                    "getLastKnownLocation(LocationManager.GPS_PROVIDER) exception" :
+                    ex.getMessage();
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
     }

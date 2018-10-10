@@ -25,6 +25,7 @@ import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Tag;
+import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.NumericHelper;
 
@@ -203,7 +204,12 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                 if (t instanceof SignInNeededException) {
                     moveToSecurityActivity();
                 } else {
-                    Toast.makeText(AddShopActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getExceptionMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "TagFastSearch() exception" :
+                                    t.getMessage();
+                    Toast.makeText(AddShopActivity.this, msg, Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -253,21 +259,30 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         }
         catch (Exception ex)
         {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+            String msg = ex.getMessage().isEmpty() ?
+                    "MyLocationListener.getInstance().getLastLocation() exception" :
+                    ex.getMessage();
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
 
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, MyLocationListener.getInstance());
         }
         catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+            String msg = ex.getMessage().isEmpty() ?
+                    "requestLocationUpdates(LocationManager.GPS_PROVIDER exception" :
+                    ex.getMessage();
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
 
         try {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, MyLocationListener.getInstance());
         }
         catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+            String msg = ex.getMessage().isEmpty() ?
+                    "requestLocationUpdates(LocationManager.NETWORK_PROVIDER exception" :
+                    ex.getMessage();
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
     }
 
