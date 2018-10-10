@@ -69,6 +69,7 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+*.lnk
 
 # Chutzpah Test files
 _Chutzpah*
@@ -261,3 +262,5 @@ __pycache__/
 *.pyc
 
 msbuild.log
+/Neomer.EveryPrice.REST.Web/Logs
+/Neomer.EveryPrice.REST.Web/Logs/*

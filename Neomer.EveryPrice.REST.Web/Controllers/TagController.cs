@@ -12,7 +12,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 {
     public class TagController : ApiController
     {
-        public List<TagsViewModel> Get(string part)
+        public FindTagsViewModel Get(string part)
         {
             if (string.IsNullOrEmpty(part))
             {
@@ -21,13 +21,17 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
             var tagList = TagManager.Instance.FindTags(part);
 
-            return tagList.Select(_ => new TagsViewModel()
-            {
-                Uid = _.Uid,
-                Value = _.Value,
-                EntityCount = _.Shops.Count
-            })
-            .ToList<TagsViewModel>();
+			var result = new FindTagsViewModel(part);
+			result.Tags = tagList == null ? null :
+                tagList.Select(_ => new TagViewModel()
+                {
+                    Uid = _.Uid,
+                    Value = _.Value,
+                    EntityCount = _.Shops.Count
+                })
+                .ToList<TagViewModel>();
+
+			return result;
         }
     }
 }

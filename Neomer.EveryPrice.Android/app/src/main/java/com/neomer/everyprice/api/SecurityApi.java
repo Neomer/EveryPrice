@@ -34,6 +34,9 @@ public interface SecurityApi {
     @GET("/api/shop")
     Call<List<Shop>> GetNearShops(@Header("Token") UUID token, @Query("Lat") double latitude, @Query("Lng") double longtitude, @Query("Distance") double distance);
 
+    @GET("/api/shop")
+    Call<List<Shop>> GetNearShops(@Header("Token") UUID token, @Query("Lat") double latitude, @Query("Lng") double longtitude, @Query("Distance") double distance, @Query("TagUid") UUID tagUid);
+
     @PUT("/api/shop")
     Call<Shop> CreateShop(@Header("Token") UUID token, @Body Shop shopModel);
     //endregion Shop controller
@@ -47,7 +50,8 @@ public interface SecurityApi {
     //endregion
 
     //region Tag controller
-    Call<List<TagFastSearchViewModel>> FindTags(@Header("Token") UUID token, @Query("part") String tagPart);
+    @GET("/api/tag")
+    Call<TagFastSearchViewModel> FindTags(@Header("Token") UUID token, @Query("part") String tagPart);
     //endregion
 
 }

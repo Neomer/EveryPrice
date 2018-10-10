@@ -1,30 +1,31 @@
 package com.neomer.everyprice.api.models;
 
+import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class TagFastSearchViewModel {
 
-    private UUID Uid;
-    private String Value;
-    private int EntityCount;
+    private String Suggestion;
+    private List<TagViewModel> Tags;
 
-    public UUID getUid() {
-        return Uid;
+    public TagFastSearchViewModel(String suggestion) {
+        Suggestion = suggestion;
+        Tags = new ArrayList<>();
     }
 
-    public void setUid(UUID uid) {
-        Uid = uid;
+    public String getSuggestion() {
+        return Suggestion;
     }
 
-    public String getValue() {
-        return Value;
+    public void setSuggestion(String suggestion) {
+        Suggestion = suggestion;
     }
 
-    public void setValue(String value) {
-        Value = value;
-    }
-
-    public int getEntityCount() {
-        return EntityCount;
+    @Nullable
+    public List<TagViewModel> getTags() {
+        return Tags;
     }
 }

@@ -16,27 +16,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.ImageButton;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.TagFastSearchViewModel;
+import com.neomer.everyprice.api.models.TagViewModel;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
+    private SearchViewTagSuggestionAdapter searchViewTagSuggestionAdapter;
+    private SearchView searchView;
 
     @Override
     protected void onPause() {
@@ -78,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SearchView searchView = findViewById(R.id.MainActivity_tagSearch);
-
         MyLocationListener.getInstance().registerEventListener(this);
 
         ImageButton btnRefresh = findViewById(R.id.MainActivity_btnRefresh);
@@ -92,11 +99,51 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
         setupRecyclerView();
         setupFloatingButton();
-        setupFastSearch();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        if (menuInflater != null) {
+            menuInflater.inflate(R.menu.main_menu, menu);
+
+            MenuItem menuItem = menu.findItem(R.id.mainmenu_action_search);
+            if (menuItem != null) {
+                searchView = (SearchView) menuItem.getActionView();
+                setupFastSearch();
+            }
+        }
+        return true;
     }
 
     private void setupFastSearch() {
-        SearchView searchView = findViewById(R.id.MainActivity_tagSearch);
+        if (searchView == null) {
+            return;
+        }
+
+        searchViewTagSuggestionAdapter = new SearchViewTagSuggestionAdapter(
+                this,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //searchView.setSuggestionsAdapter(searchViewTagSuggestionAdapter);
+        searchView.setSuggestionsAdapter(searchViewTagSuggestionAdapter);
+        searchView.setIconified(false);
+
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                TagViewModel tag = searchViewTagSuggestionAdapter.getTags().get(position);
+                if (tag != null) {
+                    loadListOfNearestShops(tag);
+                }
+                return true;
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -104,7 +151,31 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(final String newText) {
+                if (newText == null) {
+                    return false;
+                }
+
+                if (newText.isEmpty()) {
+                    loadListOfNearestShops();
+                } else {
+                    if (newText.length() > 2) {
+                        WebApiFacade.getInstance().TagFastSearch(newText, new WebApiCallback<TagFastSearchViewModel>() {
+                            @Override
+                            public void onSuccess(TagFastSearchViewModel result) {
+                                if (result != null && result.getSuggestion().equalsIgnoreCase(newText)) {
+                                    searchViewTagSuggestionAdapter.applySuggestions(result.getTags());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+
                 return false;
             }
         });
@@ -205,12 +276,16 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void loadListOfNearestShops() {
+        loadListOfNearestShops(null);
+    }
+
+    private void loadListOfNearestShops(@Nullable TagViewModel tag) {
         if (currentLocation == null) {
             return;
         }
         recyclerView.setAdapter(new RecyclerViewUpdateAdapter());
 
-        WebApiFacade.getInstance().GetNearestShops(currentLocation, 1000, new WebApiCallback<List<Shop>>() {
+        WebApiFacade.getInstance().GetNearestShops(currentLocation, 1000, tag == null ? null : tag.getUid(), new WebApiCallback<List<Shop>>() {
             @Override
             public void onSuccess(List<Shop> result) {
                 if (result.isEmpty()) {

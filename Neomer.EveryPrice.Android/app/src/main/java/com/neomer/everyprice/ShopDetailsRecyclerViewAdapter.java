@@ -39,11 +39,11 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
         final Product product = productList.get(i);
         if (product != null) {
             viewHolder.getTextViewName().setText(product.getName());
-            List<Price> priceList = product.getPrices();
+            Price price = product.getPrice();
             viewHolder.getTextViewPrice().setText(
-                    priceList == null || priceList.isEmpty() ?
+                    price == null ?
                             viewHolder.getContext().getResources().getText(R.string.no_price) :
-                            NumericHelper.getInstance().FormatToMoney(priceList.get(0).getValue()));
+                            NumericHelper.getInstance().FormatToMoney(price.getValue()));
         }
 
         viewHolder.getConstraintLayoutRoot().setOnClickListener(new View.OnClickListener() {

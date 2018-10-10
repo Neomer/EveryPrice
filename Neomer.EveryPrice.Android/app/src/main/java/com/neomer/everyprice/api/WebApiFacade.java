@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
@@ -15,6 +16,7 @@ import com.neomer.everyprice.api.models.WebApiException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -165,10 +167,14 @@ public final class WebApiFacade {
     }
 
     public void GetNearestShops(final Location location, final double distance, final WebApiCallback<List<Shop>> callback) {
-        GetNearestShops(location, distance, callback, 0);
+        GetNearestShops(location, distance, null, callback, 0);
     }
 
-    private void GetNearestShops(final Location location, final double distance, final WebApiCallback<List<Shop>> callback, final int retry) {
+    public void GetNearestShops(final Location location, final double distance, final UUID tagUid, final WebApiCallback<List<Shop>> callback) {
+        GetNearestShops(location, distance, tagUid, callback, 0);
+    }
+
+    private void GetNearestShops(final Location location, final double distance, final UUID tagUid, final WebApiCallback<List<Shop>> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -178,14 +184,19 @@ public final class WebApiFacade {
             callback.onFailure(new SignInNeededException());
         }
 
-        Call<List<Shop>> call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance);
+        Call<List<Shop>> call;
+        if (tagUid == null) {
+            call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance);
+        } else {
+            call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance, tagUid);
+        }
         call.enqueue(new Callback<List<Shop>>() {
             @Override
             public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
                 if (checkErrorStatus(response.code(), response.errorBody(), callback))
                 {
                     if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
-                        GetNearestShops(location, distance, callback, retry + 1);
+                        GetNearestShops(location, distance, tagUid, callback, retry + 1);
                     }
                     return;
                 }
@@ -324,11 +335,11 @@ public final class WebApiFacade {
         });
     }
 
-    public void TagFastSearch(final String tagPart, WebApiCallback<List<TagFastSearchViewModel>> callback) {
+    public void TagFastSearch(final String tagPart, WebApiCallback<TagFastSearchViewModel> callback) {
         TagFastSearch(tagPart, callback, 0);
     }
 
-    private void TagFastSearch(final String tagPart, final WebApiCallback<List<TagFastSearchViewModel>> callback, final int retry) {
+    private void TagFastSearch(final String tagPart, final WebApiCallback<TagFastSearchViewModel> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -338,10 +349,10 @@ public final class WebApiFacade {
             callback.onFailure(new SignInNeededException());
         }
 
-        Call<List<TagFastSearchViewModel>> call = securityApi.FindTags(token.getToken(), tagPart);
-        call.enqueue(new Callback<List<TagFastSearchViewModel>>() {
+        Call<TagFastSearchViewModel> call = securityApi.FindTags(token.getToken(), tagPart);
+        call.enqueue(new Callback<TagFastSearchViewModel>() {
             @Override
-            public void onResponse(Call<List<TagFastSearchViewModel>> call, Response<List<TagFastSearchViewModel>> response) {
+            public void onResponse(Call<TagFastSearchViewModel> call, Response<TagFastSearchViewModel> response) {
                 if (checkErrorStatus(response.code(), response.errorBody(), callback))
                 {
                     if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
@@ -356,7 +367,7 @@ public final class WebApiFacade {
             }
 
             @Override
-            public void onFailure(Call<List<TagFastSearchViewModel>> call, Throwable t) {
+            public void onFailure(Call<TagFastSearchViewModel> call, Throwable t) {
                 if (callback != null) {
                     callback.onFailure(t);
                 }

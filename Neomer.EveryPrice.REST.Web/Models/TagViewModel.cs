@@ -8,14 +8,14 @@ namespace Neomer.EveryPrice.REST.Web.Models
 {
 
     [Serializable]
-    public class TagsViewModel
+    public class TagViewModel
     {
-        public TagsViewModel()
+        public TagViewModel()
         {
 
         }
 
-        public TagsViewModel(ITag tag)
+        public TagViewModel(ITag tag)
         {
             Uid = tag.Uid;
             Value = tag.Value;
