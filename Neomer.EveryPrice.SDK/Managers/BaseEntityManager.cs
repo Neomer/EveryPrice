@@ -33,6 +33,11 @@ namespace Neomer.EveryPrice.SDK.Managers
             NHibernateHelper.Instance.CurrentSession.Delete(entity);
         }
 
+		public virtual void Update(IEntity entity)
+		{
+			NHibernateHelper.Instance.CurrentSession.Update(entity);
+		}
+
         /// <summary>
         /// Сохраняет сущность в БД во внешней транзакции
         /// </summary>

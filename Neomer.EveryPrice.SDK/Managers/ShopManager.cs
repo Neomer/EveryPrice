@@ -52,9 +52,13 @@ namespace Neomer.EveryPrice.SDK.Managers
 						if (tagExists != null)
 						{
 							tag.Uid = tagExists.Uid;
+							TagManager.Instance.Update(tag);
 						}
-						TagManager.Instance.Save(tag);
-                    }
+						else
+						{
+							TagManager.Instance.Save(tag);
+						}
+					}
                 }
                 try
                 {
