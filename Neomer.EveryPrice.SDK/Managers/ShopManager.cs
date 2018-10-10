@@ -48,7 +48,11 @@ namespace Neomer.EveryPrice.SDK.Managers
                 {
                     foreach (var tag in shop.Tags)
                     {
-                        TagManager.Instance.Save(tag);
+						var tagExists = TagManager.Instance.FindTag(tag.Value) != null;
+						if (!tagExists)
+						{
+							TagManager.Instance.Save(tag);
+						}
                     }
                 }
                 try
