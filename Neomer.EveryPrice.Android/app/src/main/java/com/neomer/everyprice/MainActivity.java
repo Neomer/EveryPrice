@@ -47,9 +47,11 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
     private SearchViewTagSuggestionAdapter searchViewTagSuggestionAdapter;
     private SearchView searchView;
+    private boolean mIsResumed;
 
     @Override
     protected void onPause() {
+        mIsResumed = false;
         stopListenLocation();
 
         super.onPause();
@@ -57,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     protected void onResume() {
+        mIsResumed = true;
         requestLocationPermission();
-
         super.onResume();
     }
 
