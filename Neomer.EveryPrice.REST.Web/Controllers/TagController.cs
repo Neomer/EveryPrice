@@ -14,11 +14,15 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     {
         public FindTagsViewModel Get(string part)
         {
-            if (string.IsNullOrEmpty(part))
+			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+			if (user == null)
+			{
+				return null;
+			}
+			if (string.IsNullOrEmpty(part))
             {
                 return null;
             }
-
             var tagList = TagManager.Instance.FindTags(part);
 
 			var result = new FindTagsViewModel(part);
