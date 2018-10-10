@@ -39,6 +39,9 @@ public interface SecurityApi {
 
     @PUT("/api/shop")
     Call<Shop> CreateShop(@Header("Token") UUID token, @Body Shop shopModel);
+
+    @POST("/api/shop")
+    Call<Shop> EditShop(@Header("Token") UUID token, @Query("Id") UUID id,  @Body Shop shopModel);
     //endregion Shop controller
 
     //region Product controller

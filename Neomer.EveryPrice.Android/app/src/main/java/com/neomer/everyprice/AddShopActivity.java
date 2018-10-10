@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.NumericHelper;
 
@@ -34,9 +36,13 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
     public final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     public final static int REQUEST_LOCATION_CODE = 0;
 
+    public final static String LOCATION_PROVIDER_SAVED = "SavedLocation";
+
     private LocationManager locationManager;
     private Location currentLocation = null;
     private Geocoder geocoder;
+
+    private Shop shop;
 
     @Override
     public void onLocationReceived(Location location) {
@@ -102,6 +108,30 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         });
 
         geocoder = new Geocoder(this);
+
+        shop = (Shop) getIntent().getParcelableExtra(Shop.class.getCanonicalName());
+        if (shop != null) {
+            EditText txtName = findViewById(R.id.addshop_tvName);
+            EditText txtAddress = findViewById(R.id.addshop_tvAddress);
+            EditText txtTags = findViewById(R.id.addshop_txtTags);
+
+            txtName.setText(shop.getName());
+            txtAddress.setText(shop.getAddress());
+
+            String sTags = "";
+            if (shop.getTags() != null) {
+                for (Tag t : shop.getTags()) {
+                    sTags += t.getValue() + " ";
+                }
+            }
+            txtTags.setText(sTags);
+
+            Location location = new Location(LOCATION_PROVIDER_SAVED);
+            location.setLongitude(shop.getLng());
+            location.setLatitude(shop.getLat());
+            location.setAccuracy(0);
+            onLocationReceived(location);
+        }
     }
 
     @Override
@@ -151,13 +181,17 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         EditText txtAddress = findViewById(R.id.addshop_tvAddress);
         EditText txtTags = findViewById(R.id.addshop_txtTags);
 
-        Shop shop = new Shop(txtName.getText().toString(),
-                txtAddress.getText().toString(),
-                currentLocation.getLatitude(),
-                currentLocation.getLongitude(),
-                txtTags.getText().toString());
+        boolean isNew = shop == null;
+        if (shop == null) {
+            shop = new Shop();
+        }
+        shop.setName(txtName.getText().toString());
+        shop.setAddress(txtAddress.getText().toString());
+        shop.setLat(currentLocation.getLatitude());
+        shop.setLng(currentLocation.getLongitude());
+        shop.setTags(txtTags.getText().toString());
 
-        WebApiFacade.getInstance().CreateShop(shop, new WebApiCallback<Shop>() {
+        WebApiCallback<Shop> callback = new WebApiCallback<Shop>() {
             @Override
             public void onSuccess(Shop result) {
                 setResult(RESULT_OK, null);
@@ -172,7 +206,13 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                     Toast.makeText(AddShopActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-        });
+        };
+
+        if (isNew) {
+            WebApiFacade.getInstance().CreateShop(shop, callback);
+        } else {
+            WebApiFacade.getInstance().EditShop(shop, callback);
+        }
     }
 
     private void moveToSecurityActivity() {
