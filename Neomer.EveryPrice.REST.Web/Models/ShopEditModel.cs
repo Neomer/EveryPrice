@@ -20,25 +20,26 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public IList<TagEditModel> Tags;
 
-        public void ToShop(ref IShop shopModel)
-        {
-            if (shopModel == null)
-            {
-                return;
-            }
+		public void ToShop(ref IShop shopModel)
+		{
+			if (shopModel == null)
+			{
+				return;
+			}
 
-            shopModel.Address = this.Address;
-            shopModel.Lat = this.Lat;
-            shopModel.Lng = this.Lng;
-            shopModel.Name = this.Name;
-            shopModel.Tags = Tags == null ? null :
-                Tags
-                    .Where(_ => !String.IsNullOrEmpty(_.Value))
-                    .Select(_ => new Tag()
-                    {
-                        Value = _.Value
-                    })
-                    .ToList<ITag>();
+			shopModel.Address = this.Address;
+			shopModel.Lat = this.Lat;
+			shopModel.Lng = this.Lng;
+			shopModel.Name = this.Name;
+			if (Tags != null)
+			{
+				var tags = Tags
+								.Distinct()
+								.Where(_ => !String.IsNullOrEmpty(_.Value) && _.Value.Length > 2)
+								.Select(_ => TagManager.Instance.FindTag(_.Value) ?? new Tag() { Value = _.Value })
+								.ToList<ITag>();
+				shopModel.Tags = shopModel.Tags.Union(tags).ToList<ITag>();
+			}
         }
     }
 }
