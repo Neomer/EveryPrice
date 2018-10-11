@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class WebApiFacade {
 
-    public static int WEBAPI_RETRY_COUNT = 10;
+    public static int WEBAPI_RETRY_COUNT = 0;
 
     private static WebApiFacade instance;
 
