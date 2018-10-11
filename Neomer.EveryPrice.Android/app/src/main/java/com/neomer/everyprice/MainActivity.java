@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -89,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MyLocationListener.getInstance().registerEventListener(this);
 
         ImageButton btnRefresh = findViewById(R.id.MainActivity_btnRefresh);
         btnRefresh.setOnClickListener(new View.OnClickListener() {
@@ -307,13 +306,14 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
             @Override
             public void onFailure(Throwable t) {
+                Log.d("app", t.toString());
                 if (t instanceof SignInNeededException) {
                     moveToSecurityActivity();
                 } else {
                     String msg = (t instanceof WebApiException) ?
                             ((WebApiException) t).getExceptionMessage() :
                             t.getMessage().isEmpty() ?
-                                    "TagFastSearch() exception" :
+                                    "GetNearestShops() exception" :
                                     t.getMessage();
                     Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 }
@@ -336,6 +336,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             }, LOCATION_PERMISSION_REQUEST_CODE);
             return;
         }
+        MyLocationListener.getInstance().registerEventListener(this);
+
         setupLocationListener();
     }
 
@@ -369,6 +371,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void stopListenLocation() {
+        MyLocationListener.getInstance().unregisterEventListener(this);
+
         locationManager.removeUpdates(MyLocationListener.getInstance());
         locationManager = null;
     }
