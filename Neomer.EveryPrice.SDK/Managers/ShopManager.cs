@@ -52,7 +52,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 					}
                 }
 				*/
-				base.Save(shop);
+				Save(shop);
 				try
 				{
                     tr.Commit();

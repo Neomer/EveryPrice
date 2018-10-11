@@ -28,17 +28,17 @@ namespace Neomer.EveryPrice.REST.Web.Models
 			}
 
 			shopModel.Address = this.Address;
-			shopModel.Lat = this.Lat;
-			shopModel.Lng = this.Lng;
-			shopModel.Name = this.Name;
+
 			if (Tags != null)
 			{
-				var tags = Tags
+				shopModel.Tags = Tags
 								.Distinct()
 								.Where(_ => !String.IsNullOrEmpty(_.Value) && _.Value.Length > 2)
 								.Select(_ => TagManager.Instance.FindTag(_.Value) ?? new Tag() { Value = _.Value })
 								.ToList<ITag>();
-				shopModel.Tags = shopModel.Tags.Union(tags).ToList<ITag>();
+			} else
+			{
+				shopModel.Tags = null;
 			}
         }
     }
