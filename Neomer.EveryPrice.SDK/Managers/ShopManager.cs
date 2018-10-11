@@ -43,25 +43,18 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
             using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
             {
-                base.Save(shop);
-                if (shop.Tags != null)
-                {
-                    foreach (var tag in shop.Tags)
-                    {
-						var tagExists = TagManager.Instance.FindTag(tag.Value);
-						if (tagExists != null)
-						{
-							tagExists.Shops.Add(shop);
-							TagManager.Instance.Save(tagExists);
-						}
-						else
-						{
-							TagManager.Instance.Save(tag);
-						}
+				/*
+				if (shop.Tags != null)
+				{
+					foreach (var t in shop.Tags)
+					{
+						TagManager.Instance.Save(t);
 					}
                 }
-                try
-                {
+				*/
+				base.Save(shop);
+				try
+				{
                     tr.Commit();
                 }
                 catch (Exception ex)

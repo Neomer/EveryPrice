@@ -1,4 +1,5 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using System;
@@ -14,6 +15,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     {
         public FindTagsViewModel Get(string part)
         {
+			Logger.Log.Debug("Request :: TagController.Get(" + part + ")");
+
 			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
 			if (user == null)
 			{

@@ -24,6 +24,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
 		public List<ShopViewModel> Get(double lat, double lng, double distance, Guid? tagUid)
 		{
+			Logger.Log.Debug("Request[GET] :: ShopController.Get(" + lat + ", " + lng + ", " + distance + ", " + tagUid + ")");
 			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
 			if (user == null)
 			{
@@ -45,7 +46,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
 		public ShopViewModel Get([FromUri] Guid id)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+			Logger.Log.Debug("Request[GET] :: ShopController.Get(" + id + ")");
+			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
                 return null;
@@ -60,7 +62,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
         public List<ShopViewModel> Get(Guid tagUid, string tagName)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+			Logger.Log.Debug("Request[GET] :: ShopController.Get(" + tagUid + ", " + tagName + ")");
+			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
             if (user == null)
             {
                 return null;
@@ -83,7 +86,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public async System.Threading.Tasks.Task<ShopViewModel> PostAsync(Guid id, [FromBody]ShopEditModel editModel)
         {
-            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+			Logger.Log.Debug("Request[POST] :: ShopController.PostAsync(" + id + ")");
+			using (var contentStream = await Request.Content.ReadAsStreamAsync())
             {
                 contentStream.Seek(0, SeekOrigin.Begin);
                 using (var sr = new StreamReader(contentStream))
@@ -116,7 +120,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public async System.Threading.Tasks.Task<ShopViewModel> PutAsync([FromBody]ShopEditModel editModel)
         {
-            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+			Logger.Log.Debug("Request[PUT] :: ShopController.PutAsync()");
+			using (var contentStream = await Request.Content.ReadAsStreamAsync())
             {
                 contentStream.Seek(0, SeekOrigin.Begin);
                 using (var sr = new StreamReader(contentStream))
