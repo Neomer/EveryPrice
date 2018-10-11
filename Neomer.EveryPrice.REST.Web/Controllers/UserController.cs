@@ -32,7 +32,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public UserViewModel Get(Guid id)
         {
-            var entity = UserManager.Instance.Get(id) as IUser;
+			Logger.Log.Debug("Request[Get] :: UserController.Get(" + id + ")");
+			var entity = UserManager.Instance.Get(id) as IUser;
             if (entity == null)
             {
                 throw new NotFoundException();
@@ -47,7 +48,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public async System.Threading.Tasks.Task<UserWithTokenViewModel> PostAsync([FromBody]UserAuthModel authModel)
         {
-            using (var contentStream = await Request.Content.ReadAsStreamAsync())
+			Logger.Log.Debug("Request[POST] :: UserController.PostAsync()");
+			using (var contentStream = await Request.Content.ReadAsStreamAsync())
             {
                 contentStream.Seek(0, SeekOrigin.Begin);
                 using (var sr = new StreamReader(contentStream))

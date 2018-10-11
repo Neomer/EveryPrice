@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class WebApiFacade {
 
-    public static int WEBAPI_RETRY_COUNT = 10;
+    public static int WEBAPI_RETRY_COUNT = 0;
 
     private static WebApiFacade instance;
 
@@ -55,8 +55,8 @@ public final class WebApiFacade {
 
         try {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://46.147.157.189:8000/") //Базовая часть адреса
-                    //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
+                    //.baseUrl("http://46.147.157.189:8000/") //Базовая часть адреса
+                    .baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
                     //.baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
