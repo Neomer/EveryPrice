@@ -1,7 +1,6 @@
 package com.neomer.everyprice;
 
 import android.Manifest;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,23 +22,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.neomer.everyprice.api.SignInNeededException;
-import com.neomer.everyprice.api.WebApiCallback;
+import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.commands.GetNearShopsCommand;
+import com.neomer.everyprice.api.commands.TagsSuggestionsCommand;
 import com.neomer.everyprice.api.models.Shop;
+import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.TagViewModel;
 import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.GeoLocation;
+import com.neomer.everyprice.core.IBeforeExecuteListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
 
@@ -47,20 +49,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
     private SearchViewTagSuggestionAdapter searchViewTagSuggestionAdapter;
     private SearchView searchView;
-
-    @Override
-    protected void onPause() {
-        stopListenLocation();
-
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        requestLocationPermission();
-
-        super.onResume();
-    }
 
     @Override
     public void onLocationReceived(Location location) {
@@ -76,7 +64,18 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private Location currentLocation = null;
     private ShopRecyclerViewAdapter shopRecyclerViewAdapter;
     private FloatingActionButton floatingActionButton;
+    private Tag selectedTag;
 
+    /**
+     * Команда для получения списка ближайших магазинов
+     */
+    private GetNearShopsCommand nearShopsCommand;
+    /**
+     * Команда для получения списка тэгов
+     */
+    private TagsSuggestionsCommand tagsSuggestionsCommand;
+
+    //region Activity overridden methods
     @Override
     protected void onDestroy() {
         MyLocationListener.getInstance().unregisterEventListener(this);
@@ -90,13 +89,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
         MyLocationListener.getInstance().registerEventListener(this);
 
-        ImageButton btnRefresh = findViewById(R.id.MainActivity_btnRefresh);
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadListOfNearestShops();
-            }
-        });
+        createCommands();
+
 
         setupRecyclerView();
         setupFloatingButton();
@@ -115,6 +109,92 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             }
         }
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        stopListenLocation();
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        requestLocationPermission();
+
+        super.onResume();
+    }
+
+    //endregion
+
+    private void createCommands() {
+
+        //region GetNearShopsCommand - Команда для получения списка ближайших магазинов
+        nearShopsCommand = new GetNearShopsCommand(new IWebApiCallback<List<Shop>>() {
+            @Override
+            public void onSuccess(List<Shop> result) {
+                if (result.isEmpty()) {
+
+                } else {
+                    if (shopRecyclerViewAdapter == null || recyclerView == null) {
+                        return;
+                    }
+                    shopRecyclerViewAdapter.setShopList(result);
+                    recyclerView.setAdapter(shopRecyclerViewAdapter);
+                    shopRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (t instanceof SignInNeededException) {
+                    moveToSecurityActivity();
+                } else {
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getExceptionMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "GetNearShopsCommand() exception" :
+                                    t.getMessage();
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        nearShopsCommand.setDistance(1000);
+        nearShopsCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+            @Override
+            public boolean OnBeforeExecute() {
+                if (currentLocation == null || recyclerView == null) {
+                    return false;
+                }
+                recyclerView.setAdapter(new RecyclerViewUpdateAdapter());
+                nearShopsCommand.setLocation(new GeoLocation(currentLocation));
+                return true;
+            }
+        });
+        nearShopsCommand.applyToViewClick(findViewById(R.id.MainActivity_btnRefresh));
+        //endregion
+
+        //region TagsSuggestionsCommand - Команда для получения списка тэгов
+        tagsSuggestionsCommand = new TagsSuggestionsCommand(new IWebApiCallback<TagFastSearchViewModel>() {
+            @Override
+            public void onSuccess(TagFastSearchViewModel result) {
+                if (result != null) {
+                    searchViewTagSuggestionAdapter.applySuggestions(result.getTags());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                String msg = (t instanceof WebApiException) ?
+                        ((WebApiException) t).getExceptionMessage() :
+                        t.getMessage().isEmpty() ?
+                                "tagsSuggestionsCommand() exception" :
+                                t.getMessage();
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //endregion
     }
 
     private void setupFastSearch() {
@@ -139,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             public boolean onSuggestionClick(int position) {
                 TagViewModel tag = searchViewTagSuggestionAdapter.getTags().get(position);
                 if (tag != null) {
-                    loadListOfNearestShops(tag);
+                    selectedTag = tag.toTag();
+                    loadListOfNearestShops();
                 }
                 return true;
             }
@@ -156,30 +237,13 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                 if (newText == null) {
                     return false;
                 }
+                selectedTag = null;
 
                 if (newText.isEmpty()) {
                     loadListOfNearestShops();
                 } else {
-                    if (newText.length() > 2) {
-                        WebApiFacade.getInstance().TagFastSearch(newText, new WebApiCallback<TagFastSearchViewModel>() {
-                            @Override
-                            public void onSuccess(TagFastSearchViewModel result) {
-                                if (result != null && result.getSuggestion().equalsIgnoreCase(newText)) {
-                                    searchViewTagSuggestionAdapter.applySuggestions(result.getTags());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                String msg = (t instanceof WebApiException) ?
-                                        ((WebApiException) t).getExceptionMessage() :
-                                        t.getMessage().isEmpty() ?
-                                                "TagFastSearch() exception" :
-                                                t.getMessage();
-                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    tagsSuggestionsCommand.setTagPart(newText);
+                    tagsSuggestionsCommand.execute();
                 }
 
                 return false;
@@ -282,41 +346,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void loadListOfNearestShops() {
-        loadListOfNearestShops(null);
-    }
-
-    private void loadListOfNearestShops(@Nullable TagViewModel tag) {
-        if (currentLocation == null) {
-            return;
-        }
-        recyclerView.setAdapter(new RecyclerViewUpdateAdapter());
-
-        WebApiFacade.getInstance().GetNearestShops(currentLocation, 1000, tag == null ? null : tag.getUid(), new WebApiCallback<List<Shop>>() {
-            @Override
-            public void onSuccess(List<Shop> result) {
-                if (result.isEmpty()) {
-
-                } else {
-                    shopRecyclerViewAdapter.setShopList(result);
-                    recyclerView.setAdapter(shopRecyclerViewAdapter);
-                    shopRecyclerViewAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                if (t instanceof SignInNeededException) {
-                    moveToSecurityActivity();
-                } else {
-                    String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getExceptionMessage() :
-                            t.getMessage().isEmpty() ?
-                                    "TagFastSearch() exception" :
-                                    t.getMessage();
-                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        nearShopsCommand.setTag(selectedTag);
+        nearShopsCommand.execute();
     }
 
     private void moveToSecurityActivity() {
@@ -374,6 +405,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     public void OnRecyclerBottomReached(int position) {
-        //loadListOfNearestShops();
+
     }
 }

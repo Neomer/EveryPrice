@@ -28,7 +28,7 @@ public class SearchViewTagSuggestionAdapter  extends SimpleCursorAdapter {
 
 
 
-    public void applySuggestions(List<TagViewModel> tagViewModelList) {
+    public synchronized void applySuggestions(List<TagViewModel> tagViewModelList) {
         if (tagViewModelList == null) {
             return;
         }

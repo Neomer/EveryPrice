@@ -1,14 +1,11 @@
 package com.neomer.everyprice.api;
 
-import android.content.pm.SigningInfo;
-import android.graphics.PorterDuff;
 import android.location.Location;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
-import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
@@ -81,7 +78,19 @@ public final class WebApiFacade {
         return instance;
     }
 
-    private boolean checkErrorStatus(int code, ResponseBody errorBody, WebApiCallback callback) {
+    public SecurityApi getSecurityApi() {
+        return securityApi;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
+    private boolean checkErrorStatus(int code, ResponseBody errorBody, IWebApiCallback callback) {
         if (code != 200) {
             if (callback != null) {
                 try {
@@ -106,7 +115,7 @@ public final class WebApiFacade {
         return false;
     }
 
-    public void SignIn(UserSignInModel signInModel, final WebApiCallback<Token> callback) {
+    public void SignIn(UserSignInModel signInModel, final IWebApiCallback<Token> callback) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -137,89 +146,12 @@ public final class WebApiFacade {
         });
     }
 
-    public void Registration(UserSignInModel signInModel, final WebApiCallback<Token> callback) {
-        if (securityApi == null) {
-            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
-            return;
-        }
 
-        Call<Token> call = securityApi.Registration(signInModel);
-        call.enqueue(new Callback<Token>() {
-            @Override
-            public void onResponse(Call<Token> call, Response<Token> response) {
-                if (checkErrorStatus(response.code(), response.errorBody(), callback))
-                {
-                    return;
-                }
-                token = response.body();
-                if (callback != null) {
-                    callback.onSuccess(token);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Token> call, Throwable t) {
-                if (callback != null) {
-                    callback.onFailure(t);
-                }
-            }
-        });
-    }
-
-    public void GetNearestShops(final Location location, final double distance, final WebApiCallback<List<Shop>> callback) {
-        GetNearestShops(location, distance, null, callback, 0);
-    }
-
-    public void GetNearestShops(final Location location, final double distance, final UUID tagUid, final WebApiCallback<List<Shop>> callback) {
-        GetNearestShops(location, distance, tagUid, callback, 0);
-    }
-
-    private void GetNearestShops(final Location location, final double distance, final UUID tagUid, final WebApiCallback<List<Shop>> callback, final int retry) {
-        if (securityApi == null) {
-            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
-            return;
-        }
-
-        if (token == null) {
-            callback.onFailure(new SignInNeededException());
-        }
-
-        Call<List<Shop>> call;
-        if (tagUid == null) {
-            call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance);
-        } else {
-            call = securityApi.GetNearShops(token.getToken(), location.getLatitude(), location.getLongitude(), distance, tagUid);
-        }
-        call.enqueue(new Callback<List<Shop>>() {
-            @Override
-            public void onResponse(Call<List<Shop>> call, Response<List<Shop>> response) {
-                if (checkErrorStatus(response.code(), response.errorBody(), callback))
-                {
-                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
-                        GetNearestShops(location, distance, tagUid, callback, retry + 1);
-                    }
-                    return;
-                }
-
-                if (callback != null) {
-                    callback.onSuccess(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Shop>> call, Throwable t) {
-                if (callback != null) {
-                    callback.onFailure(t);
-                }
-            }
-        });
-    }
-
-    public  void GetShopProducts(Shop shop, final WebApiCallback<List<Product>> callback) {
+    public  void GetShopProducts(Shop shop, final IWebApiCallback<List<Product>> callback) {
         GetShopProducts(shop, callback, 0);
     }
 
-    private void GetShopProducts(final Shop shop, final WebApiCallback<List<Product>> callback, final int retry) {
+    private void GetShopProducts(final Shop shop, final IWebApiCallback<List<Product>> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -255,11 +187,11 @@ public final class WebApiFacade {
         });
     }
 
-    public void CreateShop(Shop shop, final WebApiCallback<Shop> callback) {
+    public void CreateShop(Shop shop, final IWebApiCallback<Shop> callback) {
         CreateShop(shop, callback, 0);
     }
 
-    private void CreateShop(final Shop shop, final WebApiCallback<Shop> callback, final int retry) {
+    private void CreateShop(final Shop shop, final IWebApiCallback<Shop> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -295,11 +227,11 @@ public final class WebApiFacade {
         });
     }
 
-    public void EditShop(Shop shop, final WebApiCallback<Shop> callback) {
+    public void EditShop(Shop shop, final IWebApiCallback<Shop> callback) {
         EditShop(shop, callback, 0);
     }
 
-    private void EditShop(final Shop shop, final WebApiCallback<Shop> callback, final int retry) {
+    private void EditShop(final Shop shop, final IWebApiCallback<Shop> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -339,11 +271,11 @@ public final class WebApiFacade {
         });
     }
 
-    public void CreateProduct(final Shop shop, final Product product, WebApiCallback<Product> callback) {
+    public void CreateProduct(final Shop shop, final Product product, IWebApiCallback<Product> callback) {
         CreateProduct(shop, product, callback, 0);
     }
 
-    private void CreateProduct(final Shop shop, final Product product, final WebApiCallback<Product> callback, final int retry) {
+    private void CreateProduct(final Shop shop, final Product product, final IWebApiCallback<Product> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;
@@ -379,11 +311,11 @@ public final class WebApiFacade {
         });
     }
 
-    public void TagFastSearch(final String tagPart, WebApiCallback<TagFastSearchViewModel> callback) {
+    public void TagFastSearch(final String tagPart, IWebApiCallback<TagFastSearchViewModel> callback) {
         TagFastSearch(tagPart, callback, 0);
     }
 
-    private void TagFastSearch(final String tagPart, final WebApiCallback<TagFastSearchViewModel> callback, final int retry) {
+    private void TagFastSearch(final String tagPart, final IWebApiCallback<TagFastSearchViewModel> callback, final int retry) {
         if (securityApi == null) {
             callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
             return;

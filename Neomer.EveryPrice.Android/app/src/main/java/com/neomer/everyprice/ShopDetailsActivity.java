@@ -14,7 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.neomer.everyprice.api.WebApiCallback;
+import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
@@ -126,7 +126,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
     }
 
     private void startLoadProducts() {
-        WebApiFacade.getInstance().GetShopProducts(shop, new WebApiCallback<List<Product>>() {
+        WebApiFacade.getInstance().GetShopProducts(shop, new IWebApiCallback<List<Product>>() {
             @Override
             public void onSuccess(List<Product> result) {
                 updateProductList(result);

@@ -5,19 +5,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.neomer.everyprice.api.WebApiCallback;
+import com.neomer.everyprice.api.IWebApiCallback;
+import com.neomer.everyprice.api.WebApiExceptionTranslator;
 import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.commands.UserRegistrationCommand;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
+import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.IBeforeExecuteListener;
 
 public class RegistrationFragment extends Fragment {
 
@@ -34,31 +36,33 @@ public class RegistrationFragment extends Fragment {
         final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
 
         Button btnRegistration = (Button) rootView.findViewById(R.id.btnRegister);
-
-        btnRegistration.setOnClickListener(new View.OnClickListener() {
+        final UserRegistrationCommand registrationCommand = new UserRegistrationCommand(new IWebApiCallback<Token>() {
             @Override
-            public void onClick(View v) {
-                if (!txtPassword.getText().toString().contentEquals(txtPasswordRetype.getText().toString())) {
-                    tvRegistrationError.setText(rootView.getResources().getText(R.string.password_not_match));
-                    return;
+            public void onSuccess(Token result) {
+                moveToMainActivity();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (t instanceof WebApiException) {
+                    tvRegistrationError.setText(WebApiExceptionTranslator.getMessage((WebApiException)t, getResources()));
+                } else {
+                    tvRegistrationError.setText(t.getLocalizedMessage());
                 }
-
-                WebApiFacade.getInstance().Registration(
-                        new UserSignInModel(txtUsername.getText().toString()),
-                        new WebApiCallback<Token>() {
-                            @Override
-                            public void onSuccess(Token result) {
-                                moveToMainActivity();
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                tvRegistrationError.setText(t.getLocalizedMessage());
-                            }
-                        });
-
             }
         });
+        registrationCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+            @Override
+            public boolean OnBeforeExecute() {
+                if (!txtPassword.getText().toString().contentEquals(txtPasswordRetype.getText().toString())) {
+                    DisplayErrorMessage(rootView.getResources().getText(R.string.password_not_match));
+                    return false;
+                }
+                registrationCommand.setData(new UserSignInModel(txtUsername.getText().toString()));
+                return true;
+            }
+        });
+        registrationCommand.applyToViewClick(btnRegistration);
 
         return rootView;
     }
@@ -66,5 +70,16 @@ public class RegistrationFragment extends Fragment {
     private void moveToMainActivity() {
         startActivity(new Intent(rootView.getContext(), MainActivity.class));
         getActivity().finish();
+    }
+
+    public void DisplayErrorMessage(String message) {
+        final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
+        tvRegistrationError.setText(message);
+    }
+
+
+    public void DisplayErrorMessage(CharSequence message) {
+        final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
+        tvRegistrationError.setText(message);
     }
 }

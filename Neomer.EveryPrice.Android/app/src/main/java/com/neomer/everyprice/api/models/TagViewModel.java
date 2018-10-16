@@ -28,4 +28,8 @@ public class TagViewModel {
         return EntityCount;
     }
 
+    public Tag toTag() {
+        return new Tag(Uid, Value);
+    }
+
 }
