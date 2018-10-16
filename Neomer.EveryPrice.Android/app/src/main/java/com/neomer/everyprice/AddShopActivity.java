@@ -9,7 +9,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,11 +20,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.neomer.everyprice.api.SignInNeededException;
-import com.neomer.everyprice.api.WebApiCallback;
-import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.IWebApiCallback;
+import com.neomer.everyprice.api.commands.CreateOrEditShopCommand;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.IBeforeExecuteListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.NumericHelper;
 
@@ -44,6 +44,8 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
     private Geocoder geocoder;
 
     private Shop shop;
+
+    private CreateOrEditShopCommand createOrEditShopCommand;
 
     @Override
     public void onLocationReceived(Location location) {
@@ -92,13 +94,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
 
         MyLocationListener.getInstance().registerEventListener(this);
 
-        Button btnSave = findViewById(R.id.addshop_btnSave);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveShop();
-            }
-        });
+        createCommands();
 
         Button btnOpenMap = findViewById(R.id.addshop_btnOpenMap);
         btnOpenMap.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +107,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
         geocoder = new Geocoder(this);
 
         shop = (Shop) getIntent().getParcelableExtra(Shop.class.getCanonicalName());
+
         if (shop != null) {
             EditText txtName = findViewById(R.id.addshop_tvName);
             EditText txtAddress = findViewById(R.id.addshop_tvAddress);
@@ -133,6 +130,55 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
             location.setAccuracy(0);
             onLocationReceived(location);
         }
+    }
+
+    private void createCommands() {
+        createOrEditShopCommand = new CreateOrEditShopCommand(new IWebApiCallback<Shop>() {
+            @Override
+            public void onSuccess(Shop result) {
+                setResult(RESULT_OK, null);
+                moveToMainActivity();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (t instanceof SignInNeededException) {
+                    moveToSecurityActivity();
+                } else {
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getExceptionMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "CreateOrEditShopCommand() exception" :
+                                    t.getMessage();
+                    Toast.makeText(AddShopActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        createOrEditShopCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+            @Override
+            public boolean OnBeforeExecute() {
+                if (currentLocation == null) {
+                    Toast.makeText(AddShopActivity.this, getResources().getString(R.string.error_location_not_ready), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                EditText txtName = findViewById(R.id.addshop_tvName);
+                EditText txtAddress = findViewById(R.id.addshop_tvAddress);
+                EditText txtTags = findViewById(R.id.addshop_txtTags);
+
+                if (shop == null) {
+                    shop = new Shop();
+                }
+                shop.setName(txtName.getText().toString());
+                shop.setAddress(txtAddress.getText().toString());
+                shop.setLat(currentLocation.getLatitude());
+                shop.setLng(currentLocation.getLongitude());
+                shop.setTags(txtTags.getText().toString());
+
+                return true;
+            }
+        });
+        createOrEditShopCommand.applyToViewClick(findViewById(R.id.addshop_btnSave));
     }
 
     @Override
@@ -169,55 +215,6 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                 }
                 catch (NullPointerException ex) { }
             }
-        }
-    }
-
-    private void saveShop() {
-        if (currentLocation == null) {
-            Toast.makeText(this, getResources().getString(R.string.error_location_not_ready), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        EditText txtName = findViewById(R.id.addshop_tvName);
-        EditText txtAddress = findViewById(R.id.addshop_tvAddress);
-        EditText txtTags = findViewById(R.id.addshop_txtTags);
-
-        boolean isNew = shop == null;
-        if (shop == null) {
-            shop = new Shop();
-        }
-        shop.setName(txtName.getText().toString());
-        shop.setAddress(txtAddress.getText().toString());
-        shop.setLat(currentLocation.getLatitude());
-        shop.setLng(currentLocation.getLongitude());
-        shop.setTags(txtTags.getText().toString());
-
-        WebApiCallback<Shop> callback = new WebApiCallback<Shop>() {
-            @Override
-            public void onSuccess(Shop result) {
-                setResult(RESULT_OK, null);
-                moveToMainActivity();
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                if (t instanceof SignInNeededException) {
-                    moveToSecurityActivity();
-                } else {
-                    String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getExceptionMessage() :
-                            t.getMessage().isEmpty() ?
-                                    "TagFastSearch() exception" :
-                                    t.getMessage();
-                    Toast.makeText(AddShopActivity.this, msg, Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        if (isNew) {
-            WebApiFacade.getInstance().CreateShop(shop, callback);
-        } else {
-            WebApiFacade.getInstance().EditShop(shop, callback);
         }
     }
 

@@ -13,12 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.neomer.everyprice.api.WebApiCallback;
+import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiExceptionTranslator;
-import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.api.commands.SignInCommand;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
-import com.neomer.everyprice.api.models.WebApiException;
 
 public class SignInFragment extends Fragment {
 
@@ -33,31 +34,29 @@ public class SignInFragment extends Fragment {
         Button btnSignIn = (Button) rootView.findViewById(R.id.btnSignIn);
         final TextView tvSignInError = (TextView) rootView.findViewById(R.id.tvSignInError);
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        final SignInCommand signInCommand = new SignInCommand(new IWebApiCallback<Token>() {
             @Override
-            public void onClick(View v) {
-                WebApiFacade webApiFacade = WebApiFacade.getInstance();
+            public void onSuccess(@Nullable Token result) {
+                moveToMainActivity();
+            }
 
-                webApiFacade.SignIn(
-                        new UserSignInModel(txtUsername.getText().toString()),
-                        new WebApiCallback<Token>() {
-                            @Override
-                            public void onSuccess(Token result) {
-                                moveToMainActivity();
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                if (t instanceof WebApiException) {
-                                    tvSignInError.setText(WebApiExceptionTranslator.getMessage((WebApiException) t, getResources()));
-                                } else {
-                                    tvSignInError.setText(t.getMessage());
-                                }
-                            }
-                        });
-
+            @Override
+            public void onFailure(Throwable t) {
+                if (t instanceof WebApiException) {
+                    tvSignInError.setText(WebApiExceptionTranslator.getMessage((WebApiException)t, getResources()));
+                } else {
+                    tvSignInError.setText(t.getLocalizedMessage());
+                }
             }
         });
+        signInCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+            @Override
+            public boolean OnBeforeExecute() {
+                signInCommand.setData(new UserSignInModel(txtUsername.getText().toString()));
+                return true;
+            }
+        });
+        signInCommand.applyToViewClick(btnSignIn);
 
         return rootView;
     }

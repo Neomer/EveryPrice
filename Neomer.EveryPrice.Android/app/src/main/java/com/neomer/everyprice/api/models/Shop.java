@@ -124,7 +124,9 @@ public class Shop implements Parcelable {
             }
             String[] strings = tags.split(" ");
             for (String s : strings) {
-                Tags.add(new Tag(s));
+                if (s.length() > 2) {
+                    Tags.add(new Tag(s));
+                }
             }
         }
     }
