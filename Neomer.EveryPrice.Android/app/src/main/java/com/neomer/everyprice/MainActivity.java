@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     //region Activity overridden methods
     @Override
     protected void onDestroy() {
-        MyLocationListener.getInstance().unregisterEventListener(this);
         super.onDestroy();
     }
 
@@ -87,26 +86,23 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MyLocationListener.getInstance().registerEventListener(this);
-
         createCommands();
-
 
         setupRecyclerView();
         setupFloatingButton();
+
+        requestLocationPermission();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        if (menuInflater != null) {
-            menuInflater.inflate(R.menu.main_menu, menu);
+        menuInflater.inflate(R.menu.main_menu, menu);
 
-            MenuItem menuItem = menu.findItem(R.id.mainmenu_action_search);
-            if (menuItem != null) {
-                searchView = (SearchView) menuItem.getActionView();
-                setupFastSearch();
-            }
+        MenuItem menuItem = menu.findItem(R.id.mainmenu_action_search);
+        if (menuItem != null) {
+            searchView = (SearchView) menuItem.getActionView();
+            setupFastSearch();
         }
         return true;
     }
@@ -120,10 +116,46 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     protected void onResume() {
-        requestLocationPermission();
+        setupLocationListener();
 
         super.onResume();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == RESULT_FOR_ADD_SHOP_ACTION) {
+            if (resultCode == RESULT_OK) {
+                loadListOfNearestShops();
+            }
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+
+            if (grantResults.length == 0) {
+                return;
+            }
+
+            boolean permission = true;
+            for (int res : grantResults) {
+                if (res == PackageManager.PERMISSION_DENIED) {
+                    permission = false;
+                    break;
+                }
+            }
+            if (permission) {
+                setupLocationListener();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 
     //endregion
 
@@ -310,41 +342,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         startActivityForResult(new Intent(this, AddShopActivity.class), RESULT_FOR_ADD_SHOP_ACTION);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == RESULT_FOR_ADD_SHOP_ACTION) {
-            if (resultCode == RESULT_OK) {
-                loadListOfNearestShops();
-            }
-            return;
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-
-            if (grantResults.length == 0) {
-                return;
-            }
-
-            boolean permission = true;
-            for (int res : grantResults) {
-                if (res == PackageManager.PERMISSION_DENIED) {
-                    permission = false;
-                    break;
-                }
-            }
-            if (permission) {
-                setupLocationListener();
-            }
-            return;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
     private void loadListOfNearestShops() {
         nearShopsCommand.setTag(selectedTag);
         nearShopsCommand.execute();
@@ -365,7 +362,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             }, LOCATION_PERMISSION_REQUEST_CODE);
             return;
         }
-        setupLocationListener();
     }
 
     private void setupLocationListener() {
@@ -395,9 +391,13 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
+
+        MyLocationListener.getInstance().registerEventListener(this);
     }
 
     private void stopListenLocation() {
+        MyLocationListener.getInstance().unregisterEventListener(this);
+
         locationManager.removeUpdates(MyLocationListener.getInstance());
         locationManager = null;
     }
