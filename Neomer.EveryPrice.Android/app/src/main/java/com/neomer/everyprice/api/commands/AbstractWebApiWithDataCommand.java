@@ -13,7 +13,7 @@ public abstract class AbstractWebApiWithDataCommand<TData, TCallbackResult> exte
 
     private TData data;
 
-    public AbstractWebApiWithDataCommand(@NonNull IWebApiCallback<TCallbackResult> callback) throws NullPointerException {
+    AbstractWebApiWithDataCommand(@NonNull IWebApiCallback<TCallbackResult> callback) throws NullPointerException {
         super(callback);
     }
 
