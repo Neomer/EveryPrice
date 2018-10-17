@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.commands.GetShopProductsCommand;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.WebApiException;
@@ -30,6 +31,8 @@ public class ShopDetailsActivity extends AppCompatActivity {
     private ShopDetailsRecyclerViewAdapter shopDetailsRecyclerViewAdapter;
     private FloatingActionButton floatingActionButton;
     private boolean actionsShow;
+
+    private GetShopProductsCommand shopProductsCommand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,26 @@ public class ShopDetailsActivity extends AppCompatActivity {
             }
         });
 
+        shopProductsCommand = new GetShopProductsCommand(new IWebApiCallback<List<Product>>() {
+            @Override
+            public void onSuccess(List<Product> result) {
+                updateProductList(result);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                String msg = (t instanceof WebApiException) ?
+                        ((WebApiException) t).getExceptionMessage() :
+                        t.getMessage().isEmpty() ?
+                                "GetShopProductsCommand() exception" :
+                                t.getMessage();
+                Toast.makeText(ShopDetailsActivity.this, msg, Toast.LENGTH_LONG).show();
+            }
+        });
+        shopProductsCommand.setShop(shop);
+
         setupRecyclerView();
+
         startLoadProducts();
 
     }
@@ -126,22 +148,9 @@ public class ShopDetailsActivity extends AppCompatActivity {
     }
 
     private void startLoadProducts() {
-        WebApiFacade.getInstance().GetShopProducts(shop, new IWebApiCallback<List<Product>>() {
-            @Override
-            public void onSuccess(List<Product> result) {
-                updateProductList(result);
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                String msg = (t instanceof WebApiException) ?
-                        ((WebApiException) t).getExceptionMessage() :
-                        t.getMessage().isEmpty() ?
-                                "TagFastSearch() exception" :
-                                t.getMessage();
-                Toast.makeText(ShopDetailsActivity.this, msg, Toast.LENGTH_LONG).show();
-            }
-        });
+        shopProductsCommand.execute();
+
     }
 
     @Override
