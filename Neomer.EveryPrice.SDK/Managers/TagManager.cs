@@ -15,12 +15,26 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-        /// <summary>
-        /// Возвращает тэг по его полному значению, либо null
-        /// </summary>
-        /// <param name="value">Значение тэга</param>
-        /// <returns></returns>
-        public ITag FindTag(string value)
+		public override void Save(IEntity entity)
+		{
+			var tag = entity as ITag;
+			if (tag != null)
+			{
+				if (tag.Value.Length < 3)
+				{
+					throw new FormatException("Tag name is too short");
+				}
+			}
+
+			base.Save(entity);
+		}
+
+		/// <summary>
+		/// Возвращает тэг по его полному значению, либо null
+		/// </summary>
+		/// <param name="value">Значение тэга</param>
+		/// <returns></returns>
+		public ITag FindTag(string value)
         {
             return NHibernateHelper.Instance.CurrentSession.CreateCriteria<ITag>()
                 .Add(Expression.Eq("Value", value))
