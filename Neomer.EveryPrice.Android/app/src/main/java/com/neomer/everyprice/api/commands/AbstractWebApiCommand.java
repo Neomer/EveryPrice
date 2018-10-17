@@ -5,12 +5,17 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SecurityApi;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.Token;
+import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.ICommand;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -104,6 +109,22 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                 if (getCallback() == null || response == null) {
                     throw new NullPointerException();
                 }
+
+                if (response.code() != 200) {
+                    try {
+                        Gson gson = new GsonBuilder().create();
+                        try {
+                            WebApiException exception = gson.fromJson(response.errorBody().string(), WebApiException.class);
+                            callback.onFailure(exception);
+                        }
+                        catch (Exception ex) {
+                            callback.onFailure(new Exception(response.errorBody().string()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 TCallbackResult result = response.body();
 
                 beforeSuccessCallback(result);
