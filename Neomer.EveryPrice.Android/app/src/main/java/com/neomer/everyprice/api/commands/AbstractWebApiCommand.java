@@ -3,17 +3,15 @@ package com.neomer.everyprice.api.commands;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SecurityApi;
 import com.neomer.everyprice.api.WebApiFacade;
-import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.WebApiException;
-import com.neomer.everyprice.core.ICommand;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.ICommand;
 
 import java.io.IOException;
 
@@ -35,7 +33,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
 
     protected abstract Call<TCallbackResult> getCall();
 
-    public AbstractWebApiCommand(@NonNull IWebApiCallback<TCallbackResult> callback) throws NullPointerException {
+    AbstractWebApiCommand(@NonNull IWebApiCallback<TCallbackResult> callback) throws NullPointerException {
         this.securityApi = WebApiFacade.getInstance().getSecurityApi();
         if (this.securityApi == null) {
             throw new NullPointerException();
@@ -68,7 +66,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
      * Вызывается перед тем, как отдать исключение на внешний Callback
      * @param t Исключение при выполнении WebAPI запроса
      */
-    protected void beforeFailureCallback(Throwable t) {
+    private void beforeFailureCallback(@SuppressWarnings("unused") Throwable t) {
 
     }
 
@@ -105,20 +103,22 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
 
         call.enqueue(new Callback<TCallbackResult>() {
             @Override
-            public void onResponse(Call<TCallbackResult> call, Response<TCallbackResult> response) {
-                if (getCallback() == null || response == null) {
+            public void onResponse(@NonNull Call<TCallbackResult> call, @NonNull Response<TCallbackResult> response) {
+                if (getCallback() == null) {
                     throw new NullPointerException();
                 }
 
                 if (response.code() != 200) {
                     try {
                         Gson gson = new GsonBuilder().create();
-                        try {
-                            WebApiException exception = gson.fromJson(response.errorBody().string(), WebApiException.class);
-                            callback.onFailure(exception);
-                        }
-                        catch (Exception ex) {
-                            callback.onFailure(new Exception(response.errorBody().string()));
+                        if (response.errorBody() != null) {
+                            try {
+                                WebApiException exception = gson.fromJson(response.errorBody().string(), WebApiException.class);
+                                callback.onFailure(exception);
+                            }
+                            catch (Exception ex) {
+                                callback.onFailure(new Exception(response.errorBody().string()));
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -132,7 +132,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
             }
 
             @Override
-            public void onFailure(Call<TCallbackResult> call, Throwable t) {
+            public void onFailure(@NonNull Call<TCallbackResult> call, @NonNull Throwable t) {
                 if (getCallback() == null) {
                     throw new NullPointerException();
                 }
