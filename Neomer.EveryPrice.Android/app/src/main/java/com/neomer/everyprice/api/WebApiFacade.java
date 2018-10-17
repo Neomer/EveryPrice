@@ -147,44 +147,5 @@ public final class WebApiFacade {
     }
 
 
-    public  void GetShopProducts(Shop shop, final IWebApiCallback<List<Product>> callback) {
-        GetShopProducts(shop, callback, 0);
-    }
-
-    private void GetShopProducts(final Shop shop, final IWebApiCallback<List<Product>> callback, final int retry) {
-        if (securityApi == null) {
-            callback.onFailure(new Exception("Security API not initialized! Last Error: " + lastError));
-            return;
-        }
-
-        if (token == null) {
-            callback.onFailure(new SignInNeededException());
-        }
-
-        Call<List<Product>> call = securityApi.GetShopProducts(token.getToken(), shop.getUid());
-        call.enqueue(new Callback<List<Product>>() {
-            @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                if (checkErrorStatus(response.code(), response.errorBody(), callback))
-                {
-                    if (retry < WebApiFacade.WEBAPI_RETRY_COUNT) {
-                        GetShopProducts(shop, callback, retry + 1);
-                    }
-                    return;
-                }
-
-                if (callback != null) {
-                    callback.onSuccess(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
-                if (callback != null) {
-                    callback.onFailure(t);
-                }
-            }
-        });
-    }
 
 }
