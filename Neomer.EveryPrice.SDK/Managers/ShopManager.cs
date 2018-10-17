@@ -48,8 +48,12 @@ namespace Neomer.EveryPrice.SDK.Managers
                 {
                     foreach (var tag in shop.Tags)
                     {
-                        TagManager.Instance.Save(tag);
-                    }
+						try
+						{
+							TagManager.Instance.Save(tag);
+						}
+						catch (FormatException) { }
+					}
                 }
                 try
                 {
