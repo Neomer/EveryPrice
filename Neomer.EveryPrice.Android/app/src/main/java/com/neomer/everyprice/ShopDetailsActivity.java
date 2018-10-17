@@ -20,7 +20,10 @@ import com.neomer.everyprice.api.commands.GetShopProductsCommand;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.ICommand;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShopDetailsActivity extends AppCompatActivity {
@@ -33,6 +36,8 @@ public class ShopDetailsActivity extends AppCompatActivity {
     private boolean actionsShow;
 
     private GetShopProductsCommand shopProductsCommand;
+
+    private ICommand displayShopOnMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +78,36 @@ public class ShopDetailsActivity extends AppCompatActivity {
         });
         shopProductsCommand.setShop(shop);
 
+        displayShopOnMap = new ICommand() {
+            @Override
+            public void setOnBeforeExecuteListener(IBeforeExecuteListener listener) {
+
+            }
+
+            @Override
+            public void execute() {
+                moveToDisplayShopOnMapActivity();
+            }
+        };
+
+        findViewById(R.id.shopDetails_btnShopLocation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayShopOnMap.execute();
+            }
+        });
+
         setupRecyclerView();
 
         startLoadProducts();
 
+    }
+
+    private void moveToDisplayShopOnMapActivity() {
+        Intent intent = new Intent(ShopDetailsActivity.this, ShopOnMapActivity.class);
+        Shop[] shopList = new Shop[] { shop };
+        intent.putExtra(Shop.class.getCanonicalName(), shopList);
+        startActivity(intent);
     }
 
     private void showActions() {

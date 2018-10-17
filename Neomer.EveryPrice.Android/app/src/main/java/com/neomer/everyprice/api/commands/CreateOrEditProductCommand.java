@@ -14,7 +14,7 @@ import retrofit2.Call;
  * На вход передаются данные о магазине и продуктею
  * Если все прошло штатно, то на выходе получаем ту же информацию о продукте только с Uid.
  */
-public class CreateOrEditProductCommand extends AbstractWebApiWithDataCommand<Product, Product> {
+public class CreateOrEditProductCommand extends AbstractWebApiWithTokenAndDataCommand<Product, Product> {
 
     public CreateOrEditProductCommand(@NonNull IWebApiCallback<Product> callback) throws NullPointerException {
         super(callback);
@@ -30,7 +30,7 @@ public class CreateOrEditProductCommand extends AbstractWebApiWithDataCommand<Pr
         if (getData().getName() == null || getData().getName().length() < 2) {
             return false;
         }
-        return true;
+        return super.beforeExecute();
     }
 
     @Override
