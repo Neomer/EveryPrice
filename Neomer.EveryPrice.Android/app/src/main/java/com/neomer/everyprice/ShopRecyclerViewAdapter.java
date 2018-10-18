@@ -59,7 +59,9 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopRecyclerVi
                     sDistance = NumericHelper.getInstance().FormatDistance(distance, viewHolder.getContext().getResources());
                 }
                 catch (NullPointerException ex) {
-                    Toast.makeText(viewHolder.getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    if (!ex.getMessage().isEmpty()) {
+                        Toast.makeText(viewHolder.getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             } else {
                 Toast.makeText(viewHolder.getContext(), viewHolder.getContext().getResources().getString(R.string.error_location_not_ready), Toast.LENGTH_SHORT).show();
