@@ -175,6 +175,8 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                 shop.setLng(currentLocation.getLongitude());
                 shop.setTags(txtTags.getText().toString());
 
+                createOrEditShopCommand.setData(shop);
+
                 return true;
             }
         });
