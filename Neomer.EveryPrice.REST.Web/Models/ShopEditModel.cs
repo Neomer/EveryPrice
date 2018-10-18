@@ -34,7 +34,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
             shopModel.Tags = Tags == null ? null :
                 Tags
                     .Where(_ => !String.IsNullOrEmpty(_.Value))
-                    .Select(_ => new Tag()
+                    .Select(_ => TagManager.Instance.FindTag(_.Value) ?? new Tag()
                     {
                         Value = _.Value
                     })

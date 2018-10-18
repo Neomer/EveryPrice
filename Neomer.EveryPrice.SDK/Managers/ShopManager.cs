@@ -33,39 +33,6 @@ namespace Neomer.EveryPrice.SDK.Managers
 
             base.Save(entity);
         }
-        
-        public override void SaveIsolate(IEntity entity)
-        {
-            var shop = entity as IShop;
-            if (shop == null)
-            {
-                throw new UnsupportedEntityException();
-            }
-            using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
-            {
-                base.Save(shop);
-                if (shop.Tags != null)
-                {
-                    foreach (var tag in shop.Tags)
-                    {
-						try
-						{
-							TagManager.Instance.Save(tag);
-						}
-						catch (FormatException) { }
-					}
-                }
-                try
-                {
-                    tr.Commit();
-                }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    throw ex;
-                }
-            }
-        }
 
 		public IList<Shop> GetShopsNear(Location location, double distance, ITag tag)
 		{

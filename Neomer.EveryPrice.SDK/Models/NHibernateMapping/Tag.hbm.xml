@@ -6,7 +6,7 @@
       <generator class="guid" />
     </id>
     <property name="Value" unique="true" index="IDX_UQ_Value" />
-    <bag name="Shops" inverse="true" lazy="true" table="Tag_Shop">
+    <bag name="Shops" inverse="true" cascade="all" lazy="true" table="Tag_Shop">
       <key column="TagUid"/>
       <many-to-many class="Shop" column="ShopUid" />
     </bag>
