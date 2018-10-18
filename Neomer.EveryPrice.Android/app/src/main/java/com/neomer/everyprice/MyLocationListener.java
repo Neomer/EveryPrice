@@ -35,7 +35,7 @@ public final class MyLocationListener implements LocationListener {
     }
 
     private MyLocationListener() {
-        eventListenerList = new ArrayList<ILocationUpdateEventListener>();
+        eventListenerList = new ArrayList<>();
     }
 
     @Override
