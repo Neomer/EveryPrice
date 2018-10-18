@@ -7,7 +7,7 @@ import com.neomer.everyprice.api.IWebApiCallback;
 /**
  * Расширение для базового типа WebAPI комманд, для возможности передачи данных в виде модели
  * @param <TData> Тип передаваемых данных
- * @param <TCallbackResult>
+ * @param <TCallbackResult> Тип возвращаемого значения
  */
 public abstract class AbstractWebApiWithDataCommand<TData, TCallbackResult> extends AbstractWebApiCommand<TCallbackResult> {
 

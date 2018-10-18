@@ -28,7 +28,7 @@ public class UserRegistrationCommand extends AbstractWebApiWithDataCommand<UserS
         if (getData().Username == null || getData().Username.length() < 4) {
             return false;
         }
-        return true;
+        return super.beforeExecute();
     }
 
     @Override

@@ -13,7 +13,7 @@ import retrofit2.Call;
  * На вход передаются данные о магазине.
  * Если все прошло штатно, то на выходе получаем ту же информацию о магазине только с Uid.
  */
-public class EditShopCommand extends AbstractWebApiWithDataCommand<Shop, Shop> {
+public class EditShopCommand extends AbstractWebApiWithTokenAndDataCommand<Shop, Shop> {
 
     public EditShopCommand(@NonNull IWebApiCallback<Shop> callback) throws NullPointerException {
         super(callback);
@@ -36,7 +36,7 @@ public class EditShopCommand extends AbstractWebApiWithDataCommand<Shop, Shop> {
         if (getData().getTags() == null || getData().getTags().isEmpty()) {
             return false;
         }
-        return true;
+        return super.beforeExecute();
     }
 
     @Override
