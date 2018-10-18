@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -24,12 +24,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.IWebApiCallback;
-import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.commands.GetNearShopsCommand;
 import com.neomer.everyprice.api.commands.TagsSuggestionsCommand;
 import com.neomer.everyprice.api.models.Shop;
@@ -169,9 +167,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                     return;
                 }
 
-                if (result.isEmpty()) {
-
-                } else {
+                if (!result.isEmpty()) {
                     if (shopRecyclerViewAdapter == null || recyclerView == null) {
                         return;
                     }
