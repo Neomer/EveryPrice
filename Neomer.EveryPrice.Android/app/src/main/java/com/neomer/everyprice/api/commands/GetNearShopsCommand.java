@@ -19,7 +19,7 @@ import retrofit2.Call;
  * На вход передаются данные о текущем местоположении.
  * На выходе получаем список магазинов.
  */
-public class GetNearShopsCommand extends AbstractWebApiCommand<List<Shop>> {
+public class GetNearShopsCommand extends AbstractWebApiWithTokenCommand<List<Shop>> {
 
     private GeoLocation location;
     private double distance;
@@ -31,6 +31,11 @@ public class GetNearShopsCommand extends AbstractWebApiCommand<List<Shop>> {
         location = new GeoLocation();
         distance = 0;
         tag = null;
+    }
+
+    @Override
+    protected boolean beforeExecute() {
+        return super.beforeExecute();
     }
 
     @Override

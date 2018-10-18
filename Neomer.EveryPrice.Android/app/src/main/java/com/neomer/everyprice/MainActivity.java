@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -86,12 +87,11 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createCommands();
-
         setupRecyclerView();
         setupFloatingButton();
 
-        requestLocationPermission();
+        createCommands();
+
     }
 
     @Override
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     protected void onResume() {
-        setupLocationListener();
+        requestLocationPermission();
 
         super.onResume();
     }
@@ -165,6 +165,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         nearShopsCommand = new GetNearShopsCommand(new IWebApiCallback<List<Shop>>() {
             @Override
             public void onSuccess(List<Shop> result) {
+                if (result == null) {
+                    return;
+                }
+
                 if (result.isEmpty()) {
 
                 } else {
@@ -188,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                                     "GetNearShopsCommand() exception" :
                                     t.getMessage();
                     Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    Log.d("app", t.getLocalizedMessage());
                 }
             }
         });
@@ -353,6 +358,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void requestLocationPermission() {
+        setupLocationListener();
+    }
+
+    private void setupLocationListener() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -362,14 +371,14 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             }, LOCATION_PERMISSION_REQUEST_CODE);
             return;
         }
-    }
 
-    private void setupLocationListener() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+        MyLocationListener.getInstance().registerEventListener(this);
 
         try {
             MyLocationListener.getInstance().onLocationChanged(locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
@@ -392,14 +401,15 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
 
-        MyLocationListener.getInstance().registerEventListener(this);
     }
 
     private void stopListenLocation() {
         MyLocationListener.getInstance().unregisterEventListener(this);
 
-        locationManager.removeUpdates(MyLocationListener.getInstance());
-        locationManager = null;
+        if (locationManager != null) {
+            locationManager.removeUpdates(MyLocationListener.getInstance());
+            locationManager = null;
+        }
     }
 
 

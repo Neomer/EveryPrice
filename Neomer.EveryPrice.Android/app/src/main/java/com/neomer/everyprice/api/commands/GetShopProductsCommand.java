@@ -11,7 +11,7 @@ import java.util.List;
 
 import retrofit2.Call;
 
-public class GetShopProductsCommand extends AbstractWebApiCommand<List<Product>> {
+public class GetShopProductsCommand extends AbstractWebApiWithTokenCommand<List<Product>> {
 
     private Shop shop;
 
@@ -24,7 +24,7 @@ public class GetShopProductsCommand extends AbstractWebApiCommand<List<Product>>
         if (shop == null || shop.getUid() == null) {
             return false;
         }
-        return true;
+        return super.beforeExecute();
     }
 
     @Override

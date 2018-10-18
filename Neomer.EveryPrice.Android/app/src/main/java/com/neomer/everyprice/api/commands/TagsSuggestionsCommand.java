@@ -10,7 +10,7 @@ import java.util.List;
 
 import retrofit2.Call;
 
-public class TagsSuggestionsCommand extends AbstractWebApiCommand<TagFastSearchViewModel> {
+public class TagsSuggestionsCommand extends AbstractWebApiWithTokenCommand<TagFastSearchViewModel> {
 
     private String tagPart;
 
@@ -23,7 +23,7 @@ public class TagsSuggestionsCommand extends AbstractWebApiCommand<TagFastSearchV
         if (getTagPart() == null || getTagPart().length() < 3) {
             return false;
         }
-        return true;
+        return super.beforeExecute();
     }
 
     @Override

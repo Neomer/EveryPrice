@@ -39,7 +39,7 @@ public class SignInCommand extends AbstractWebApiWithDataCommand<UserSignInModel
         if (getData().Username == null || getData().Username.length() < 4) {
             return false;
         }
-        return true;
+        return super.beforeExecute();
     }
 
     @Override
