@@ -19,6 +19,7 @@ import com.neomer.everyprice.api.commands.UserRegistrationCommand;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.IAfterExecutionListener;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
 
 public class RegistrationFragment extends Fragment {
@@ -58,8 +59,17 @@ public class RegistrationFragment extends Fragment {
                     DisplayErrorMessage(rootView.getResources().getText(R.string.password_not_match));
                     return false;
                 }
+                rootView.findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
+                rootView.findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.VISIBLE);
                 registrationCommand.setData(new UserSignInModel(txtUsername.getText().toString()));
                 return true;
+            }
+        });
+        registrationCommand.setOnAfterExecutionListener(new IAfterExecutionListener() {
+            @Override
+            public void OnAfterExecution() {
+                rootView.findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);
+                rootView.findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.INVISIBLE);
             }
         });
         registrationCommand.applyToViewClick(btnRegistration);
