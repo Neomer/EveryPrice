@@ -71,6 +71,8 @@
     <Compile Include="Exceptions\Security\TokenExpiredException.cs" />
     <Compile Include="Exceptions\Security\InvalidTokenException.cs" />
     <Compile Include="Exceptions\Security\TokenNotFoundException.cs" />
+    <Compile Include="Exceptions\Sessions\DuplicateSessionKeyException.cs" />
+    <Compile Include="Exceptions\Sessions\BaseHibernateSessionException.cs" />
     <Compile Include="Helpers\LoggerHelper.cs" />
     <Compile Include="Helpers\NHibernateHelper.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />
@@ -106,6 +108,8 @@
     <Compile Include="Models\UserProfile.cs" />
     <Compile Include="Models\UserSecurityProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Session\ISessionProvider.cs" />
+    <Compile Include="Session\WebSessionProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -139,5 +143,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Models\NHibernateMapping\Blob.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

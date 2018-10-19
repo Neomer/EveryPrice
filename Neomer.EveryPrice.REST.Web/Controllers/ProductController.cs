@@ -2,6 +2,7 @@
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Web.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,22 +13,22 @@ using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class ProductController : ApiController
-    {
+    public class ProductController : BaseApiController
+	{
         public List<ProductViewModel> Get(Guid shopUid)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var shop = ShopManager.Instance.Get(shopUid) as IShop;
+            var shop = ShopManager.Instance.Get(CurrentSession, shopUid) as IShop;
             if (shop == null)
             {
                 return null;
             }
 
-            var products = ProductManager.Instance.GetProductsByShop(shop);
+            var products = ProductManager.Instance.GetProductsByShop(CurrentSession, shop);
             if (products == null)
             {
                 return null;
@@ -50,18 +51,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                     // use raw content here
                 }
             }
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var product = ProductManager.Instance.Get(uid) as IProduct;
+            var product = ProductManager.Instance.Get(CurrentSession, uid) as IProduct;
             if (product == null)
             {
                 return null;
             }
             productEditModel.ToProduct(ref product);
-            ProductManager.Instance.SaveIsolate(product);
+            ProductManager.Instance.SaveIsolate(CurrentSession, product);
 
             return new ProductViewModel(product);
         }
@@ -78,12 +79,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                     // use raw content here
                 }
             }
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var shop = ShopManager.Instance.Get(shopUid) as IShop;
+            var shop = ShopManager.Instance.Get(CurrentSession, shopUid) as IShop;
             if (shop == null)
             {
                 return null;
@@ -97,7 +98,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             };
 
             productEditModel.ToProduct(ref product);
-            ProductManager.Instance.SaveIsolate(product);
+            ProductManager.Instance.SaveIsolate(CurrentSession, product);
 
             return new ProductViewModel(product);
         }

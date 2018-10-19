@@ -1,4 +1,6 @@
 ﻿using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,12 +12,12 @@ namespace Neomer.EveryPrice.SDK.Managers
 {
     public interface IEntityManager
     {
-        IEntity Get(Guid id);
+        IEntity Get(ISession session, Guid id);
 
-        IEnumerable<IEntity> Get();
+        IEnumerable<IEntity> Get(ISession session);
 
-        void Remove(IEntity entity);
+        void Remove(ISession session,  IEntity entity);
 
-        void Save(IEntity entity);
+        void Save(ISession session,  IEntity entity);
     }
 }

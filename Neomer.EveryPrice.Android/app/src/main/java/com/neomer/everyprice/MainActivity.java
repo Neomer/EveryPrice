@@ -383,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                             "getLastKnownLocation(LocationManager.NETWORK_PROVIDER) exception" :
                             ex.getMessage();
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "ex.1", Toast.LENGTH_LONG).show();
         }
 
         try {
@@ -393,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                     "getLastKnownLocation(LocationManager.GPS_PROVIDER) exception" :
                     ex.getMessage();
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "ex.2", Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
 

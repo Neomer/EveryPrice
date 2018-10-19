@@ -1,6 +1,7 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Web.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,11 @@ using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class TagController : ApiController
-    {
+    public class TagController : BaseApiController
+	{
         public FindTagsViewModel Get(string part)
         {
-			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+			var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
 			if (user == null)
 			{
 				return null;
@@ -23,7 +24,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             {
                 return null;
             }
-            var tagList = TagManager.Instance.FindTags(part);
+            var tagList = TagManager.Instance.FindTags(CurrentSession, part);
 
 			var result = new FindTagsViewModel(part);
 			result.Tags = tagList == null ? null :

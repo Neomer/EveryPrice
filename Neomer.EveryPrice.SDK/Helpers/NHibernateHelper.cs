@@ -13,14 +13,17 @@ namespace Neomer.EveryPrice.SDK.Helpers
     public class NHibernateHelper
     {
         private static NHibernateHelper instance;
-        private ISessionFactory sessionFactory = null;
+        private static ISessionFactory sessionFactory = null;
+
+		IDictionary<Guid, ISession> _sessionPool;
 
         private NHibernateTransactionsProvider transactionsProvider;
 
         private NHibernateHelper()
         {
             transactionsProvider = new NHibernateTransactionsProvider();
-        }
+			_sessionPool = new Dictionary<Guid, ISession>();
+		}
 
         public static NHibernateHelper Instance
         {
@@ -34,27 +37,35 @@ namespace Neomer.EveryPrice.SDK.Helpers
             }
         }
 
-        public void OpenSession(string configurationFilePath)
+		public static void ApplyConfiguration(string configurationFilePath)
+		{
+			var configuration = new Configuration();
+			configuration.Configure(configurationFilePath);
+			configuration.AddAssembly(typeof(IEntity).Assembly);
+			sessionFactory = configuration.BuildSessionFactory();
+
+			new SchemaUpdate(configuration).Execute(true, true);
+		}
+
+		public static ISession OpenSession()
         {
-            var configuration = new Configuration();
-            configuration.Configure(configurationFilePath);
-            configuration.AddAssembly(typeof(IEntity).Assembly);
-            sessionFactory = configuration.BuildSessionFactory();
-
-            new SchemaUpdate(configuration).Execute(true, true);
-
-            CurrentSession = sessionFactory.OpenSession();
+			return sessionFactory.OpenSession();
         }
 
         public void CloseSession()
         {
-            if (sessionFactory != null)
+            if (CurrentSession != null)
             {
-                sessionFactory.Close();
+				CurrentSession.Close();
             }
         }
 
         public ISession CurrentSession { get; private set; }
+
+		public ISession SessionByUid(Guid sessionUid)
+		{
+			return _sessionPool.ContainsKey(sessionUid) ? _sessionPool[sessionUid] : null;
+		}
 
         public Guid BeginTransaction()
         {

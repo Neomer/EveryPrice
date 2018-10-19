@@ -1,5 +1,7 @@
 ﻿using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-		public override void Save(IEntity entity)
+		public override void Save(ISession session, IEntity entity)
 		{
 			var tag = entity as ITag;
 			if (tag != null)
@@ -26,7 +28,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 				}
 			}
 
-			base.Save(entity);
+			base.Save(session, entity);
 		}
 
 		/// <summary>
@@ -34,9 +36,10 @@ namespace Neomer.EveryPrice.SDK.Managers
 		/// </summary>
 		/// <param name="value">Значение тэга</param>
 		/// <returns></returns>
-		public ITag FindTag(string value)
+		public ITag FindTag(ISession session, string value)
         {
-            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<ITag>()
+            return session
+				.CreateCriteria<ITag>()
                 .Add(Expression.Eq("Value", value))
                 .UniqueResult<ITag>();
         }
@@ -45,7 +48,7 @@ namespace Neomer.EveryPrice.SDK.Managers
         /// Ищет тэги, похожие на указанное значение
         /// </summary>
         /// <returns></returns>
-        public IList<Tag> FindTags(string value)
+        public IList<Tag> FindTags(ISession session, string value)
         {
             var validator = new Regex(@"[\(\)\s\;\,\.\\]");
 
@@ -54,7 +57,8 @@ namespace Neomer.EveryPrice.SDK.Managers
                 throw new FormatException();
             }
 
-            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<ITag>()
+            return session
+				.CreateCriteria<ITag>()
                 .Add(Expression.Like("Value", String.Format("%{0}%", value)))
                 .SetMaxResults(10)
                 .List<Tag>();

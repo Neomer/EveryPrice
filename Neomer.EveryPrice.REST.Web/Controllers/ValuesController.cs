@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Neomer.EveryPrice.SDK.Web.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,8 +8,8 @@ using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class ValuesController : ApiController
-    {
+    public class ValuesController : BaseApiController
+	{
         // GET api/values
         public IEnumerable<string> Get()
         {

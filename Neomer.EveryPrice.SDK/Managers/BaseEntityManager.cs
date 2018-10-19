@@ -7,6 +7,8 @@ using Neomer.EveryPrice.SDK.Core;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
 using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 
 namespace Neomer.EveryPrice.SDK.Managers
 {
@@ -14,47 +16,48 @@ namespace Neomer.EveryPrice.SDK.Managers
         where TEntity : IEntity
         where TSingleton : class
     {
+
         protected BaseEntityManager() 
         {
         }
 
-        public virtual IEntity Get(Guid id)
+        public virtual IEntity Get(ISession session,  Guid id)
         {
-            return NHibernateHelper.Instance.CurrentSession.Get<TEntity>(id);
+            return session.Get<TEntity>(id);
         }
 
-        public virtual IEnumerable<IEntity> Get()
+        public virtual IEnumerable<IEntity> Get(ISession session)
         {
-            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IEntity>().List<IEntity>();
+            return session.CreateCriteria<IEntity>().List<IEntity>();
         }
 
-        public virtual void Remove(IEntity entity)
+        public virtual void Remove(ISession session,  IEntity entity)
         {
-            NHibernateHelper.Instance.CurrentSession.Delete(entity);
+			session.Delete(entity);
         }
 
         /// <summary>
         /// Сохраняет сущность в БД во внешней транзакции
         /// </summary>
         /// <param name="entity"></param>
-        public virtual void Save(IEntity entity)
+        public virtual void Save(ISession session,  IEntity entity)
         {
             if (!(entity is TEntity))
             {
                 throw new UnsupportedEntityException();
             }
-            NHibernateHelper.Instance.CurrentSession.Save(entity);
+			session.Save(entity);
         }
 
         /// <summary>
         /// Сохраняет сущность в БД внутри собственной транзакции
         /// </summary>
         /// <param name="entity"></param>
-        public virtual void SaveIsolate(IEntity entity)
+        public virtual void SaveIsolate(ISession session,  IEntity entity)
         {
-            using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
+            using (var tr = session.BeginTransaction())
             {
-                Save(entity);
+                Save(session, entity);
                 try
                 {
                     tr.Commit();
