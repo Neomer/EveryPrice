@@ -134,6 +134,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                             }
                         }
                     } catch (IOException e) {
+                        callback.onFailure(e);
                         e.printStackTrace();
                     }
                     return;

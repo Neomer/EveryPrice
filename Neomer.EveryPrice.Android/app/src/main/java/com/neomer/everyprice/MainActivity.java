@@ -179,17 +179,21 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
             @Override
             public void onFailure(Throwable t) {
-                if (t instanceof SignInNeededException) {
-                    moveToSecurityActivity();
-                } else {
-                    String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getExceptionMessage() :
-                            t.getMessage().isEmpty() ?
-                                    "GetNearShopsCommand() exception" :
-                                    t.getMessage();
-                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    Log.d("app", t.getLocalizedMessage());
+                try
+                {
+                    if (t instanceof SignInNeededException) {
+                        moveToSecurityActivity();
+                    } else {
+                        String msg = (t instanceof WebApiException) ?
+                                ((WebApiException) t).getExceptionMessage() :
+                                t.getMessage().isEmpty() ?
+                                        "GetNearShopsCommand() exception" :
+                                        t.getMessage();
+                        Toast.makeText(MainActivity.this, "ex.3", Toast.LENGTH_SHORT).show();
+                        Log.d("app", t.getLocalizedMessage());
+                    }
                 }
+                catch (NullPointerException ex) { }
             }
         });
         nearShopsCommand.setDistance(1000);
@@ -218,12 +222,16 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
             @Override
             public void onFailure(Throwable t) {
-                String msg = (t instanceof WebApiException) ?
-                        ((WebApiException) t).getExceptionMessage() :
-                        t.getMessage().isEmpty() ?
-                                "tagsSuggestionsCommand() exception" :
-                                t.getMessage();
-                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                try
+                {
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getExceptionMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "tagsSuggestionsCommand() exception" :
+                                    t.getMessage();
+                    Toast.makeText(MainActivity.this, "ex.4", Toast.LENGTH_SHORT).show();
+                }
+                catch (NullPointerException ex) { }
             }
         });
 
@@ -383,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                             "getLastKnownLocation(LocationManager.NETWORK_PROVIDER) exception" :
                             ex.getMessage();
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "ex.1", Toast.LENGTH_LONG).show();
         }
 
         try {
@@ -393,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                     "getLastKnownLocation(LocationManager.GPS_PROVIDER) exception" :
                     ex.getMessage();
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "ex.2", Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
 

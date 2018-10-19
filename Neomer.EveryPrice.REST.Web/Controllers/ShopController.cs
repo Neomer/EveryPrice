@@ -18,6 +18,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
     {
         public List<ShopViewModel> Get(double lat, double lng, double distance)
         {
+			Logger.Log.Debug("ShopController.Get(lat=" + lat.ToString() + ", lng=" + lng.ToString() + ", distance=" + distance.ToString() + ")");
 			return Get(lat, lng, distance, null);
         }
 
