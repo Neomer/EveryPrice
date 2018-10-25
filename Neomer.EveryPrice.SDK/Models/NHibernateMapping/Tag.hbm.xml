@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true" assembly="Neomer.EveryPrice.SDK" namespace="Neomer.EveryPrice.SDK.Models">
+  <class name="Tag" table="Tags" dynamic-update="true" >
+    <cache usage="read-write"/>
+    <id name="Uid">
+      <generator class="guid" />
+    </id>
+    <property name="Value" unique="true" index="IDX_UQ_Value" />
+    <bag name="Shops" inverse="true" cascade="all" lazy="true" table="Tag_Shop">
+      <key column="TagUid"/>
+      <many-to-many class="Shop" column="ShopUid" />
+    </bag>
+
+  </class>
+</hibernate-mapping>

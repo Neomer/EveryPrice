@@ -8,6 +8,6 @@ namespace Neomer.EveryPrice.SDK.Models
 {
     public class BaseEntity : IEntity
     {
-        public Guid Uid { get; set; }
+        public virtual Guid Uid { get; set; }
     }
 }

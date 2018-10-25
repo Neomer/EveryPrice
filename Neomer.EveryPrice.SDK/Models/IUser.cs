@@ -9,6 +9,9 @@ namespace Neomer.EveryPrice.SDK.Models
     public interface IUser : IEntity
     {
         String Username { get; set; }
-        IUserProfile Profile { get; set; }
+
+        Guid? Token { get; set; }
+
+        DateTime? TokenExpirationDate { get; set; }
     }
 }

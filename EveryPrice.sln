@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SDK", "SDK", "{1CA0921D-963
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neomer.EveryPrice.REST.Web", "Neomer.EveryPrice.REST.Web\Neomer.EveryPrice.REST.Web.csproj", "{CB8E4E16-466D-46CD-9F46-C7F7D881914E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neomer.EveryPrice.Console", "Neomer.EveryPrice.Console\Neomer.EveryPrice.Console.csproj", "{A22410E4-5C48-4B5E-982A-F6B16B850BA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neomer.EveryPrice.SDK.Web", "Neomer.EveryPrice.SDK.Web\Neomer.EveryPrice.SDK.Web.csproj", "{9007355F-4B67-4DA0-ABE5-F7676EECF885}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		EveryPrice\EveryPrice.projitems*{5082830a-978f-460e-a939-dc4d40542b43}*SharedItemsImports = 13
@@ -28,12 +32,21 @@ Global
 		{CB8E4E16-466D-46CD-9F46-C7F7D881914E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB8E4E16-466D-46CD-9F46-C7F7D881914E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB8E4E16-466D-46CD-9F46-C7F7D881914E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A22410E4-5C48-4B5E-982A-F6B16B850BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A22410E4-5C48-4B5E-982A-F6B16B850BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A22410E4-5C48-4B5E-982A-F6B16B850BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A22410E4-5C48-4B5E-982A-F6B16B850BA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9007355F-4B67-4DA0-ABE5-F7676EECF885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9007355F-4B67-4DA0-ABE5-F7676EECF885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9007355F-4B67-4DA0-ABE5-F7676EECF885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9007355F-4B67-4DA0-ABE5-F7676EECF885}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B6A680FA-9150-4854-B5E1-05FDEB559376} = {1CA0921D-9636-4050-B24F-E0307620D7F1}
+		{9007355F-4B67-4DA0-ABE5-F7676EECF885} = {1CA0921D-9636-4050-B24F-E0307620D7F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3ED41D0D-7704-4996-AF14-8EB8273F9394}
