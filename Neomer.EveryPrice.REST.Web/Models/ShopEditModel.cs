@@ -1,5 +1,7 @@
 ﻿using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
         public IList<TagEditModel> Tags;
 
-        public void ToShop(ref IShop shopModel)
+        public void ToShop(ISession session, ref IShop shopModel)
         {
             if (shopModel == null)
             {
@@ -34,7 +36,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
             shopModel.Tags = Tags == null ? null :
                 Tags
                     .Where(_ => !String.IsNullOrEmpty(_.Value))
-                    .Select(_ => TagManager.Instance.FindTag(_.Value) ?? new Tag()
+                    .Select(_ => TagManager.Instance.FindTag(session, _.Value) ?? new Tag()
                     {
                         Value = _.Value
                     })

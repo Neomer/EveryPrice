@@ -1,6 +1,8 @@
 ﻿using Neomer.EveryPrice.SDK.Exceptions.Security;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
@@ -24,9 +26,9 @@ namespace Neomer.EveryPrice.SDK.Managers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public IUser SignIn(Guid userId)
+        public IUser SignIn(ISession session, Guid userId)
         {
-            var user = Get(userId) as IUser;
+            var user = Get(session, userId) as IUser;
 
             if (user == null)
             {
@@ -36,7 +38,7 @@ namespace Neomer.EveryPrice.SDK.Managers
             user.Token = Guid.NewGuid();
             user.TokenExpirationDate = DateTime.UtcNow.AddHours(2);
 
-            SaveIsolate(user);
+            SaveIsolate(session, user);
 
             return user;
         }
@@ -46,9 +48,10 @@ namespace Neomer.EveryPrice.SDK.Managers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public IUser GetUserByToken(Guid token)
+        public IUser GetUserByToken(ISession session, Guid token)
         {
-            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+			return session
+				.CreateCriteria<IUser>()
                 .Add(Expression.Eq("Token", token))
                 .Add(Expression.Le("TokenExpirationDate", DateTime.Now))
                 .UniqueResult<IUser>();
@@ -59,7 +62,7 @@ namespace Neomer.EveryPrice.SDK.Managers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public IUser GetUserByToken(HttpRequestHeaders headers)
+        public IUser GetUserByToken(ISession session, HttpRequestHeaders headers)
         {
             if (!headers.Contains("Token"))
             {
@@ -76,7 +79,8 @@ namespace Neomer.EveryPrice.SDK.Managers
                 throw new InvalidTokenException();
             }
 
-            var user = NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+            var user = session
+				.CreateCriteria<IUser>()
                 .Add(Expression.Eq("Token", token))
                 .Add(Expression.Ge("TokenExpirationDate", DateTime.UtcNow))
                 .UniqueResult<IUser>();

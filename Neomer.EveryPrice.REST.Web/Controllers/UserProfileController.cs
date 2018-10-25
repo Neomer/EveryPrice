@@ -2,6 +2,7 @@
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Web.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,16 @@ using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class UserProfileController : ApiController
-    {
+    public class UserProfileController : BaseApiController
+	{
         public UserProfile Get(Guid id)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            return UserProfileManager.Instance.Get(id) as UserProfile;
+            return UserProfileManager.Instance.Get(CurrentSession, id) as UserProfile;
         }
 
         /// <summary>
@@ -31,13 +32,13 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public UserProfile Post(Guid id, [FromBody]UserProfileEditModel profileEditModel)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if  (user == null)
             {
                 return null;
             }
 
-            var userProfile = UserProfileManager.Instance.Get(id) as UserProfile;
+            var userProfile = UserProfileManager.Instance.Get(CurrentSession, id) as UserProfile;
             if (userProfile == null)
             {
                 return null;
@@ -45,7 +46,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             profileEditModel.ToUserProfile(ref userProfile);
 
             var transactionId = NHibernateHelper.Instance.BeginTransaction();
-            UserProfileManager.Instance.Save(userProfile);
+            UserProfileManager.Instance.Save(CurrentSession, userProfile);
             NHibernateHelper.Instance.CommitTransaction(transactionId);
 
             return userProfile;

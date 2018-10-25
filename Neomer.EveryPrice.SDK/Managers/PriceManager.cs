@@ -1,5 +1,7 @@
 ﻿using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
@@ -16,10 +18,10 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-        public IList<IPrice> GetPricesByProduct(IProduct product)
+        public IList<IPrice> GetPricesByProduct(ISession session, IProduct product)
         {
-            return NHibernateHelper.Instance.CurrentSession
-                .CreateCriteria<IPrice>()
+            return session
+				.CreateCriteria<IPrice>()
                 .Add(Expression.Eq("Product", product))
                 .List<IPrice>(); 
         }

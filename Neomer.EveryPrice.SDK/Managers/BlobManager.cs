@@ -1,5 +1,7 @@
 ﻿using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-        public IList<IBlob> FindByOwner(IEntity uid)
+        public IList<IBlob> FindByOwner(ISession session, IEntity uid)
         {
             throw new NotImplementedException();
         }
