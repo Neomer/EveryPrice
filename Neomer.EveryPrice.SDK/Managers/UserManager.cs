@@ -36,21 +36,31 @@ namespace Neomer.EveryPrice.SDK.Managers
             base.Save(session, entity);
         }
 
-        public void RegisterUser(ISession session, IUser user) {
+        public void RegisterUser(ISession session, IUser user, string encryptedPassword) {
 
-            this.Save(session, user);
+			if (encryptedPassword == null || encryptedPassword.Length < 3)
+			{
+				throw new FormatException();
+			}
 
-            var userProfile = new UserProfile();
-            userProfile.Owner = user;
-            userProfile.Name = null;
-            userProfile.BirthDate = null;
+			this.SaveIsolate(session, user);
 
-            UserProfileManager.Instance.Save(session, userProfile);
+			user.Profile = new UserProfile()
+			{
+				Name = null,
+				BirthDate = null,
+				Owner = user
+			};
 
-            var userSecurityProfile = new UserSecurityProfile();
-            userSecurityProfile.Owner = user;
+			UserProfileManager.Instance.SaveIsolate(session, user.Profile);
 
-            UserSecurityProfileManager.Instance.Save(session, userSecurityProfile);
+			user.SecurityProfile = new UserSecurityProfile()
+			{
+				Password = encryptedPassword,
+				Owner = user
+			};
+
+			UserSecurityProfileManager.Instance.SaveIsolate(session, user.SecurityProfile);
         }
 
         public IUser GetUserByUsername(ISession session, string username)

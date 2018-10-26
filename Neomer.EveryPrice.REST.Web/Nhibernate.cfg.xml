@@ -8,7 +8,7 @@
       NHibernate.Driver.SqlClientDriver
     </property>
     <property name="connection.connection_string">
-      Server=KIRPK\SQLEXPRESS; database=EveryPrice;User Id=EveryPrice;Password=EveryPriceVeryHardPassword; MultipleActiveResultSets=True;
+      Server=W0114; database=EveryPrice;User Id=EveryPrice;Password=EveryPriceVeryHardPassword; 
     </property>
     <property name="dialect">
       NHibernate.Dialect.MsSql2008Dialect
