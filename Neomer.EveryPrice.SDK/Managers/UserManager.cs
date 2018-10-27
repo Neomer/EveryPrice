@@ -1,6 +1,8 @@
 ﻿using Neomer.EveryPrice.SDK.Exceptions.Managers;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-        public override void Save(IEntity entity)
+        public override void Save(ISession session, IEntity entity)
         {
             var user = entity as IUser;
 
@@ -31,29 +33,40 @@ namespace Neomer.EveryPrice.SDK.Managers
                 throw new FormatException("Имя не может быть короче 3 символов");
             }
 
-            base.Save(entity);
+            base.Save(session, entity);
         }
 
-        public void RegisterUser(IUser user) {
+        public void RegisterUser(ISession session, IUser user, string encryptedPassword) {
 
-            this.Save(user);
+			if (encryptedPassword == null || encryptedPassword.Length < 3)
+			{
+				throw new FormatException();
+			}
 
-            var userProfile = new UserProfile();
-            userProfile.Owner = user;
-            userProfile.Name = null;
-            userProfile.BirthDate = null;
+			this.SaveIsolate(session, user);
 
-            UserProfileManager.Instance.Save(userProfile);
+			user.Profile = new UserProfile()
+			{
+				Name = null,
+				BirthDate = null,
+				Owner = user
+			};
 
-            var userSecurityProfile = new UserSecurityProfile();
-            userSecurityProfile.Owner = user;
+			UserProfileManager.Instance.SaveIsolate(session, user.Profile);
 
-            UserSecurityProfileManager.Instance.Save(userSecurityProfile);
+			user.SecurityProfile = new UserSecurityProfile()
+			{
+				Password = encryptedPassword,
+				Owner = user
+			};
+
+			UserSecurityProfileManager.Instance.SaveIsolate(session, user.SecurityProfile);
         }
 
-        public IUser GetUserByUsername(string username)
+        public IUser GetUserByUsername(ISession session, string username)
         {
-            return NHibernateHelper.Instance.CurrentSession.CreateCriteria<IUser>()
+            return session
+				.CreateCriteria<IUser>()
                 .Add(Expression.Eq("Username", username))
                 .UniqueResult<IUser>();
         }

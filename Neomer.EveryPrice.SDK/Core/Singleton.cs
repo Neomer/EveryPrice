@@ -7,26 +7,37 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Core
 {
-    public class Singleton<T> where T : class
+	public class Singleton<T> : Singleton<T, T>
+		where T : class
+	{
+	}
+
+	public class Singleton<TClass, TInterface> 
+		where TClass : class, TInterface
     {
-        private static T _instance;
+        private static TInterface _instance;
 
         protected Singleton()
         {
         }
 
-        private static T CreateInstance()
+        private static TInterface CreateInstance()
         {
-            ConstructorInfo cInfo = typeof(T).GetConstructor(
+            ConstructorInfo cInfo = typeof(TClass).GetConstructor(
                 BindingFlags.Instance | BindingFlags.NonPublic,
                 null,
                 new Type[0],
                 new ParameterModifier[0]);
 
-            return (T)cInfo.Invoke(null);
+			if (cInfo == null)
+			{
+				throw new Exception("No default constructor!");
+			}
+
+            return (TInterface)cInfo.Invoke(null);
         }
 
-        public static T Instance
+        public static TInterface Instance
         {
             get
             {

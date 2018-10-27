@@ -4,6 +4,7 @@ using Neomer.EveryPrice.SDK.Exceptions.Security;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Web.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,7 @@ using System.Web.Mvc;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class UserController : ApiController
+    public class UserController : BaseApiController
     {
         /// <summary>
         /// Не использовать!
@@ -32,7 +33,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
         /// <returns></returns>
         public UserViewModel Get(Guid id)
         {
-            var entity = UserManager.Instance.Get(id) as IUser;
+            var entity = UserManager.Instance.Get(CurrentSession, id) as IUser;
             if (entity == null)
             {
                 throw new NotFoundException();
@@ -58,12 +59,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                 }
             }
 
-            var user = UserManager.Instance.GetUserByUsername(authModel.Username) as IUser;
-            if (user == null)
+            var user = UserManager.Instance.GetUserByUsername(CurrentSession, authModel.Username) as IUser;
+            if (user == null || user.SecurityProfile == null || user.SecurityProfile.Password != authModel.EncryptedPassword)
             {
                 throw new SignInFailedException();
             }
-            return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(user.Uid));
+            return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(CurrentSession, user.Uid));
         }
 
         /// <summary>
@@ -84,9 +85,9 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             }
             IUser user = new User();
             authModel.ToUser(ref user);
-            UserManager.Instance.SaveIsolate(user);
+            UserManager.Instance.RegisterUser(CurrentSession, user, authModel.EncryptedPassword);
 
-            return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(user.Uid));
+            return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(CurrentSession, user.Uid));
         }
 
         /// <summary>

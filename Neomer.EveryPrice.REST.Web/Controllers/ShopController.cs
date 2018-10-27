@@ -4,6 +4,7 @@ using Neomer.EveryPrice.SDK.Exceptions.Managers;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Web.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class ShopController : ApiController
+    public class ShopController : BaseApiController
     {
         public List<ShopViewModel> Get(double lat, double lng, double distance)
         {
@@ -24,7 +25,8 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
 		public List<ShopViewModel> Get(double lat, double lng, double distance, Guid? tagUid)
 		{
-			var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+			Logger.Log.Debug("ShopController.Get(lat=" + lat + ", lng=" + lng + ", distance=" + distance + ", tagUid=" + tagUid + ")");
+			var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
 			if (user == null)
 			{
 				return null;
@@ -32,10 +34,10 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 			ITag tag = null;
 			if (tagUid != null)
 			{
-				tag = TagManager.Instance.Get((Guid)tagUid) as ITag;
+				tag = TagManager.Instance.Get(CurrentSession, (Guid)tagUid) as ITag;
 			}
 
-			var shopList = ShopManager.Instance.GetShopsNear(new Location() { Latitude = lat, Longtitude = lng }, distance, tag);
+			var shopList = ShopManager.Instance.GetShopsNear(CurrentSession, new Location() { Latitude = lat, Longtitude = lng }, distance, tag);
 
 			return shopList == null ? null :
 				shopList
@@ -45,12 +47,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
 		public ShopViewModel Get([FromUri] Guid id)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var entity = ShopManager.Instance.Get(id) as IShop;
+            var entity = ShopManager.Instance.Get(CurrentSession, id) as IShop;
             if (entity == null)
             {
                 throw new NotFoundException();
@@ -60,12 +62,12 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 
         public List<ShopViewModel> Get(Guid tagUid, string tagName)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var tag = TagManager.Instance.Get((Guid)tagUid) as ITag;
+            var tag = TagManager.Instance.Get(CurrentSession, (Guid)tagUid) as ITag;
             if (tag == null || tag.Shops == null)
             {
                 return null;
@@ -93,18 +95,18 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                     // use raw content here
                 }
             }
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var shop = ShopManager.Instance.Get(id) as IShop;
+            var shop = ShopManager.Instance.Get(CurrentSession, id) as IShop;
             if (shop == null)
             {
                 return null;
             }
-            editModel.ToShop(ref shop);
-            ShopManager.Instance.SaveIsolate(shop);
+            editModel.ToShop(CurrentSession, ref shop);
+            ShopManager.Instance.SaveIsolate(CurrentSession, shop);
 
             return new ShopViewModel(shop);
         }
@@ -126,7 +128,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                     // use raw content here
                 }
             }
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
@@ -138,9 +140,9 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
                 Creator = user
             };
 
-            editModel.ToShop(ref shop);
+            editModel.ToShop(CurrentSession, ref shop);
 
-            ShopManager.Instance.SaveIsolate(shop);
+            ShopManager.Instance.SaveIsolate(CurrentSession, shop);
 
             return new ShopViewModel(shop);
         }

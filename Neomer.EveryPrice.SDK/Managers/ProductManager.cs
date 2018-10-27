@@ -1,6 +1,8 @@
 ﻿using Neomer.EveryPrice.SDK.Exceptions.Managers;
 using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Models;
+using Neomer.EveryPrice.SDK.Session;
+using NHibernate;
 using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace Neomer.EveryPrice.SDK.Managers
 
         }
 
-        public override void SaveIsolate(IEntity entity)
+        public override void SaveIsolate(ISession session, IEntity entity)
         {
             var product = entity as IProduct;
             if (product == null)
@@ -26,12 +28,12 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
             using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
             {
-                base.Save(product);
+                base.Save(session, product);
                 if (product.Prices != null)
                 {
                     foreach (var price in product.Prices)
                     {
-                        PriceManager.Instance.Save(price);
+                        PriceManager.Instance.Save(session, price);
                     }
                 }
                 try
@@ -46,14 +48,14 @@ namespace Neomer.EveryPrice.SDK.Managers
             }
         }
 
-        public IList<IProduct> GetProductsByShop(IShop shop)
+        public IList<IProduct> GetProductsByShop(ISession session, IShop shop)
         {
             if (shop == null)
             {
                 return null;
             }
-            return NHibernateHelper.Instance.CurrentSession
-                .CreateCriteria<IProduct>()
+            return session
+				.CreateCriteria<IProduct>()
                 .Add(Expression.Eq("Shop", shop))
                 .AddOrder(Order.Asc("Name"))
                 .List<IProduct>();

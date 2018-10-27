@@ -3,6 +3,7 @@ package com.neomer.everyprice;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -28,12 +29,14 @@ import android.widget.Toast;
 
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SignInNeededException;
+import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.commands.GetNearShopsCommand;
 import com.neomer.everyprice.api.commands.TagsSuggestionsCommand;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.TagViewModel;
+import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.GeoLocation;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
@@ -41,8 +44,12 @@ import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
+
+    public final static String APP_PREFERENCES = "EveryPricePreferences";
+    public final static String APP_PREFERENCES_TOKEN = "Token";
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
@@ -84,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (!loadSavedToken()) {
+            return;
+        }
 
         setupRecyclerView();
         setupFloatingButton();
@@ -156,6 +167,19 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
 
     //endregion
+
+    private boolean loadSavedToken() {
+        SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String sToken = preferences.getString(APP_PREFERENCES_TOKEN, null);
+        if (sToken == null || sToken.isEmpty()) {
+            moveToSecurityActivity();
+            return false;
+        }
+        Token token = new Token();
+        token.setToken(UUID.fromString(sToken));
+        WebApiFacade.getInstance().setToken(token);
+        return true;
+    }
 
     private void createCommands() {
 
@@ -383,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                             "getLastKnownLocation(LocationManager.NETWORK_PROVIDER) exception" :
                             ex.getMessage();
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "ex.1", Toast.LENGTH_LONG).show();
         }
 
         try {
@@ -393,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                     "getLastKnownLocation(LocationManager.GPS_PROVIDER) exception" :
                     ex.getMessage();
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "ex.2", Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
 

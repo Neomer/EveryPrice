@@ -7,19 +7,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using Neomer.EveryPrice.SDK.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
-    public class ImageController : ApiController
-    {
+    public class ImageController : BaseApiController
+	{
         public ImageViewModel Get([FromUri] Guid id)
         {
-            var user = SecurityManager.Instance.GetUserByToken(Request.Headers);
+            var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
             if (user == null)
             {
                 return null;
             }
-            var image = BlobManager.Instance.Get(id) as IBlob;
+            var image = BlobManager.Instance.Get(CurrentSession, id) as IBlob;
             if (image == null)
             {
                 throw new NotFoundException();

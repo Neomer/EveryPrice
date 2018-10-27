@@ -17,11 +17,7 @@ namespace Neomer.EveryPrice.Console
             var location = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var appPath = System.IO.Path.GetDirectoryName(location);
 
-            NHibernateHelper.Instance.OpenSession(appPath + @"\Nhibernate.cfg.xml");
-
-            //Program.CreateGroups();
-
-            NHibernateHelper.Instance.CloseSession();
+            NHibernateHelper.ApplyConfiguration(appPath + @"\Nhibernate.cfg.xml");
         }
 
         static void CreateGroups()
@@ -41,13 +37,6 @@ namespace Neomer.EveryPrice.Console
 
         static void CreateAdmin()
         {
-            var transactionUid = NHibernateHelper.Instance.BeginTransaction();
-
-            var adminUser = new User();
-            adminUser.Username = "Admin";
-            UserManager.Instance.RegisterUser(adminUser);
-
-            NHibernateHelper.Instance.CommitTransaction(transactionUid);
         }
     }
 }
