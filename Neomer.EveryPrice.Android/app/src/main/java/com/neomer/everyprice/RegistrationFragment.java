@@ -22,21 +22,24 @@ import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.IAfterExecutionListener;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
 
-public class RegistrationFragment extends Fragment {
+public class RegistrationFragment extends SecurityFragment {
 
-    private View rootView;
+    @Override
+    public int getLayoutResource() {
+        return R.layout.fragment_registration_security;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_registration_security, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        final EditText txtUsername = (EditText) rootView.findViewById(R.id.txtUsername);
-        final EditText txtPassword = (EditText) rootView.findViewById(R.id.txtPassword);
-        final EditText txtPasswordRetype = (EditText) rootView.findViewById(R.id.txtPasswordRetype);
-        final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
+        final EditText txtUsername = getRootView().findViewById(R.id.txtUsername);
+        final EditText txtPassword = getRootView().findViewById(R.id.txtPassword);
+        final EditText txtPasswordRetype = getRootView().findViewById(R.id.txtPasswordRetype);
+        final TextView tvRegistrationError = getRootView().findViewById(R.id.tvRegistrationError);
 
-        Button btnRegistration = (Button) rootView.findViewById(R.id.btnRegister);
+        Button btnRegistration = getRootView().findViewById(R.id.btnRegister);
         final UserRegistrationCommand registrationCommand = new UserRegistrationCommand(new IWebApiCallback<Token>() {
             @Override
             public void onSuccess(Token result) {
@@ -56,40 +59,32 @@ public class RegistrationFragment extends Fragment {
             @Override
             public boolean OnBeforeExecute() {
                 if (!txtPassword.getText().toString().contentEquals(txtPasswordRetype.getText().toString())) {
-                    DisplayErrorMessage(rootView.getResources().getText(R.string.password_not_match));
+                    DisplayErrorMessage(getRootView().getResources().getText(R.string.password_not_match));
                     return false;
                 }
-                rootView.findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
-                rootView.findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.VISIBLE);
-                registrationCommand.setData(new UserSignInModel(txtUsername.getText().toString()));
+                getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.VISIBLE);
+                registrationCommand.setData(
+                        new UserSignInModel(
+                                txtUsername.getText().toString(),
+                                txtPassword.getText().toString()));
                 return true;
             }
         });
         registrationCommand.setOnAfterExecutionListener(new IAfterExecutionListener() {
             @Override
             public void OnAfterExecution() {
-                rootView.findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.INVISIBLE);
             }
         });
         registrationCommand.applyToViewClick(btnRegistration);
 
-        return rootView;
+        return getRootView();
     }
-
-    private void moveToMainActivity() {
-        startActivity(new Intent(rootView.getContext(), MainActivity.class));
-        getActivity().finish();
-    }
-
-    public void DisplayErrorMessage(String message) {
-        final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
-        tvRegistrationError.setText(message);
-    }
-
 
     public void DisplayErrorMessage(CharSequence message) {
-        final TextView tvRegistrationError = (TextView) rootView.findViewById(R.id.tvRegistrationError);
+        final TextView tvRegistrationError = getRootView().findViewById(R.id.tvRegistrationError);
         tvRegistrationError.setText(message);
     }
 }
