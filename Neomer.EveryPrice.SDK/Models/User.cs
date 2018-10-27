@@ -13,5 +13,9 @@ namespace Neomer.EveryPrice.SDK.Models
         public virtual Guid? Token { get; set; }
 
         public virtual DateTime? TokenExpirationDate { get; set; }
-    }
+
+		public virtual IUserSecurityProfile SecurityProfile { get; set; }
+
+		public virtual IUserProfile Profile { get; set; }
+	}
 }
