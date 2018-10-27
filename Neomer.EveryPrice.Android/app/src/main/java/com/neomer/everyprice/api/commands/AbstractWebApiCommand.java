@@ -17,6 +17,8 @@ import com.neomer.everyprice.core.IBeforeExecuteListener;
 import com.neomer.everyprice.core.ICommand;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,10 +34,10 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     private IWebApiCallback<TCallbackResult> callback;
     private SecurityApi securityApi;
 
-    private IBeforeExecuteListener onBeforeExecuteListener;
-    private IAfterExecutionListener onAfterExecutionListener;
-    private IAfterFailedExecutionListener onAfterFailedExecutionListener;
-    private IAfterSuccessExecutionListener onAfterSuccessExecutionListener;
+    private List<IBeforeExecuteListener> onBeforeExecuteListener;
+    private List<IAfterExecutionListener> onAfterExecutionListener;
+    private List<IAfterFailedExecutionListener> onAfterFailedExecutionListener;
+    private List<IAfterSuccessExecutionListener> onAfterSuccessExecutionListener;
 
     protected abstract Call<TCallbackResult> getCall();
 
@@ -45,10 +47,10 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
             throw new NullPointerException();
         }
         this.callback = callback;
-        this.onBeforeExecuteListener = null;
-        this.onAfterExecutionListener = null;
-        this.onAfterFailedExecutionListener = null;
-        this.onAfterSuccessExecutionListener = null;
+        this.onBeforeExecuteListener = new ArrayList<>();
+        this.onAfterExecutionListener = new ArrayList<>();
+        this.onAfterFailedExecutionListener = new ArrayList<>();
+        this.onAfterSuccessExecutionListener = new ArrayList<>();
     }
 
     public final SecurityApi getSecurityApi() {
@@ -93,14 +95,14 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     public synchronized final void execute() throws NullPointerException {
 
         if (onBeforeExecuteListener != null) {
-            if (!onBeforeExecuteListener.OnBeforeExecute())
-            {
-                return;
+            for (IBeforeExecuteListener i : onBeforeExecuteListener) {
+                if (!i.OnBeforeExecute()) {
+                    return;
+                }
             }
         }
 
-        if (!beforeExecute())
-        {
+        if (!beforeExecute()) {
             return;
         }
 
@@ -118,7 +120,9 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                 }
 
                 if (onAfterExecutionListener != null) {
-                    onAfterExecutionListener.OnAfterExecution();
+                    for (IAfterExecutionListener i : onAfterExecutionListener) {
+                        i.OnAfterExecution();
+                    }
                 }
 
                 if (response.code() != 200) {
@@ -140,7 +144,9 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                 }
 
                 if (onAfterSuccessExecutionListener != null) {
-                    onAfterSuccessExecutionListener.OnAfterSuccessExecution();
+                    for (IAfterSuccessExecutionListener i : onAfterSuccessExecutionListener) {
+                        i.OnAfterSuccessExecution();
+                    }
                 }
 
                 TCallbackResult result = response.body();
@@ -155,11 +161,15 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                     throw new NullPointerException();
                 }
                 if (onAfterExecutionListener != null) {
-                    onAfterExecutionListener.OnAfterExecution();
+                    for (IAfterExecutionListener i : onAfterExecutionListener) {
+                        i.OnAfterExecution();
+                    }
                 }
 
                 if (onAfterFailedExecutionListener != null) {
-                    onAfterFailedExecutionListener.OnAfterFailedExecution(t);
+                    for (IAfterFailedExecutionListener i : onAfterFailedExecutionListener) {
+                        i.OnAfterFailedExecution(t);
+                    }
                 }
                 beforeFailureCallback(t);
                 getCallback().onFailure(t);
@@ -181,18 +191,18 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     }
 
     public final void setOnBeforeExecuteListener(IBeforeExecuteListener onBeforeExecuteListener) {
-        this.onBeforeExecuteListener = onBeforeExecuteListener;
+        this.onBeforeExecuteListener.add(onBeforeExecuteListener);
     }
 
     public void setOnAfterExecutionListener(IAfterExecutionListener onAfterExecutionListener) {
-        this.onAfterExecutionListener = onAfterExecutionListener;
+        this.onAfterExecutionListener.add(onAfterExecutionListener);
     }
 
     public void setOnAfterFailedExecutionListener(IAfterFailedExecutionListener onAfterFailedExecutionListener) {
-        this.onAfterFailedExecutionListener = onAfterFailedExecutionListener;
+        this.onAfterFailedExecutionListener.add(onAfterFailedExecutionListener);
     }
 
     public void setOnAfterSuccessExecutionListener(IAfterSuccessExecutionListener onAfterSuccessExecutionListener) {
-        this.onAfterSuccessExecutionListener = onAfterSuccessExecutionListener;
+        this.onAfterSuccessExecutionListener.add(onAfterSuccessExecutionListener);
     }
 }

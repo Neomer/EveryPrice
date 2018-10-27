@@ -60,7 +60,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             }
 
             var user = UserManager.Instance.GetUserByUsername(CurrentSession, authModel.Username) as IUser;
-            if (user == null)
+            if (user == null || user.SecurityProfile == null || user.SecurityProfile.Password != authModel.EncryptedPassword)
             {
                 throw new SignInFailedException();
             }
@@ -85,7 +85,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             }
             IUser user = new User();
             authModel.ToUser(ref user);
-            UserManager.Instance.SaveIsolate(CurrentSession, user);
+            UserManager.Instance.RegisterUser(CurrentSession, user, authModel.EncryptedPassword);
 
             return new UserWithTokenViewModel(SecurityManager.Instance.SignIn(CurrentSession, user.Uid));
         }
