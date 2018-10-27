@@ -9,12 +9,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
+import com.neomer.everyprice.core.helpers.ImageHelper;
 
 public class ShopOnMapActivity extends AppCompatActivity implements OnMapReadyCallback, ILocationUpdateEventListener {
 
@@ -57,7 +59,6 @@ public class ShopOnMapActivity extends AppCompatActivity implements OnMapReadyCa
             try {
                 markerOptions.position(googleMap.getCameraPosition().target);
                 markerOptions.draggable(false);
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_shopping_cart_white_24dp));
             }
             catch (NullPointerException ex) {}
             markerPosition = googleMap.addMarker(markerOptions);
@@ -71,6 +72,8 @@ public class ShopOnMapActivity extends AppCompatActivity implements OnMapReadyCa
                 MarkerOptions markerOptions = new MarkerOptions();
                 try {
                     markerOptions.position(new LatLng(s.getLat(), s.getLng()));
+                    markerOptions.draggable(false);
+                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ImageHelper.VectorToBitmap(ShopOnMapActivity.this, R.drawable.ic_shopping_cart_white_24dp)));
                     googleMap.addMarker(markerOptions);
                 }
                 catch (NullPointerException e) {}
