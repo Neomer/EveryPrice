@@ -23,19 +23,25 @@ import com.neomer.everyprice.api.commands.SignInCommand;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 
-public class SignInFragment extends Fragment {
+public class SignInFragment extends SecurityFragment {
 
-    private View rootView = null;
+    @Override
+    public int getLayoutResource() {
+        return R.layout.fragment_signin_security;
+    }
+
     private View progressView = null;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_signin_security, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        final EditText txtUsername = rootView.findViewById(R.id.txtUsername);
-        Button btnSignIn = rootView.findViewById(R.id.btnSignIn);
-        final TextView tvSignInError = rootView.findViewById(R.id.tvSignInError);
+        final EditText txtUsername = getRootView().findViewById(R.id.txtUsername);
+        final EditText txtPassword = getRootView().findViewById(R.id.txtPassword);
+
+        Button btnSignIn = getRootView().findViewById(R.id.btnSignIn);
+        final TextView tvSignInError = getRootView().findViewById(R.id.tvSignInError);
 
         final SignInCommand signInCommand = new SignInCommand(new IWebApiCallback<Token>() {
             @Override
@@ -48,38 +54,33 @@ public class SignInFragment extends Fragment {
                 if (t instanceof WebApiException) {
                     tvSignInError.setText(WebApiExceptionTranslator.getMessage((WebApiException)t, getResources()));
                 } else {
-                    tvSignInError.setText(t.getLocalizedMessage());
+                    tvSignInError.setText(t.getMessage());
                 }
             }
         });
         signInCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
             @Override
             public boolean OnBeforeExecute() {
-                rootView.findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
-                rootView.findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.VISIBLE);
-                signInCommand.setData(new UserSignInModel(txtUsername.getText().toString()));
+                getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.VISIBLE);
+                signInCommand.setData(
+                        new UserSignInModel(
+                                txtUsername.getText().toString(),
+                                txtPassword.getText().toString()));
                 return true;
             }
         });
         signInCommand.setOnAfterExecutionListener(new IAfterExecutionListener() {
             @Override
             public void OnAfterExecution() {
-                rootView.findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);
-                rootView.findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.INVISIBLE);
             }
         });
 
         signInCommand.applyToViewClick(btnSignIn);
 
-        return rootView;
+        return getRootView();
     }
-
-    private void moveToMainActivity() {
-        if (rootView != null) {
-            startActivity(new Intent(rootView.getContext(), MainActivity.class));
-        }
-        getActivity().finish();
-    }
-
 
 }
