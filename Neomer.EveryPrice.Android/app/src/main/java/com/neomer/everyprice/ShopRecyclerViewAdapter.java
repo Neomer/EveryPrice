@@ -7,6 +7,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,12 +60,10 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopRecyclerVi
                     sDistance = NumericHelper.getInstance().FormatDistance(distance, viewHolder.getContext().getResources());
                 }
                 catch (NullPointerException ex) {
-                    if (!ex.getMessage().isEmpty()) {
-                        Toast.makeText(viewHolder.getContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    Log.d("app", ex.getMessage());
                 }
             } else {
-                Toast.makeText(viewHolder.getContext(), viewHolder.getContext().getResources().getString(R.string.error_location_not_ready), Toast.LENGTH_SHORT).show();
+                Log.d("app", viewHolder.getContext().getResources().getString(R.string.error_location_not_ready));
             }
             viewHolder.getTextViewDistance().setText(sDistance);
         }
