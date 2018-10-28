@@ -281,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             public boolean onSuggestionClick(int position) {
                 TagViewModel tag = searchViewTagSuggestionAdapter.getTags().get(position);
                 if (tag != null) {
+                    searchView.setQuery(tag.getValue(), false);
                     selectedTag = tag.toTag();
                     loadListOfNearestShops();
                 }
