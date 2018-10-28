@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.neomer.everyprice.api.WebApiFacade;
+import com.neomer.everyprice.core.helpers.SecurityHelper;
 
 public abstract class SecurityFragment extends Fragment {
 
@@ -38,9 +39,9 @@ public abstract class SecurityFragment extends Fragment {
         if (context == null) {
             return;
         }
-        SharedPreferences preferences = context.getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(SecurityHelper.APP_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(MainActivity.APP_PREFERENCES_TOKEN, WebApiFacade.getInstance().getToken().getToken().toString());
+        editor.putString(SecurityHelper.APP_PREFERENCES_TOKEN, WebApiFacade.getInstance().getToken().getToken().toString());
         editor.apply();
 
         if (rootView != null) {

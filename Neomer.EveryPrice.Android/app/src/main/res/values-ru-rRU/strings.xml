@@ -39,4 +39,7 @@
 	<string name="no_price">Нет цены</string>
     <string name="tags_search_hint">Найти тэги...</string>
     <string name="search">Найти</string>
+    <string name="logout">Выйти</string>
+    <string name="menu">Меню</string>
+    <string name="profile">Профиль</string>
 </resources>

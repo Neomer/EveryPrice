@@ -42,14 +42,12 @@ import com.neomer.everyprice.core.GeoLocation;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
+import com.neomer.everyprice.core.helpers.SecurityHelper;
 
 import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
-
-    public final static String APP_PREFERENCES = "EveryPricePreferences";
-    public final static String APP_PREFERENCES_TOKEN = "Token";
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
@@ -108,10 +106,21 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.mainmenu_action_search);
-        if (menuItem != null) {
-            searchView = (SearchView) menuItem.getActionView();
+        MenuItem itemSearch = menu.findItem(R.id.mainmenu_action_search);
+        if (itemSearch != null) {
+            searchView = (SearchView) itemSearch.getActionView();
             setupFastSearch();
+        }
+        MenuItem itemLogout = menu.findItem(R.id.mainMenu_Logout);
+        if (itemLogout != null) {
+            itemLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    SecurityHelper.ClearSavedToken(MainActivity.this);
+                    moveToSecurityActivity();
+                    return true;
+                }
+            });
         }
         return true;
     }
@@ -169,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     //endregion
 
     private boolean loadSavedToken() {
-        SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String sToken = preferences.getString(APP_PREFERENCES_TOKEN, null);
+        SharedPreferences preferences = getSharedPreferences(SecurityHelper.APP_PREFERENCES, Context.MODE_PRIVATE);
+        String sToken = preferences.getString(SecurityHelper.APP_PREFERENCES_TOKEN, null);
         if (sToken == null || sToken.isEmpty()) {
             moveToSecurityActivity();
             return false;
