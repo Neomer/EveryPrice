@@ -62,8 +62,8 @@ public class RegistrationFragment extends SecurityFragment {
                     DisplayErrorMessage(getRootView().getResources().getText(R.string.password_not_match));
                     return false;
                 }
-                getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
-                getRootView().findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.FragmentRegistration_formLayout).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.FragmentRegistration_progressBar).setVisibility(View.VISIBLE);
                 registrationCommand.setData(
                         new UserSignInModel(
                                 txtUsername.getText().toString(),
@@ -74,8 +74,8 @@ public class RegistrationFragment extends SecurityFragment {
         registrationCommand.setOnAfterExecutionListener(new IAfterExecutionListener() {
             @Override
             public void OnAfterExecution() {
-                getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);
-                getRootView().findViewById(R.id.FragmentSignIn_progressBar).setVisibility(View.INVISIBLE);
+                getRootView().findViewById(R.id.FragmentRegistration_formLayout).setVisibility(View.VISIBLE);
+                getRootView().findViewById(R.id.FragmentRegistration_progressBar).setVisibility(View.INVISIBLE);
             }
         });
         registrationCommand.applyToViewClick(btnRegistration);

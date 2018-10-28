@@ -48,6 +48,6 @@ public class WebApiException extends Exception {
     }
 
     public boolean is(String exceptionType) {
-        return ExceptionType.contains(exceptionType);
+        return ExceptionType == null || ExceptionType.isEmpty() ? false : ExceptionType.contains(exceptionType);
     }
 }

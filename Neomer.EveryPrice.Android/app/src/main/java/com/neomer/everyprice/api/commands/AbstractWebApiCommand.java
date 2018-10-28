@@ -77,8 +77,8 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
      * Вызывается перед тем, как отдать исключение на внешний Callback
      * @param t Исключение при выполнении WebAPI запроса
      */
-    private void beforeFailureCallback(@SuppressWarnings("unused") Throwable t) {
-
+    protected Throwable beforeFailureCallback(@SuppressWarnings("unused") Throwable t) {
+        return t;
     }
 
     /**
@@ -126,19 +126,15 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                 }
 
                 if (response.code() != 200) {
-                    try {
-                        Gson gson = new GsonBuilder().create();
-                        if (response.errorBody() != null) {
-                            try {
-                                WebApiException exception = gson.fromJson(response.errorBody().string(), WebApiException.class);
-                                callback.onFailure(exception);
-                            }
-                            catch (Exception ex) {
-                                callback.onFailure(new Exception(response.errorBody().string()));
-                            }
+                    Gson gson = new GsonBuilder().create();
+                    if (response.errorBody() != null) {
+                        try {
+                            WebApiException exception = gson.fromJson(response.errorBody().string(), WebApiException.class);
+                            onFailure(call, exception);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        catch (Exception ex) {
+                            onFailure(call, ex);
+                        }
                     }
                     return;
                 }
@@ -151,7 +147,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
 
                 TCallbackResult result = response.body();
 
-                beforeSuccessCallback(result);
+                    beforeSuccessCallback(result);
                 getCallback().onSuccess(result);
             }
 
@@ -171,7 +167,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
                         i.OnAfterFailedExecution(t);
                     }
                 }
-                beforeFailureCallback(t);
+                t = beforeFailureCallback(t);
                 getCallback().onFailure(t);
             }
         });
