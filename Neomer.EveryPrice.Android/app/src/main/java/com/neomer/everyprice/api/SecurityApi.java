@@ -50,6 +50,9 @@ public interface SecurityApi {
 
     @PUT("/api/product")
     Call<Product> CreateProduct(@Header("Token") UUID token, @Query("ShopUid") UUID shopUid, @Body Product product);
+
+    @POST("/api/product")
+    Call<Product> EditProduct(@Header("Token") UUID token, @Query("Uid") UUID id,  @Body Product productModel);
     //endregion
 
     //region Tag controller

@@ -26,25 +26,18 @@ namespace Neomer.EveryPrice.SDK.Managers
             {
                 throw new UnsupportedEntityException();
             }
-            using (var tr = NHibernateHelper.Instance.CurrentSession.BeginTransaction())
+			base.SaveIsolate(session, product);
+			
+            if (product.Prices != null)
             {
-                base.Save(session, product);
-                if (product.Prices != null)
+                foreach (var price in product.Prices)
                 {
-                    foreach (var price in product.Prices)
-                    {
-                        PriceManager.Instance.Save(session, price);
-                    }
-                }
-                try
-                {
-                    tr.Commit();
-                }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    throw ex;
-                }
+					if (price.Uid == Guid.Empty)
+					{
+						price.Product = product;
+						PriceManager.Instance.SaveIsolate(session, price);
+					}
+				}
             }
         }
 

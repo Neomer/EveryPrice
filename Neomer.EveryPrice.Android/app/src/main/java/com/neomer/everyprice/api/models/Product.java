@@ -36,6 +36,10 @@ public class Product implements Parcelable {
         Name = in.readString();
     }
 
+    public Product() {
+
+    }
+
     public Product(String name, double price) {
         Name = name;
         Price = new Price(price, "");
