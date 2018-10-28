@@ -242,12 +242,17 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
             @Override
             public void onFailure(Throwable t) {
-                String msg = (t instanceof WebApiException) ?
-                        ((WebApiException) t).getExceptionMessage() :
-                        t.getMessage().isEmpty() ?
-                                "tagsSuggestionsCommand() exception" :
-                                t.getMessage();
-                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                if (t instanceof SignInNeededException) {
+                    moveToSecurityActivity();
+                } else {
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getExceptionMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "tagsSuggestionsCommand() exception" :
+                                    t.getMessage();
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    Log.d("app", t.getLocalizedMessage());
+                }
             }
         });
 
