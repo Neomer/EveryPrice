@@ -99,6 +99,7 @@
     <Compile Include="Models\ITagged.cs" />
     <Compile Include="Models\IUser.cs" />
     <Compile Include="Models\IUserProfile.cs" />
+    <Compile Include="Models\IUserSecurityProfile.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Shop.cs" />

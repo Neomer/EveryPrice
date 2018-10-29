@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Neomer.EveryPrice.SDK.Models
 {
-    public class UserSecurityProfile : BaseEntity
+    public class UserSecurityProfile : BaseEntity, IUserSecurityProfile
     {
 
         public virtual IUser Owner { get; set; }

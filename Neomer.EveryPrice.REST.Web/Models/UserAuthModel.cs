@@ -11,6 +11,8 @@ namespace Neomer.EveryPrice.REST.Web.Models
     {
         public string Username;
 
+		public string EncryptedPassword;
+
         public void ToUser(ref IUser user)
         {
             user.Username = Username;

@@ -52,5 +52,9 @@
 
     <string name="no_price">No price</string>
 
+    <string name="logout">Logout</string>
+    <string name="menu">Menu</string>
+    <string name="profile">Profile</string>
 
 </resources>
+

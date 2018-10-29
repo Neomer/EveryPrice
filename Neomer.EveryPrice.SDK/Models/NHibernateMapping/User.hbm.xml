@@ -10,5 +10,7 @@
     </property>
     <property name="Token" />
     <property name="TokenExpirationDate" type="UtcDateTime" />
+    <one-to-one name="SecurityProfile" class="UserSecurityProfile"/>
+    <one-to-one name="Profile" class="UserProfile"/>
   </class>
 </hibernate-mapping>

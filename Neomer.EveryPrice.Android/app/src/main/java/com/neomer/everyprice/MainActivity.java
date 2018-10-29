@@ -3,6 +3,7 @@ package com.neomer.everyprice;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -28,19 +29,23 @@ import android.widget.Toast;
 
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SignInNeededException;
+import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.commands.GetNearShopsCommand;
 import com.neomer.everyprice.api.commands.TagsSuggestionsCommand;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.TagViewModel;
+import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.GeoLocation;
 import com.neomer.everyprice.core.IBeforeExecuteListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
+import com.neomer.everyprice.core.helpers.SecurityHelper;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
 
@@ -85,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (!loadSavedToken()) {
+            return;
+        }
+
         setupRecyclerView();
         setupFloatingButton();
 
@@ -97,10 +106,21 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
 
-        MenuItem menuItem = menu.findItem(R.id.mainmenu_action_search);
-        if (menuItem != null) {
-            searchView = (SearchView) menuItem.getActionView();
+        MenuItem itemSearch = menu.findItem(R.id.mainmenu_action_search);
+        if (itemSearch != null) {
+            searchView = (SearchView) itemSearch.getActionView();
             setupFastSearch();
+        }
+        MenuItem itemLogout = menu.findItem(R.id.mainMenu_Logout);
+        if (itemLogout != null) {
+            itemLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    SecurityHelper.ClearSavedToken(MainActivity.this);
+                    moveToSecurityActivity();
+                    return true;
+                }
+            });
         }
         return true;
     }
@@ -157,6 +177,19 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     //endregion
 
+    private boolean loadSavedToken() {
+        SharedPreferences preferences = getSharedPreferences(SecurityHelper.APP_PREFERENCES, Context.MODE_PRIVATE);
+        String sToken = preferences.getString(SecurityHelper.APP_PREFERENCES_TOKEN, null);
+        if (sToken == null || sToken.isEmpty()) {
+            moveToSecurityActivity();
+            return false;
+        }
+        Token token = new Token();
+        token.setToken(UUID.fromString(sToken));
+        WebApiFacade.getInstance().setToken(token);
+        return true;
+    }
+
     private void createCommands() {
 
         //region GetNearShopsCommand - Команда для получения списка ближайших магазинов
@@ -183,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                     moveToSecurityActivity();
                 } else {
                     String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getExceptionMessage() :
+                            ((WebApiException) t).getMessage() :
                             t.getMessage().isEmpty() ?
                                     "GetNearShopsCommand() exception" :
                                     t.getMessage();
@@ -218,12 +251,17 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
             @Override
             public void onFailure(Throwable t) {
-                String msg = (t instanceof WebApiException) ?
-                        ((WebApiException) t).getExceptionMessage() :
-                        t.getMessage().isEmpty() ?
-                                "tagsSuggestionsCommand() exception" :
-                                t.getMessage();
-                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                if (t instanceof SignInNeededException) {
+                    moveToSecurityActivity();
+                } else {
+                    String msg = (t instanceof WebApiException) ?
+                            ((WebApiException) t).getMessage() :
+                            t.getMessage().isEmpty() ?
+                                    "tagsSuggestionsCommand() exception" :
+                                    t.getMessage();
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    Log.d("app", t.getLocalizedMessage());
+                }
             }
         });
 
@@ -252,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             public boolean onSuggestionClick(int position) {
                 TagViewModel tag = searchViewTagSuggestionAdapter.getTags().get(position);
                 if (tag != null) {
+                    searchView.setQuery(tag.getValue(), false);
                     selectedTag = tag.toTag();
                     loadListOfNearestShops();
                 }

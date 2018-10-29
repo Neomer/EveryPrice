@@ -1,6 +1,7 @@
 package com.neomer.everyprice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Product;
+import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.core.NumericHelper;
 
 import java.util.List;
@@ -20,10 +22,12 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
 
     private List<Product> productList;
     private Context context;
+    private Shop mShop;
 
-    public ShopDetailsRecyclerViewAdapter(List<Product> productList, Context context) {
+    public ShopDetailsRecyclerViewAdapter(Shop shop, List<Product> productList, Context context) {
         this.productList = productList;
         this.context = context;
+        mShop = shop;
     }
 
     @NonNull
@@ -44,14 +48,22 @@ public class ShopDetailsRecyclerViewAdapter extends RecyclerView.Adapter<ShopDet
                     price == null ?
                             viewHolder.getContext().getResources().getText(R.string.no_price) :
                             NumericHelper.getInstance().FormatToMoney(price.getValue()));
-        }
 
+        }
         viewHolder.getConstraintLayoutRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openProductDetailsActivity(product);
             }
         });
+
+    }
+
+    private void openProductDetailsActivity(Product product) {
+        Intent intent = new Intent(context, AddProductActivity.class);
+        intent.putExtra(Shop.class.getCanonicalName(), mShop);
+        intent.putExtra(Product.class.getCanonicalName(), product);
+        context.startActivity(intent);
     }
 
     @Override

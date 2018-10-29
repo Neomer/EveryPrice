@@ -4,8 +4,11 @@ public class UserSignInModel {
 
     public String Username;
 
-    public UserSignInModel(String username) {
+    public String EncryptedPassword;
+
+    public UserSignInModel(String username, String password) {
         Username = username;
+        EncryptedPassword = password;
     }
 
 }
