@@ -60,6 +60,10 @@ public class Price implements Parcelable {
         Unit = in.readString();
     }
 
+    public Price() {
+
+    }
+
     public Price(double value, String unit) {
         Value = value;
         Unit = unit;

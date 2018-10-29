@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                     moveToSecurityActivity();
                 } else {
                     String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getExceptionMessage() :
+                            ((WebApiException) t).getMessage() :
                             t.getMessage().isEmpty() ?
                                     "GetNearShopsCommand() exception" :
                                     t.getMessage();
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                     moveToSecurityActivity();
                 } else {
                     String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getExceptionMessage() :
+                            ((WebApiException) t).getMessage() :
                             t.getMessage().isEmpty() ?
                                     "tagsSuggestionsCommand() exception" :
                                     t.getMessage();

@@ -207,7 +207,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        shopDetailsRecyclerViewAdapter = new ShopDetailsRecyclerViewAdapter(null, this);
+        shopDetailsRecyclerViewAdapter = new ShopDetailsRecyclerViewAdapter(shop,null, this);
 
         RecyclerView recyclerView = findViewById(R.id.shopDetails_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

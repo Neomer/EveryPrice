@@ -11,7 +11,7 @@ namespace Neomer.EveryPrice.REST.Web.Models
     {
         public string Name;
 
-        public List<PriceEditModel> Prices;
+		public PriceEditModel Price;
 
         public void ToProduct(ref IProduct model)
         {
@@ -20,18 +20,17 @@ namespace Neomer.EveryPrice.REST.Web.Models
                 return;
             }
             model.Name = Name;
-            IUser user = model.Creator;
-            IProduct product = model;
-
-            var prices = Prices.Select(_ => new Price()
-            {
-                CreationDate = DateTime.UtcNow,
-                Creator = user,
-                Product = product,
-                Value = _.Value,
-                Unit = "шт."
-            }).ToList<IPrice>();
-            model.Prices = (ICollection<IPrice>)prices;
+			if (model.Prices == null || !model.Prices.Any())
+			{
+				model.Prices = new List<IPrice>();
+			}
+			IPrice price = new Price()
+			{
+				CreationDate = DateTime.UtcNow,
+				Creator = model.Creator
+			};
+			Price.ToPrice(ref price);
+			((List<IPrice>)model.Prices).Add(price);
         }
     }
 }
