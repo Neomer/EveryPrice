@@ -13,6 +13,7 @@ import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.commands.CreateOrEditProductCommand;
 import com.neomer.everyprice.api.commands.CreateOrEditShopCommand;
+import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.WebApiException;
@@ -36,22 +37,21 @@ public class AddProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
-        shop = (Shop) getIntent().getParcelableExtra(Shop.class.getCanonicalName());
+        txtName = findViewById(R.id.addproduct_txtProductName);
+        txtPrice = findViewById(R.id.addproduct_txtPrice);
+        chkIsDiscount = findViewById(R.id.addproduct_chkIsDiscount);
+
+        shop = getIntent().getParcelableExtra(Shop.class.getCanonicalName());
         if (shop == null) {
             finish();
         }
 
-        product = (Product) getIntent().getParcelableExtra(Product.class.getCanonicalName());
+        product = getIntent().getParcelableExtra(Product.class.getCanonicalName());
         if (product != null) {
             txtName.setText(product.getName());
         }
 
         createCommands();
-
-        txtName = findViewById(R.id.addproduct_txtProductName);
-        txtPrice = findViewById(R.id.addproduct_txtPrice);
-        chkIsDiscount = findViewById(R.id.addproduct_chkIsDiscount);
-
 
     }
 
@@ -65,7 +65,7 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
                 String msg = (t instanceof WebApiException) ?
-                        ((WebApiException) t).getExceptionMessage() :
+                        ((WebApiException) t).getMessage() :
                         t.getMessage().isEmpty() ?
                                 "CreateOrEditProductCommand() exception" :
                                 t.getMessage();
@@ -77,8 +77,10 @@ public class AddProductActivity extends AppCompatActivity {
             public boolean OnBeforeExecute() {
 
                 if (product == null) {
-                    product = new Product(txtName.getText().toString(), Double.valueOf(txtPrice.getText().toString()));
+                    product = new Product();
                 }
+                product.setName(txtName.getText().toString());
+                product.setPrice(new Price(Double.valueOf(txtPrice.getText().toString()), ""));
                 createOrEditProductCommand.setData(product);
 
                 return true;

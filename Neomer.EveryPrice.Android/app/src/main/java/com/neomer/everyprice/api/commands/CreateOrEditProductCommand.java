@@ -41,8 +41,13 @@ public class CreateOrEditProductCommand extends AbstractWebApiWithTokenAndDataCo
                     getShop().getUid(),
                     getData()
             );
+        } else {
+            return getSecurityApi().EditProduct(
+                    WebApiFacade.getInstance().getToken().getToken(),
+                    getData().getUid(),
+                    getData()
+            );
         }
-        return null;
     }
 
     public Shop getShop() {
