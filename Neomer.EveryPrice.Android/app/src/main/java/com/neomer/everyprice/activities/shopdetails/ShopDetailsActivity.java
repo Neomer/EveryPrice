@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.shopdetails;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -14,16 +14,21 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.neomer.everyprice.AddProductActivity;
+import com.neomer.everyprice.AddShopActivity;
+import com.neomer.everyprice.R;
+import com.neomer.everyprice.ShopOnMapActivity;
 import com.neomer.everyprice.api.IWebApiCallback;
-import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.commands.GetShopProductsCommand;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.WebApiException;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.BaseRecyclerViewAdapter;
+import com.neomer.everyprice.core.IAfterExecutionListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.core.ICommand;
+import com.neomer.everyprice.core.IRecyclerViewElementClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShopDetailsActivity extends AppCompatActivity {
@@ -31,7 +36,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
     public final static int RESULT_FOR_ADD_PRICE = 0;
 
     private Shop shop;
-    private ShopDetailsRecyclerViewAdapter shopDetailsRecyclerViewAdapter;
+    private BaseRecyclerViewAdapter<Product, ProductListRecyclerViewHolder> shopDetailsRecyclerViewAdapter;
     private FloatingActionButton floatingActionButton;
     private boolean actionsShow;
 
@@ -44,7 +49,7 @@ public class ShopDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_details);
 
-        shop = (Shop) getIntent().getParcelableExtra(Shop.class.getCanonicalName());
+        shop = getIntent().getParcelableExtra(Shop.class.getCanonicalName());
         if (shop == null) {
             finish();
         }
@@ -80,7 +85,12 @@ public class ShopDetailsActivity extends AppCompatActivity {
 
         displayShopOnMap = new ICommand() {
             @Override
-            public void setOnBeforeExecuteListener(IBeforeExecuteListener listener) {
+            public void setOnAfterExecuteListener(IAfterExecutionListener listener) {
+
+            }
+
+            @Override
+            public void setOnBeforeExecuteListener(IBeforeExecutionListener listener) {
 
             }
 
@@ -101,6 +111,13 @@ public class ShopDetailsActivity extends AppCompatActivity {
 
         startLoadProducts();
 
+    }
+
+    private void openProductDetailsActivity(Product product) {
+        Intent intent = new Intent(ShopDetailsActivity.this, AddProductActivity.class);
+        intent.putExtra(Shop.class.getCanonicalName(), shop);
+        intent.putExtra(Product.class.getCanonicalName(), product);
+        startActivity(intent);
     }
 
     private void moveToDisplayShopOnMapActivity() {
@@ -133,8 +150,8 @@ public class ShopDetailsActivity extends AppCompatActivity {
             Animation show_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_show);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddPrice.getLayoutParams();
-            layoutParams.rightMargin += (int) (floatingActionButton.getWidth());
-            layoutParams.bottomMargin += (int) (floatingActionButton.getHeight());
+            layoutParams.rightMargin += floatingActionButton.getWidth();
+            layoutParams.bottomMargin += floatingActionButton.getHeight();
             fabAddPrice.setLayoutParams(layoutParams);
             fabAddPrice.startAnimation(show_fab);
             fabAddPrice.setClickable(true);
@@ -150,8 +167,8 @@ public class ShopDetailsActivity extends AppCompatActivity {
             Animation hide_fab = AnimationUtils.loadAnimation(getApplication(), R.anim.action_fab_hide);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) fabAddPrice.getLayoutParams();
-            layoutParams.rightMargin -= (int) (floatingActionButton.getWidth());
-            layoutParams.bottomMargin -= (int) (floatingActionButton.getHeight());
+            layoutParams.rightMargin -= floatingActionButton.getWidth();
+            layoutParams.bottomMargin -= floatingActionButton.getHeight();
             fabAddPrice.setLayoutParams(layoutParams);
             fabAddPrice.startAnimation(hide_fab);
             fabAddPrice.setClickable(false);
@@ -202,12 +219,17 @@ public class ShopDetailsActivity extends AppCompatActivity {
         if (products == null || products.size() == 0) {
             return;
         }
-        shopDetailsRecyclerViewAdapter.setProductList(products);
-        shopDetailsRecyclerViewAdapter.notifyDataSetChanged();
+        shopDetailsRecyclerViewAdapter.setModel(products);
     }
 
     private void setupRecyclerView() {
-        shopDetailsRecyclerViewAdapter = new ShopDetailsRecyclerViewAdapter(shop,null, this);
+        shopDetailsRecyclerViewAdapter = new BaseRecyclerViewAdapter<>(ProductListRecyclerViewHolder.class, R.layout.shopdetails_recyclerview_listitem);
+        shopDetailsRecyclerViewAdapter.setOnElementClickListener(new IRecyclerViewElementClickListener<Product>() {
+            @Override
+            public void OnClick(@Nullable Product product) {
+                openProductDetailsActivity(product);
+            }
+        });
 
         RecyclerView recyclerView = findViewById(R.id.shopDetails_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

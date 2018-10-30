@@ -3,7 +3,7 @@ package com.neomer.everyprice.core;
 /**
  * Интерфейс для выполнения действий до выполнения команды
  */
-public interface IBeforeExecuteListener {
+public interface IBeforeExecutionListener {
 
     /**
      * Вызывается перед выполнением команды

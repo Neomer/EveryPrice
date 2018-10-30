@@ -2,22 +2,17 @@ package com.neomer.everyprice;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.neomer.everyprice.api.IWebApiCallback;
-import com.neomer.everyprice.api.SignInNeededException;
-import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.commands.CreateOrEditProductCommand;
-import com.neomer.everyprice.api.commands.CreateOrEditShopCommand;
 import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.WebApiException;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 
 public class AddProductActivity extends AppCompatActivity {
 
@@ -72,7 +67,7 @@ public class AddProductActivity extends AppCompatActivity {
                 Toast.makeText(AddProductActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         });
-        createOrEditProductCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+        createOrEditProductCommand.setOnBeforeExecuteListener(new IBeforeExecutionListener() {
             @Override
             public boolean OnBeforeExecute() {
 

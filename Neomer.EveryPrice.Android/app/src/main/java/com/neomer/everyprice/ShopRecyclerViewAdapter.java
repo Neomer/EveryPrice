@@ -2,7 +2,6 @@ package com.neomer.everyprice;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -13,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.neomer.everyprice.activities.shopdetails.ShopDetailsActivity;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 import com.neomer.everyprice.core.NumericHelper;
@@ -37,7 +36,7 @@ public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopRecyclerVi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_listitem, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.mainactivity_recyclerview_listitem, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }

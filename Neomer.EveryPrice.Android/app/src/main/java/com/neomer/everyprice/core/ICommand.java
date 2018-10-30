@@ -5,7 +5,9 @@ package com.neomer.everyprice.core;
  */
 public interface ICommand {
 
-    void setOnBeforeExecuteListener(IBeforeExecuteListener listener);
+    void setOnBeforeExecuteListener(IBeforeExecutionListener listener);
+
+    void setOnAfterExecuteListener(IAfterExecutionListener listener);
 
     void execute();
 

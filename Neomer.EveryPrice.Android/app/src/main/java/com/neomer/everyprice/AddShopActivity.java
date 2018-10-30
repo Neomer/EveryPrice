@@ -25,7 +25,7 @@ import com.neomer.everyprice.api.commands.CreateOrEditShopCommand;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.WebApiException;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.NumericHelper;
 
@@ -154,7 +154,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                 }
             }
         });
-        createOrEditShopCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+        createOrEditShopCommand.setOnBeforeExecuteListener(new IBeforeExecutionListener() {
             @Override
             public boolean OnBeforeExecute() {
                 if (currentLocation == null) {
