@@ -1,11 +1,7 @@
 package com.neomer.everyprice.core.helpers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-
-import com.neomer.everyprice.MainActivity;
-import com.neomer.everyprice.api.WebApiFacade;
 
 public final class SecurityHelper {
 

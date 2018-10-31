@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.main;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +26,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
 import android.widget.Toast;
 
+import com.neomer.everyprice.AddShopActivity;
+import com.neomer.everyprice.MyLocationListener;
+import com.neomer.everyprice.R;
+import com.neomer.everyprice.SearchViewTagSuggestionAdapter;
+import com.neomer.everyprice.SecurityActivity;
+import com.neomer.everyprice.activities.shopdetails.ShopDetailsActivity;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.WebApiFacade;
@@ -37,17 +42,21 @@ import com.neomer.everyprice.api.models.Tag;
 import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.TagViewModel;
 import com.neomer.everyprice.api.models.Token;
-import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.AbstractRecycleViewAdatper;
+import com.neomer.everyprice.core.BaseRecyclerViewAdapter;
 import com.neomer.everyprice.core.GeoLocation;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
+import com.neomer.everyprice.core.IRecyclerViewElementClickListener;
 import com.neomer.everyprice.core.helpers.SecurityHelper;
 
 import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
+
+    private final static String TAG = "MainActivity";
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
     private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
@@ -63,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         loadListOfNearestShops();
     }
 
-    private RecyclerView recyclerView;
+    private ShopRecyclerView recyclerView;
+
     private LocationManager locationManager;
     private Location currentLocation = null;
-    private ShopRecyclerViewAdapter shopRecyclerViewAdapter;
     private FloatingActionButton floatingActionButton;
     private Tag selectedTag;
 
@@ -193,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private void createCommands() {
 
         //region GetNearShopsCommand - Команда для получения списка ближайших магазинов
-        nearShopsCommand = new GetNearShopsCommand(new IWebApiCallback<List<Shop>>() {
+        final GetNearShopsCommand nearShopsCommand = new GetNearShopsCommand(new IWebApiCallback<List<Shop>>() {
             @Override
             public void onSuccess(List<Shop> result) {
                 if (result == null) {
@@ -201,12 +210,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                 }
 
                 if (!result.isEmpty()) {
-                    if (shopRecyclerViewAdapter == null || recyclerView == null) {
+                    if (recyclerView == null || recyclerView.getAdapter() == null) {
                         return;
                     }
-                    shopRecyclerViewAdapter.setShopList(result);
-                    recyclerView.setAdapter(shopRecyclerViewAdapter);
-                    shopRecyclerViewAdapter.notifyDataSetChanged();
+                    recyclerView.getAdapter().setModel(result);
                 }
             }
 
@@ -215,29 +222,30 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                 if (t instanceof SignInNeededException) {
                     moveToSecurityActivity();
                 } else {
-                    String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getMessage() :
-                            t.getMessage().isEmpty() ?
+                    String msg = t.getMessage().isEmpty() ?
                                     "GetNearShopsCommand() exception" :
                                     t.getMessage();
                     Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    Log.d("app", t.getLocalizedMessage());
+                    Log.d(TAG, t.getLocalizedMessage());
                 }
             }
         });
         nearShopsCommand.setDistance(1000);
-        nearShopsCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+        nearShopsCommand.setOnBeforeExecuteListener(new IBeforeExecutionListener() {
             @Override
             public boolean OnBeforeExecute() {
-                if (currentLocation == null || recyclerView == null) {
-                    return false;
-                }
-                recyclerView.setAdapter(new RecyclerViewUpdateAdapter());
                 nearShopsCommand.setLocation(new GeoLocation(currentLocation));
                 return true;
             }
         });
-        nearShopsCommand.applyToViewClick(findViewById(R.id.MainActivity_btnRefresh));
+
+        recyclerView.setUpdateCommand(nearShopsCommand);
+        findViewById(R.id.MainActivity_btnRefresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.update();
+            }
+        });
         //endregion
 
         //region TagsSuggestionsCommand - Команда для получения списка тэгов
@@ -254,13 +262,11 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                 if (t instanceof SignInNeededException) {
                     moveToSecurityActivity();
                 } else {
-                    String msg = (t instanceof WebApiException) ?
-                            ((WebApiException) t).getMessage() :
-                            t.getMessage().isEmpty() ?
+                    String msg = t.getMessage().isEmpty() ?
                                     "tagsSuggestionsCommand() exception" :
                                     t.getMessage();
                     Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    Log.d("app", t.getLocalizedMessage());
+                    Log.d(TAG, t.getLocalizedMessage());
                 }
             }
         });
@@ -326,10 +332,21 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private void setupRecyclerView() {
         recyclerView = findViewById(R.id.rvNearShops);
 
-        shopRecyclerViewAdapter = new ShopRecyclerViewAdapter(null, MainActivity.this);
-        shopRecyclerViewAdapter.setOnBottomReachListener(this);
+        AbstractRecycleViewAdatper<Shop> shopRecyclerViewAdapter = new BaseRecyclerViewAdapter<>(ShopsListViewHolder.class, R.layout.mainactivity_recyclerview_listitem);
+        shopRecyclerViewAdapter.setOnElementClickListener(new IRecyclerViewElementClickListener<Shop>() {
+            @Override
+            public void OnClick(@Nullable Shop shop) {
+                moveToShopDetailsActivity(shop);
+            }
+        });
         recyclerView.setAdapter(shopRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void moveToShopDetailsActivity(Shop shop) {
+        Intent intent = new Intent(MainActivity.this, ShopDetailsActivity.class);
+        intent.putExtra(Shop.class.getCanonicalName(), shop);
+        startActivity(intent);
     }
 
     private void setupFloatingButton() {
@@ -383,8 +400,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     }
 
     private void loadListOfNearestShops() {
-        nearShopsCommand.setTag(selectedTag);
-        nearShopsCommand.execute();
+        ((GetNearShopsCommand)recyclerView.getUpdateCommand()).setTag(selectedTag);
+        recyclerView.update();
     }
 
     private void moveToSecurityActivity() {
@@ -422,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                             "getLastKnownLocation(LocationManager.NETWORK_PROVIDER) exception" :
                             ex.getMessage();
-            Toast.makeText(MainActivity.this, "ex.1", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
         }
 
         try {
@@ -432,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             String msg = ex.getMessage().isEmpty() ?
                     "getLastKnownLocation(LocationManager.GPS_PROVIDER) exception" :
                     ex.getMessage();
-            Toast.makeText(MainActivity.this, "ex.2", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, MyLocationListener.getInstance());
 

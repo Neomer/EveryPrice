@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.neomer.everyprice.activities.main.MainActivity;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.core.helpers.SecurityHelper;
 

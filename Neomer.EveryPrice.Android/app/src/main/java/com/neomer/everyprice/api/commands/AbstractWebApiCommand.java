@@ -13,10 +13,9 @@ import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.IAfterExecutionListener;
 import com.neomer.everyprice.core.IAfterFailedExecutionListener;
 import com.neomer.everyprice.core.IAfterSuccessExecutionListener;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.core.ICommand;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     private IWebApiCallback<TCallbackResult> callback;
     private SecurityApi securityApi;
 
-    private List<IBeforeExecuteListener> onBeforeExecuteListener;
+    private List<IBeforeExecutionListener> onBeforeExecuteListener;
     private List<IAfterExecutionListener> onAfterExecutionListener;
     private List<IAfterFailedExecutionListener> onAfterFailedExecutionListener;
     private List<IAfterSuccessExecutionListener> onAfterSuccessExecutionListener;
@@ -95,7 +94,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     public synchronized final void execute() throws NullPointerException {
 
         if (onBeforeExecuteListener != null) {
-            for (IBeforeExecuteListener i : onBeforeExecuteListener) {
+            for (IBeforeExecutionListener i : onBeforeExecuteListener) {
                 if (!i.OnBeforeExecute()) {
                     return;
                 }
@@ -186,11 +185,12 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
         });
     }
 
-    public final void setOnBeforeExecuteListener(IBeforeExecuteListener onBeforeExecuteListener) {
+    public final void setOnBeforeExecuteListener(IBeforeExecutionListener onBeforeExecuteListener) {
         this.onBeforeExecuteListener.add(onBeforeExecuteListener);
     }
 
-    public void setOnAfterExecutionListener(IAfterExecutionListener onAfterExecutionListener) {
+    @Override
+    public void setOnAfterExecuteListener(IAfterExecutionListener onAfterExecutionListener) {
         this.onAfterExecutionListener.add(onAfterExecutionListener);
     }
 

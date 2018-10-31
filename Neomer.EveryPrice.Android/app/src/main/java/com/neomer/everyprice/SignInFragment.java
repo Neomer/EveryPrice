@@ -1,24 +1,20 @@
 package com.neomer.everyprice;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceGroup;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiExceptionTranslator;
 import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.IAfterExecutionListener;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.api.commands.SignInCommand;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
@@ -58,7 +54,7 @@ public class SignInFragment extends SecurityFragment {
                 }
             }
         });
-        signInCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+        signInCommand.setOnBeforeExecuteListener(new IBeforeExecutionListener() {
             @Override
             public boolean OnBeforeExecute() {
                 getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.INVISIBLE);
@@ -70,7 +66,7 @@ public class SignInFragment extends SecurityFragment {
                 return true;
             }
         });
-        signInCommand.setOnAfterExecutionListener(new IAfterExecutionListener() {
+        signInCommand.setOnAfterExecuteListener(new IAfterExecutionListener() {
             @Override
             public void OnAfterExecution() {
                 getRootView().findViewById(R.id.FragmentSignIn_FormLayout).setVisibility(View.VISIBLE);

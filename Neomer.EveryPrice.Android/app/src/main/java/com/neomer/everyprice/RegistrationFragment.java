@@ -1,10 +1,8 @@
 package com.neomer.everyprice;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,12 @@ import android.widget.TextView;
 
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiExceptionTranslator;
-import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.commands.UserRegistrationCommand;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 import com.neomer.everyprice.api.models.WebApiException;
 import com.neomer.everyprice.core.IAfterExecutionListener;
-import com.neomer.everyprice.core.IBeforeExecuteListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
 
 public class RegistrationFragment extends SecurityFragment {
 
@@ -55,7 +52,7 @@ public class RegistrationFragment extends SecurityFragment {
                 }
             }
         });
-        registrationCommand.setOnBeforeExecuteListener(new IBeforeExecuteListener() {
+        registrationCommand.setOnBeforeExecuteListener(new IBeforeExecutionListener() {
             @Override
             public boolean OnBeforeExecute() {
                 if (!txtPassword.getText().toString().contentEquals(txtPasswordRetype.getText().toString())) {
@@ -71,7 +68,7 @@ public class RegistrationFragment extends SecurityFragment {
                 return true;
             }
         });
-        registrationCommand.setOnAfterExecutionListener(new IAfterExecutionListener() {
+        registrationCommand.setOnAfterExecuteListener(new IAfterExecutionListener() {
             @Override
             public void OnAfterExecution() {
                 getRootView().findViewById(R.id.FragmentRegistration_formLayout).setVisibility(View.VISIBLE);
