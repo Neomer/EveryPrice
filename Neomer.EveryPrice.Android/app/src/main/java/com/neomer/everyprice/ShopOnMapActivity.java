@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.neomer.everyprice.api.models.Shop;
@@ -54,16 +56,18 @@ public class ShopOnMapActivity extends AppCompatActivity implements OnMapReadyCa
 
         onLocationReceived(MyLocationListener.getInstance().getLastLocation());
 
+        LatLngBounds.Builder b = new LatLngBounds.Builder();
+
         try {
             MarkerOptions markerOptions = new MarkerOptions();
             try {
                 markerOptions.position(googleMap.getCameraPosition().target);
                 markerOptions.draggable(false);
+
+                b.include(googleMap.getCameraPosition().target);
             }
             catch (NullPointerException ex) {}
             markerPosition = googleMap.addMarker(markerOptions);
-
-
         }
         catch (Exception ex) { }
 
@@ -71,14 +75,27 @@ public class ShopOnMapActivity extends AppCompatActivity implements OnMapReadyCa
             for(Shop s : shops) {
                 MarkerOptions markerOptions = new MarkerOptions();
                 try {
-                    markerOptions.position(new LatLng(s.getLat(), s.getLng()));
+                    LatLng position = new LatLng(s.getLat(), s.getLng());
+
+                    markerOptions.position(position);
                     markerOptions.draggable(false);
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ImageHelper.VectorToBitmap(ShopOnMapActivity.this, R.drawable.ic_shopping_cart_white_24dp)));
                     googleMap.addMarker(markerOptions);
+
+                    b.include(position);
                 }
                 catch (NullPointerException e) {}
             }
         }
+        final LatLngBounds bounds = b.build();
+
+        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+                googleMap.moveCamera(cu);
+            }
+        });
 
     }
 
