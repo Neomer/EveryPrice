@@ -33,8 +33,8 @@ public class SignInFragment extends SecurityFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        final EditText txtUsername = getRootView().findViewById(R.id.txtUsername);
-        final EditText txtPassword = getRootView().findViewById(R.id.txtPassword);
+        final EditText txtUsername = getRootView().findViewById(R.id.signInFragment_txtUsername);
+        final EditText txtPassword = getRootView().findViewById(R.id.signInFragment_txtPassword);
 
         Button btnSignIn = getRootView().findViewById(R.id.btnSignIn);
         final TextView tvSignInError = getRootView().findViewById(R.id.tvSignInError);

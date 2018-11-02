@@ -28,12 +28,12 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/txtUsername"
+            android:id="@+id/signInFragment_txtUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:ems="10"
@@ -58,7 +58,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
 
         <EditText
-            android:id="@+id/txtPassword"
+            android:id="@+id/signInFragment_txtPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -71,21 +71,21 @@
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtUsername" />
+            app:layout_constraintTop_toBottomOf="@+id/signInFragment_txtUsername" />
 
         <Button
             android:id="@+id/btnSignIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="145dp"
+            android:layout_height="49dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="@string/signin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/signInFragment_txtPassword" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
