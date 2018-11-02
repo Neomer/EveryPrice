@@ -32,6 +32,7 @@ import com.neomer.everyprice.R;
 import com.neomer.everyprice.SearchViewTagSuggestionAdapter;
 import com.neomer.everyprice.SecurityActivity;
 import com.neomer.everyprice.ShopOnMapActivity;
+import com.neomer.everyprice.activities.settings.ApplicationSettingsActivity;
 import com.neomer.everyprice.activities.shopdetails.ShopDetailsActivity;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SignInNeededException;
@@ -50,6 +51,7 @@ import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.core.ILocationUpdateEventListener;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 import com.neomer.everyprice.core.IRecyclerViewElementClickListener;
+import com.neomer.everyprice.core.helpers.ConfigurationProvider;
 import com.neomer.everyprice.core.helpers.SecurityHelper;
 
 import java.util.List;
@@ -57,10 +59,12 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements ILocationUpdateEventListener, IRecyclerAdapterOnBottomReachListener {
 
-    private final static String TAG = "MainActivity";
+    public final static String TAG = "MainActivity";
+
+    private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
+    private final static int RESULT_FOR_APPLICATION_SETTINGS_ACTIVITY = 1;
 
     final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
-    private final static int RESULT_FOR_ADD_SHOP_ACTION = 0;
     private SearchViewTagSuggestionAdapter searchViewTagSuggestionAdapter;
     private SearchView searchView;
 
@@ -121,6 +125,18 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
             searchView = (SearchView) itemSearch.getActionView();
             setupFastSearch();
         }
+
+        MenuItem itemSettings = menu.findItem(R.id.mainMenu_Setting);
+        if (itemSettings != null) {
+            itemSettings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    moveToSettingsActivity();
+                    return true;
+                }
+            });
+        }
+
         MenuItem itemLogout = menu.findItem(R.id.mainMenu_Logout);
         if (itemLogout != null) {
             itemLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -154,18 +170,23 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     protected void onResume() {
-        requestLocationPermission();
+        setupLocationListener();
 
         super.onResume();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == RESULT_FOR_ADD_SHOP_ACTION) {
-            if (resultCode == RESULT_OK) {
-                loadListOfNearestShops();
-            }
-            return;
+        switch (requestCode) {
+            case RESULT_FOR_ADD_SHOP_ACTION:
+                if (resultCode == RESULT_OK) {
+                    loadListOfNearestShops();
+                }
+                return;
+
+            case RESULT_FOR_APPLICATION_SETTINGS_ACTIVITY:
+                ConfigurationProvider.getInstance().Load(MainActivity.this);
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -420,6 +441,10 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     }
 
+    private void moveToSettingsActivity() {
+        startActivityForResult(new Intent(MainActivity.this, ApplicationSettingsActivity.class), RESULT_FOR_APPLICATION_SETTINGS_ACTIVITY);
+    }
+
     private void moveToAddShopActivity() {
         startActivityForResult(new Intent(this, AddShopActivity.class), RESULT_FOR_ADD_SHOP_ACTION);
     }
@@ -432,10 +457,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private void moveToSecurityActivity() {
         startActivity(new Intent(this, SecurityActivity.class));
         finish();
-    }
-
-    private void requestLocationPermission() {
-        setupLocationListener();
     }
 
     private void setupLocationListener() {

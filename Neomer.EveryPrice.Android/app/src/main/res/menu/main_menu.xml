@@ -23,6 +23,9 @@
             android:id="@+id/mainMenu_Profile"
             android:title="@string/profile" />
         <item
+            android:id="@+id/mainMenu_Setting"
+            android:title="@string/settings" />
+        <item
             android:id="@+id/mainMenu_Logout"
             android:title="@string/logout" />
     </item>
