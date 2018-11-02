@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
 
     @Override
     protected void onResume() {
-        requestLocationPermission();
+        setupLocationListener();
 
         super.onResume();
     }
@@ -407,10 +407,6 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
     private void moveToSecurityActivity() {
         startActivity(new Intent(this, SecurityActivity.class));
         finish();
-    }
-
-    private void requestLocationPermission() {
-        setupLocationListener();
     }
 
     private void setupLocationListener() {
