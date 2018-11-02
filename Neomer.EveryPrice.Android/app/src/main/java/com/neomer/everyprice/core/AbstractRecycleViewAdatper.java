@@ -61,7 +61,7 @@ public abstract class AbstractRecycleViewAdatper<TViewModel> extends RecyclerVie
         }
     }
 
-    protected List<TViewModel> getModel() {
+    public List<TViewModel> getModel() {
         return modelList;
     }
 

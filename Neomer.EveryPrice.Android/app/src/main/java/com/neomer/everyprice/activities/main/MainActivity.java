@@ -31,6 +31,7 @@ import com.neomer.everyprice.MyLocationListener;
 import com.neomer.everyprice.R;
 import com.neomer.everyprice.SearchViewTagSuggestionAdapter;
 import com.neomer.everyprice.SecurityActivity;
+import com.neomer.everyprice.ShopOnMapActivity;
 import com.neomer.everyprice.activities.settings.ApplicationSettingsActivity;
 import com.neomer.everyprice.activities.shopdetails.ShopDetailsActivity;
 import com.neomer.everyprice.api.IWebApiCallback;
@@ -147,6 +148,16 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
                 }
             });
         }
+        MenuItem itemLocate = menu.findItem(R.id.mainmenu_action_locate);
+        if (itemLocate != null) {
+            itemLocate.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    moveToShopsOnMapActivity();
+                    return true;
+                }
+            });
+        }
         return true;
     }
 
@@ -218,6 +229,20 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         token.setToken(UUID.fromString(sToken));
         WebApiFacade.getInstance().setToken(token);
         return true;
+    }
+
+    private void moveToShopsOnMapActivity() {
+        Intent intent = new Intent(MainActivity.this, ShopOnMapActivity.class);
+        List<Shop> shopList = recyclerView.getAdapter().getModel();
+        if (shopList != null && !shopList.isEmpty()) {
+            Shop [] shopArray = new Shop[shopList.size()];
+            int idx = 0;
+            for (Shop s : shopList) {
+                shopArray[idx++] = s;
+            }
+            intent.putExtra(Shop.class.getCanonicalName(), shopArray);
+            startActivity(intent);
+        }
     }
 
     private void createCommands() {
