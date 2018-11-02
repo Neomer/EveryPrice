@@ -47,6 +47,7 @@
         <activity android:name=".AddPriceActivity" />
         <activity android:name=".AddProductActivity" />
         <activity android:name=".ShopOnMapActivity"></activity>
+        <activity android:name=".activities.settings.ApplicationSettingsActivity" />
 
 
         <uses-library

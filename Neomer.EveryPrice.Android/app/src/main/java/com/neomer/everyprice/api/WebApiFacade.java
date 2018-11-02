@@ -10,6 +10,8 @@ import com.neomer.everyprice.api.models.TagFastSearchViewModel;
 import com.neomer.everyprice.api.models.Token;
 import com.neomer.everyprice.api.models.UserSignInModel;
 import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.IConfigurationChangeListener;
+import com.neomer.everyprice.core.helpers.ConfigurationProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,6 +39,18 @@ public final class WebApiFacade {
     private Token token;
 
     private WebApiFacade() {
+        createRetrofit();
+        token = null;
+
+        ConfigurationProvider.getInstance().registerConfigurationChangeListener(new IConfigurationChangeListener() {
+            @Override
+            public void onConfigurationChange() {
+                createRetrofit();
+            }
+        });
+    }
+
+    private void createRetrofit() {
         try {
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX") // "2018-09-16T13:08:12.7290948+04:00"
@@ -50,11 +64,14 @@ public final class WebApiFacade {
             lastError = ex.getMessage();
         }
 
+        String ip = ConfigurationProvider.getInstance().getServerIP();
+        if (ip == null || ip.isEmpty()) {
+            ip = "94.181.97.208";
+        }
+
         try {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://94.181.97.208:8000/") //Базовая часть адреса
-                    //.baseUrl("http://192.168.88.204:8000/") //Базовая часть адреса
-                    //.baseUrl("http://192.168.18.48:51479/") //Базовая часть адреса
+                    .baseUrl("http://" + ip + ":8000/") //Базовая часть адреса
                     .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                     .build();
         }
@@ -68,7 +85,6 @@ public final class WebApiFacade {
         if (retrofit != null) {
             securityApi = retrofit.create(SecurityApi.class); //Создаем объект, при помощи которого будем выполнять запросы
         }
-        token = null;
     }
 
     public static WebApiFacade getInstance() {

@@ -55,6 +55,6 @@
     <string name="logout">Logout</string>
     <string name="menu">Menu</string>
     <string name="profile">Profile</string>
-
+    <string name="settings">Settings</string>
 </resources>
 
