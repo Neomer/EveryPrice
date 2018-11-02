@@ -4,6 +4,14 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="textedit_horizontal_padding">10dp</dimen>
 
-    <dimen name="activity_title_font">20sp</dimen>
+
+    <!-- Fonts -->
+    <dimen name="activity_title_font">16sp</dimen>
+
+    <dimen name="main_font">16sp</dimen>
+    <dimen name="title_font">18sp</dimen>
+    <dimen name="description_font">14sp</dimen>
+    <dimen name="tab_name">16sp</dimen>
 </resources>
