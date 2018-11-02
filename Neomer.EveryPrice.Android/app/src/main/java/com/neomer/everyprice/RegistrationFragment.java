@@ -31,9 +31,9 @@ public class RegistrationFragment extends SecurityFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        final EditText txtUsername = getRootView().findViewById(R.id.txtUsername);
-        final EditText txtPassword = getRootView().findViewById(R.id.txtPassword);
-        final EditText txtPasswordRetype = getRootView().findViewById(R.id.txtPasswordRetype);
+        final EditText txtUsername = getRootView().findViewById(R.id.registrationFragment_txtUsername);
+        final EditText txtPassword = getRootView().findViewById(R.id.registrationFragment_txtPassword);
+        final EditText txtPasswordRetype = getRootView().findViewById(R.id.registrationFragment_txtPasswordRetype);
         final TextView tvRegistrationError = getRootView().findViewById(R.id.tvRegistrationError);
 
         Button btnRegistration = getRootView().findViewById(R.id.btnRegister);
