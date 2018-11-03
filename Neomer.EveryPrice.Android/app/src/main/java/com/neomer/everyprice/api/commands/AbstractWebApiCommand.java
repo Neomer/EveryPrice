@@ -31,7 +31,6 @@ import retrofit2.Response;
 public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand {
 
     private IWebApiCallback<TCallbackResult> callback;
-    private SecurityApi securityApi;
 
     private List<IBeforeExecutionListener> onBeforeExecuteListener;
     private List<IAfterExecutionListener> onAfterExecutionListener;
@@ -41,10 +40,6 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     protected abstract Call<TCallbackResult> getCall();
 
     AbstractWebApiCommand(@NonNull IWebApiCallback<TCallbackResult> callback) throws NullPointerException {
-        this.securityApi = WebApiFacade.getInstance().getSecurityApi();
-        if (this.securityApi == null) {
-            throw new NullPointerException();
-        }
         this.callback = callback;
         this.onBeforeExecuteListener = new ArrayList<>();
         this.onAfterExecutionListener = new ArrayList<>();
@@ -53,7 +48,7 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
     }
 
     public final SecurityApi getSecurityApi() {
-        return securityApi;
+        return WebApiFacade.getInstance().getSecurityApi();
     }
 
     public final IWebApiCallback<TCallbackResult> getCallback() {

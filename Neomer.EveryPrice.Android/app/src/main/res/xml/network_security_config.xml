@@ -12,5 +12,11 @@
         <domain includeSubdomains="true">http://localhost:8000</domain>
         <domain includeSubdomains="true">http://localhost</domain>
         <domain includeSubdomains="true">localhost</domain>
+
+        <domain includeSubdomains="true">http://94.181.110.145:8000</domain>
+        <domain includeSubdomains="true">http://94.181.110.145</domain>
+        <domain includeSubdomains="true">94.181.110.145</domain>
+
+
     </domain-config>
 </network-security-config>

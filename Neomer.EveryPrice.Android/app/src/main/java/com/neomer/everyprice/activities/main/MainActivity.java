@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements ILocationUpdateEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ConfigurationProvider.getInstance().Load(MainActivity.this);
+
         if (!loadSavedToken()) {
             return;
         }
