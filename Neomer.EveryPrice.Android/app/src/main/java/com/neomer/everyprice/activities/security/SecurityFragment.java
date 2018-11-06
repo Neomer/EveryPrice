@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.security;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,5 +1,6 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.security;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,14 +10,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import com.neomer.everyprice.api.WebApiFacade;
-import com.neomer.everyprice.api.models.UserSignInModel;
+import com.neomer.everyprice.R;
+import com.neomer.everyprice.activities.settings.ApplicationSettingsActivity;
+import com.neomer.everyprice.api.SecurityApi;
+import com.neomer.everyprice.core.IAfterExecutionListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
+import com.neomer.everyprice.core.ICommand;
+import com.neomer.everyprice.core.helpers.ConfigurationProvider;
 
 public class SecurityActivity extends AppCompatActivity {
 
@@ -26,6 +30,8 @@ public class SecurityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_security);
+
+        ConfigurationProvider.getInstance().Load(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,6 +48,40 @@ public class SecurityActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.security_menu, menu);
+
+        MenuItem settingsItem = menu.findItem(R.id.securityMenu_Setting);
+        if (settingsItem != null) {
+            settingsItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    moveToSettingsActivity();
+                    return true;
+                }
+            });
+        }
+
+        MenuItem exitItem = menu.findItem(R.id.securityMenu_Exit);
+        if (exitItem != null) {
+            exitItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    finish();
+                    return true;
+                }
+            });
+        }
+
+        return true;
+    }
+
+    private void moveToSettingsActivity() {
+        startActivity(new Intent(SecurityActivity.this, ApplicationSettingsActivity.class));
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SecurityActivity"
+            android:name=".activities.security.SecurityActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity

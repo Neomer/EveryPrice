@@ -43,4 +43,5 @@
     <string name="menu">Меню</string>
     <string name="profile">Профиль</string>
     <string name="settings">Настройки</string>
+    <string name="exit">Выйти</string>
 </resources>

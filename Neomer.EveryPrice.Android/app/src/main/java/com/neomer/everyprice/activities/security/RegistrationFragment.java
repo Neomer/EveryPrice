@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.security;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.neomer.everyprice.R;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.WebApiExceptionTranslator;
 import com.neomer.everyprice.api.commands.UserRegistrationCommand;

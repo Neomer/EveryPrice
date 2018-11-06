@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.neomer.everyprice.activities.security.SecurityActivity;
 import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.commands.CreateOrEditShopCommand;
