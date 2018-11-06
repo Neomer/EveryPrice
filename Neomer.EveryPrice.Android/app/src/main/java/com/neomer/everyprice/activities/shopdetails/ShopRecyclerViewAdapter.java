@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.shopdetails;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.neomer.everyprice.activities.shopdetails.ShopDetailsActivity;
+import com.neomer.everyprice.MyLocationListener;
+import com.neomer.everyprice.R;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.core.IRecyclerAdapterOnBottomReachListener;
 import com.neomer.everyprice.core.NumericHelper;
