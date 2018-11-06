@@ -5,7 +5,7 @@
     android:id="@+id/FragmentRegistration_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecurityActivity$PlaceholderFragment">
+    tools:context=".activities.security.SecurityActivity$PlaceholderFragment">
 
     <ProgressBar
         android:id="@+id/FragmentRegistration_progressBar"
