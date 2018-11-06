@@ -1,4 +1,4 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.main;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 
+import com.neomer.everyprice.R;
 import com.neomer.everyprice.api.models.TagViewModel;
 
 import java.util.List;

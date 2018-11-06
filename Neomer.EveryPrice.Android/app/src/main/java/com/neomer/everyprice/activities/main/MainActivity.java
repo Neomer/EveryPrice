@@ -29,7 +29,6 @@ import android.widget.Toast;
 import com.neomer.everyprice.AddShopActivity;
 import com.neomer.everyprice.MyLocationListener;
 import com.neomer.everyprice.R;
-import com.neomer.everyprice.SearchViewTagSuggestionAdapter;
 import com.neomer.everyprice.activities.security.SecurityActivity;
 import com.neomer.everyprice.ShopOnMapActivity;
 import com.neomer.everyprice.activities.settings.ApplicationSettingsActivity;
