@@ -1,14 +1,12 @@
 package com.neomer.everyprice.activities.main;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.neomer.everyprice.api.models.Shop;
-import com.neomer.everyprice.core.BaseRecyclerView;
-import com.neomer.everyprice.core.ICommand;
+import com.neomer.everyprice.core.widgets.recyclerview.BaseRecyclerView;
 
 public class ShopRecyclerView extends BaseRecyclerView<Shop> {
 

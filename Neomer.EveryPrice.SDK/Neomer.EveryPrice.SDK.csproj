@@ -73,6 +73,7 @@
     <Compile Include="Exceptions\Security\TokenNotFoundException.cs" />
     <Compile Include="Exceptions\Sessions\DuplicateSessionKeyException.cs" />
     <Compile Include="Exceptions\Sessions\BaseHibernateSessionException.cs" />
+    <Compile Include="Helpers\BlobHelper.cs" />
     <Compile Include="Helpers\LoggerHelper.cs" />
     <Compile Include="Helpers\NHibernateHelper.cs" />
     <Compile Include="Managers\BaseEntityManager.cs" />

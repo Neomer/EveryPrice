@@ -20,7 +20,11 @@ public class ConfigurationProvider {
 
     public static ConfigurationProvider getInstance() {
         if (instance == null) {
-            instance = new ConfigurationProvider();
+            synchronized (ConfigurationProvider.class) {
+                if (instance == null) {
+                    instance = new ConfigurationProvider();
+                }
+            }
         }
         return instance;
     }

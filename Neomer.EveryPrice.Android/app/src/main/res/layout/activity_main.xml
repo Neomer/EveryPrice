@@ -8,7 +8,7 @@
 
     <com.neomer.everyprice.activities.main.ShopRecyclerView
         android:id="@+id/rvNearShops"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"

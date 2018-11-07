@@ -1,18 +1,22 @@
-package com.neomer.everyprice.core;
+package com.neomer.everyprice.core.widgets.recyclerview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import com.neomer.everyprice.core.IAfterExecutionListener;
+import com.neomer.everyprice.core.IBeforeExecutionListener;
+import com.neomer.everyprice.core.ICommand;
+import com.neomer.everyprice.core.IEventedCommand;
+
 /**
  * Базовый класс для реализации RecyclerView
  */
 public class BaseRecyclerView<TViewModel> extends RecyclerView {
 
-    private ICommand updateCommand;
+    private IEventedCommand updateCommand;
     private AbstractRecycleViewAdatper<TViewModel> adapter;
     private RecyclerViewUpdateAdapter updateAdapter;
 
@@ -40,7 +44,7 @@ public class BaseRecyclerView<TViewModel> extends RecyclerView {
         return adapter;
     }
 
-    public void setUpdateCommand(ICommand command) {
+    public void setUpdateCommand(IEventedCommand command) {
         updateCommand = command;
 
         // Отображаем прогресбар

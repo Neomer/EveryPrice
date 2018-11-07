@@ -1,4 +1,5 @@
-﻿using Neomer.EveryPrice.SDK.Models;
+﻿using Neomer.EveryPrice.SDK.Helpers;
+using Neomer.EveryPrice.SDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +24,14 @@ namespace Neomer.EveryPrice.REST.Web.Models
 
             Uid = image.Uid;
             CreationDate = image.CreationDate;
+			DataEncoded = BlobHelper.Encode(image.Data);
         }
 
         public Guid Uid;
 
         public DateTime CreationDate;
+
+		public String DataEncoded;
 
     }
 }

@@ -1,4 +1,4 @@
-package com.neomer.everyprice.core;
+package com.neomer.everyprice.core.widgets.recyclerview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

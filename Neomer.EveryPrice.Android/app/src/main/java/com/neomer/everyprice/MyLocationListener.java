@@ -16,7 +16,11 @@ public final class MyLocationListener implements LocationListener {
 
     public static MyLocationListener getInstance() {
         if (instance == null) {
-            instance = new MyLocationListener();
+            synchronized (MyLocationListener.class) {
+                if (instance == null) {
+                    instance = new MyLocationListener();
+                }
+            }
         }
         return instance;
     }

@@ -1,6 +1,5 @@
 package com.neomer.everyprice.activities.main;
 
-import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import com.neomer.everyprice.MyLocationListener;
 import com.neomer.everyprice.R;
 import com.neomer.everyprice.api.models.Shop;
-import com.neomer.everyprice.core.AbstractRecyclerViewHolder;
+import com.neomer.everyprice.core.widgets.recyclerview.AbstractRecyclerViewHolder;
 import com.neomer.everyprice.core.NumericHelper;
 
 public class ShopsListViewHolder extends AbstractRecyclerViewHolder<Shop> {

@@ -15,17 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neomer.everyprice.AddProductActivity;
-import com.neomer.everyprice.AddShopActivity;
 import com.neomer.everyprice.R;
 import com.neomer.everyprice.ShopOnMapActivity;
+import com.neomer.everyprice.activities.addshop.AddShopActivity;
 import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.commands.GetShopProductsCommand;
 import com.neomer.everyprice.api.models.Product;
 import com.neomer.everyprice.api.models.Shop;
 import com.neomer.everyprice.api.models.WebApiException;
-import com.neomer.everyprice.core.BaseRecyclerViewAdapter;
-import com.neomer.everyprice.core.IAfterExecutionListener;
-import com.neomer.everyprice.core.IBeforeExecutionListener;
+import com.neomer.everyprice.core.widgets.recyclerview.BaseRecyclerViewAdapter;
 import com.neomer.everyprice.core.ICommand;
 import com.neomer.everyprice.core.IRecyclerViewElementClickListener;
 
@@ -84,16 +82,6 @@ public class ShopDetailsActivity extends AppCompatActivity {
         shopProductsCommand.setShop(shop);
 
         displayShopOnMap = new ICommand() {
-            @Override
-            public void setOnAfterExecuteListener(IAfterExecutionListener listener) {
-
-            }
-
-            @Override
-            public void setOnBeforeExecuteListener(IBeforeExecutionListener listener) {
-
-            }
-
             @Override
             public void execute() {
                 moveToDisplayShopOnMapActivity();

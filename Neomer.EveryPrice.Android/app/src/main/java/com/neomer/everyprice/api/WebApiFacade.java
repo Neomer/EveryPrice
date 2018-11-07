@@ -28,7 +28,7 @@ public final class WebApiFacade {
 
     public static int WEBAPI_RETRY_COUNT = 10;
 
-    private static WebApiFacade instance;
+    private static volatile WebApiFacade instance;
 
     private Retrofit retrofit = null;
     private SecurityApi securityApi = null;
@@ -66,7 +66,7 @@ public final class WebApiFacade {
 
         String ip = ConfigurationProvider.getInstance().getServerIP();
         if (ip == null || ip.isEmpty()) {
-            ip = "94.181.97.208";
+            ip = "84.201.254.96";
         }
 
         try {
@@ -89,7 +89,11 @@ public final class WebApiFacade {
 
     public static WebApiFacade getInstance() {
         if (instance == null) {
-            instance = new WebApiFacade();
+            synchronized (WebApiFacade.class) {
+                if (instance == null) {
+                    instance = new WebApiFacade();
+                }
+            }
         }
         return instance;
     }

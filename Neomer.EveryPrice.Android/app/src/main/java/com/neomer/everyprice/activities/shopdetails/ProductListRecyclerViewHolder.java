@@ -1,6 +1,5 @@
 package com.neomer.everyprice.activities.shopdetails;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.widget.TextView;
 import com.neomer.everyprice.R;
 import com.neomer.everyprice.api.models.Price;
 import com.neomer.everyprice.api.models.Product;
-import com.neomer.everyprice.core.AbstractRecyclerViewHolder;
+import com.neomer.everyprice.core.widgets.recyclerview.AbstractRecyclerViewHolder;
 import com.neomer.everyprice.core.NumericHelper;
 
 public class ProductListRecyclerViewHolder extends AbstractRecyclerViewHolder<Product> {

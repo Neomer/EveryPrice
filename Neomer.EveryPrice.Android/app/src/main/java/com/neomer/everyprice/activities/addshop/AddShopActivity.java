@@ -1,17 +1,22 @@
-package com.neomer.everyprice;
+package com.neomer.everyprice.activities.addshop;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.neomer.everyprice.MyLocationListener;
+import com.neomer.everyprice.R;
+import com.neomer.everyprice.SpecifyLocationOnMapActivity;
+import com.neomer.everyprice.activities.camera.CameraActivity;
 import com.neomer.everyprice.activities.security.SecurityActivity;
 import com.neomer.everyprice.api.SignInNeededException;
 import com.neomer.everyprice.api.IWebApiCallback;
@@ -36,7 +45,11 @@ import java.util.List;
 public class AddShopActivity extends AppCompatActivity implements ILocationUpdateEventListener {
 
     public final static int LOCATION_PERMISSION_REQUEST_CODE = 0;
+    public final static int CAMERA_PERMISSION_REQUEST_CODE = 1;
+
     public final static int REQUEST_LOCATION_CODE = 0;
+    public final static int CAMERA_REQUEST = 1;
+
 
     public final static String LOCATION_PROVIDER_SAVED = "SavedLocation";
 
@@ -85,7 +98,9 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
             tvLatitude.setText(NumericHelper.getInstance().FormatLocation(currentLocation.getLatitude()));
             tvLongitude.setText(String.valueOf(NumericHelper.getInstance().FormatLocation(currentLocation.getLongitude())));
         }
-        catch (NullPointerException ex) { }
+        catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -107,7 +122,7 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
 
         geocoder = new Geocoder(this);
 
-        shop = (Shop) getIntent().getParcelableExtra(Shop.class.getCanonicalName());
+        shop = getIntent().getParcelableExtra(Shop.class.getCanonicalName());
 
         if (shop != null) {
             EditText txtName = findViewById(R.id.addshop_tvName);
@@ -130,6 +145,64 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
             location.setLatitude(shop.getLat());
             location.setAccuracy(0);
             onLocationReceived(location);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.add_shop_menu, menu);
+
+        MenuItem cameraItem = menu.findItem(R.id.addshopmenu_action_camera);
+        if (cameraItem != null) {
+            cameraItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    moveToCameraActivity();
+                    return true;
+                }
+            });
+        }
+
+        MenuItem exitItem = menu.findItem(R.id.addshopmenu_action_save);
+        if (exitItem != null) {
+            exitItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    createOrEditShopCommand.execute();
+                    return true;
+                }
+            });
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            if (permissions.length == 0) {
+                return;
+            }
+            boolean permission = true;
+            for (int res : grantResults) {
+                if (res == PackageManager.PERMISSION_DENIED) {
+                    permission = false;
+                    break;
+                }
+            }
+            if (permission) {
+                moveToCameraActivity();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void moveToCameraActivity() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+        } else {
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, CAMERA_REQUEST);
         }
     }
 
@@ -181,7 +254,6 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
                 return true;
             }
         });
-        createOrEditShopCommand.applyToViewClick(findViewById(R.id.addshop_btnSave));
     }
 
     @Override
@@ -205,8 +277,15 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_LOCATION_CODE) {
-            if (resultCode == RESULT_OK) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case REQUEST_LOCATION_CODE:
+                if (data == null) {
+                    return;
+                }
                 try {
                     LatLng latLng = data.getParcelableExtra("Location");
                     Location location = new Location("");
@@ -216,8 +295,14 @@ public class AddShopActivity extends AppCompatActivity implements ILocationUpdat
 
                     onLocationReceived(location);
                 }
-                catch (NullPointerException ex) { }
-            }
+                catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+
+            case CAMERA_REQUEST:
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                break;
         }
     }
 

@@ -10,11 +10,13 @@ import com.neomer.everyprice.api.IWebApiCallback;
 import com.neomer.everyprice.api.SecurityApi;
 import com.neomer.everyprice.api.WebApiFacade;
 import com.neomer.everyprice.api.models.WebApiException;
+import com.neomer.everyprice.core.AbstractMultipleEventedCommand;
 import com.neomer.everyprice.core.IAfterExecutionListener;
 import com.neomer.everyprice.core.IAfterFailedExecutionListener;
 import com.neomer.everyprice.core.IAfterSuccessExecutionListener;
 import com.neomer.everyprice.core.IBeforeExecutionListener;
 import com.neomer.everyprice.core.ICommand;
+import com.neomer.everyprice.core.IEventedCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,23 +30,13 @@ import retrofit2.Response;
  *
  * @param <TCallbackResult> Тип возвращаемого объекта
  */
-public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand {
+public abstract class AbstractWebApiCommand<TCallbackResult> extends AbstractMultipleEventedCommand {
 
     private IWebApiCallback<TCallbackResult> callback;
-
-    private List<IBeforeExecutionListener> onBeforeExecuteListener;
-    private List<IAfterExecutionListener> onAfterExecutionListener;
-    private List<IAfterFailedExecutionListener> onAfterFailedExecutionListener;
-    private List<IAfterSuccessExecutionListener> onAfterSuccessExecutionListener;
-
     protected abstract Call<TCallbackResult> getCall();
 
     AbstractWebApiCommand(@NonNull IWebApiCallback<TCallbackResult> callback) throws NullPointerException {
         this.callback = callback;
-        this.onBeforeExecuteListener = new ArrayList<>();
-        this.onAfterExecutionListener = new ArrayList<>();
-        this.onAfterFailedExecutionListener = new ArrayList<>();
-        this.onAfterSuccessExecutionListener = new ArrayList<>();
     }
 
     public final SecurityApi getSecurityApi() {
@@ -172,28 +164,13 @@ public abstract class AbstractWebApiCommand<TCallbackResult> implements ICommand
      * @param view Представление, к которому нужно привязать команду
      */
     public final void applyToViewClick(View view) {
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                execute();
-            }
-        });
-    }
-
-    public final void setOnBeforeExecuteListener(IBeforeExecutionListener onBeforeExecuteListener) {
-        this.onBeforeExecuteListener.add(onBeforeExecuteListener);
-    }
-
-    @Override
-    public void setOnAfterExecuteListener(IAfterExecutionListener onAfterExecutionListener) {
-        this.onAfterExecutionListener.add(onAfterExecutionListener);
-    }
-
-    public void setOnAfterFailedExecutionListener(IAfterFailedExecutionListener onAfterFailedExecutionListener) {
-        this.onAfterFailedExecutionListener.add(onAfterFailedExecutionListener);
-    }
-
-    public void setOnAfterSuccessExecutionListener(IAfterSuccessExecutionListener onAfterSuccessExecutionListener) {
-        this.onAfterSuccessExecutionListener.add(onAfterSuccessExecutionListener);
+        if (view != null) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    execute();
+                }
+            });
+        }
     }
 }

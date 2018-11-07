@@ -44,4 +44,5 @@
     <string name="profile">Профиль</string>
     <string name="settings">Настройки</string>
     <string name="exit">Выйти</string>
+    <string name="take_a_photo">Сделать снимок...</string>
 </resources>
