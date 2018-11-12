@@ -8,6 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using Neomer.EveryPrice.SDK.Web.Http;
+using System.IO;
+using Neomer.EveryPrice.SDK.Helpers;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
 {
@@ -27,5 +29,38 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
             }
             return new ImageViewModel(image);
         }
-    }
+
+		public async System.Threading.Tasks.Task<ImagePreviewViewModel> PutAsync(Guid shopUid, [FromBody] ImageEditModel imageModel)
+		{
+			using (var contentStream = await Request.Content.ReadAsStreamAsync())
+			{
+				contentStream.Seek(0, SeekOrigin.Begin);
+				using (StreamReader sr = new StreamReader(contentStream))
+				{
+					string rawContent = sr.ReadToEnd();
+					Logger.Log.Debug(rawContent);
+					// use raw content here
+				}
+			}
+			var user = SecurityManager.Instance.GetUserByToken(CurrentSession, Request.Headers);
+			if (user == null)
+			{
+				return null;
+			}
+			var shop = ShopManager.Instance.Get(CurrentSession, shopUid) as IShop;
+			if (shop == null)
+			{
+				return null;
+			}
+			IBlob image = new Blob()
+			{
+				CreationDate = DateTime.UtcNow
+			};
+
+			imageModel.ToImage(ref image);
+			BlobManager.Instance.SaveIsolate(CurrentSession, image);
+
+			return new ImagePreviewViewModel(image);
+		}
+	}
 }

@@ -1,9 +1,11 @@
 ﻿using Neomer.EveryPrice.REST.Web.Models;
 using Neomer.EveryPrice.SDK.Exceptions.Managers;
+using Neomer.EveryPrice.SDK.Helpers;
 using Neomer.EveryPrice.SDK.Managers;
 using Neomer.EveryPrice.SDK.Models;
 using Neomer.EveryPrice.SDK.Web.Http;
 using System;
+using System.IO;
 using System.Web.Http;
 
 namespace Neomer.EveryPrice.REST.Web.Controllers
@@ -22,7 +24,7 @@ namespace Neomer.EveryPrice.REST.Web.Controllers
 			{
 				throw new NotFoundException();
 			}
-			return new ImageViewModel(image);
+			return new ImagePreviewViewModel(image);
 		}
 	}
 }
